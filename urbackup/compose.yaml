@@ -1,0 +1,37 @@
+services:
+  urbackup:
+    image: uroni/urbackup-server:latest
+    container_name: urbackup
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - urbackup_db:/var/urbackup/:rw
+      - urbackup_www:/usr/share/urbackup/:rw
+      - urbackup_clients:/backups/clients/:rw
+      - urbackup_appdata:/backups/urbackup/:rw
+      #- /self-hosted/urbackup/temp/:/backups/urbackup_tmp_files/:rw
+      - /mnt/hdd-pool/app-data/urbackup/:/backups/:rw
+    network_mode: host
+    # Uncomment the following two lines if you're using BTRFS support
+    #cap_add:
+    #  - SYS_ADMIN
+    # Uncomment the following two lines if you're using ZFS support
+    #devices:
+    #  - /dev/zfs:/dev/zfs
+volumes:
+  urbackup_db:
+    name: urbackup_db
+    external: true
+  urbackup_www:
+    name: urbackup_www
+    external: true
+  urbackup_appdata:
+    name: urbackup_appdata
+    external: true
+  urbackup_clients:
+    name: urbackup_clients
+    external: true
+
+x-dockge:
+  urls:
+    - https://backup.samskeyti.net/

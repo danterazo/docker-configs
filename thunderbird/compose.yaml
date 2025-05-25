@@ -1,0 +1,60 @@
+services:
+  thunderbird:
+    container_name: thunderbird
+    #image: jlesage/thunderbird:latest
+    build:
+      context: ./build
+      dockerfile: Dockerfile
+    #      args:
+    #        THUNDERBIRD_VERSION: "1.38.0.2"
+    #ports:
+    #- 5900:5900
+    volumes:
+      - thunderbird_appdata:/config/:rw
+      - thunderbird_mail:/mail/:rw
+    restart: always
+    networks:
+      - thunderbird-net
+    depends_on:
+      - proton-mail-bridge
+  thunderbird-oauth:
+    container_name: thunderbird-oauth
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    command: --config /oauth2-proxy.cfg
+    restart: always
+    ports:
+      - 5800:5800/tcp
+    volumes:
+      - /self-hosted/thunderbird/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+    networks:
+      - thunderbird-net
+      - proxy-net
+    depends_on:
+      - thunderbird
+  proton-mail-bridge:
+    container_name: proton-mail-bridge
+    image: ghcr.io/videocurio/proton-mail-bridge:latest
+    volumes:
+      - proton-mail-bridge_data:/root/:rw
+    env_file: .env
+    restart: always
+    networks:
+      - thunderbird-net
+networks:
+  thunderbird-net:
+    name: thunderbird-net
+  proxy-net:
+    external: true
+volumes:
+  thunderbird_appdata:
+    external: true
+    name: thunderbird_appdata
+  thunderbird_mail:
+    external: true
+    name: thunderbird_mail
+  proton-mail-bridge_data:
+    external: true
+    name: proton-mail-bridge_data
+x-dockge:
+  urls:
+    - https://mail.samskeyti.net/

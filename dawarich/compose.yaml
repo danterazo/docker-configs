@@ -1,0 +1,199 @@
+services:
+  dawarich-app:
+    image: freikin/dawarich:${IMAGE_VERSION}
+    container_name: dawarich-app
+    volumes:
+      - dawarich_cache:/usr/local/bundle/gems_app/:rw
+      - dawarich_public:/var/app/public/:rw
+      - dawarich_storage:/var/app/storage/:rw
+      - /self-hosted/dawarich/app/imports/:/var/app/tmp/imports/:rw
+    networks:
+      - dawarich-net
+      - proxy-net
+    stdin_open: true
+    tty: true
+    entrypoint: web-entrypoint.sh
+    command:
+      - bin/rails
+      - server
+      - -p
+      - "3000"
+      - -b
+      - "::"
+    restart: unless-stopped
+    env_file: .env
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: "5"
+    depends_on:
+      dawarich-db:
+        condition: service_healthy
+        restart: true
+      dawarich-redis:
+        condition: service_healthy
+        restart: true
+      dawarich-geo:
+        condition: service_started
+        restart: true
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget -qO - http://127.0.0.1:3000/api/v1/health | grep -q
+          '"status"\s*:\s*"ok"'
+      interval: 10s
+      retries: 30
+      start_period: 30s
+      timeout: 10s
+  dawarich-redis:
+    image: redis:7.0-alpine
+    container_name: dawarich-redis
+    command: redis-server
+    networks:
+      - dawarich-net
+    volumes:
+      - dawarich_redis:/var/shared/redis/:rw
+      - dawarich_shared-db:/var/shared/:rw
+    restart: always
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - --raw
+        - incr
+        - ping
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+  dawarich-db:
+    image: postgis/postgis:17-3.5-alpine
+    container_name: dawarich-db
+    shm_size: 1G
+    volumes:
+      - dawarich_postgres:/var/lib/postgresql/data/:rw
+      - dawarich_shared-db:/var/shared/:rw
+      - /self-hosted/dawarich/db-dumps/:/dumps:rw
+    networks:
+      - dawarich-net
+    env_file: .env
+    restart: always
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres -d dawarich_development
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+  dawarich-geo:
+    image: rtuszik/photon-docker:latest
+    container_name: dawarich-geo
+    expose:
+      - 2322
+    user: ${PUID}:${PGID}
+    env_file: .env
+    volumes:
+      - dawarich_photon:/photon/:rw
+      - /self-hosted/dawarich/photon-db/:/photon/photon_data/:rw
+    restart: always
+    networks:
+      - dawarich-net
+  dawarich-sidekiq:
+    image: freikin/dawarich:${IMAGE_VERSION}
+    container_name: dawarich-sidekiq
+    volumes:
+      - dawarich_cache:/usr/local/bundle/gems_sidekiq/:rw
+      - dawarich_public:/var/app/public/:rw
+      - dawarich_storage:/var/app/storage/:rw
+      - /self-hosted/dawarich/app/imports/:/var/app/tmp/imports/:rw
+    networks:
+      - dawarich-net
+    stdin_open: true
+    tty: true
+    entrypoint: sidekiq-entrypoint.sh
+    command:
+      - bundle
+      - exec
+      - sidekiq
+    restart: on-failure
+    env_file: .env
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: "5"
+    depends_on:
+      dawarich-db:
+        condition: service_healthy
+        restart: true
+      dawarich-redis:
+        condition: service_healthy
+        restart: true
+      dawarich-app:
+        condition: service_healthy
+        restart: true
+      dawarich-geo:
+        condition: service_started
+        restart: true
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bundle exec sidekiqmon processes | grep $${HOSTNAME}
+      interval: 10s
+      retries: 30
+      start_period: 30s
+      timeout: 10s
+  dawarich-oauth:
+    container_name: dawarich-oauth
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    command: --config /oauth2-proxy.cfg
+    restart: always
+    ports:
+      - 3002:3002/tcp
+    env_file: .env
+    volumes:
+      - /self-hosted/dawarich/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+    networks:
+      - proxy-net
+      - dawarich-net
+    depends_on:
+      dawarich-app:
+        condition: service_healthy
+        restart: true
+networks:
+  dawarich-net:
+    name: dawarich-net
+  proxy-net:
+    external: true
+  #  immich-net:
+  #    external: true
+
+volumes:
+  dawarich_cache:
+    external: true
+    name: dawarich_cache
+  dawarich_public:
+    external: true
+    name: dawarich_public
+  dawarich_storage:
+    external: true
+    name: dawarich_storage
+  dawarich_redis:
+    external: true
+    name: dawarich_redis
+  dawarich_shared-db:
+    external: true
+    name: dawarich_shared-db
+  dawarich_postgres:
+    external: true
+    name: dawarich_postgres
+  dawarich_photon:
+    external: true
+    name: dawarich_photon
+x-dockge:
+  urls:
+    - https://track.samskeyti.net/
+
+# TODO: cron for backup / restore

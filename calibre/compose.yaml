@@ -1,0 +1,27 @@
+# TODO: add oauth2
+services:
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    container_name: calibre
+    env_file:
+      - .env
+    volumes:
+      - calibre_config:/config/:rw
+      - /mnt/nvme-xpg/media/books/Calibre/:/library/:rw
+    # expose:
+    #   - 8083
+    ports:
+      - 8083:8083/tcp
+    restart: unless-stopped
+    networks:
+      - proxy-net
+networks:
+  proxy-net:
+    external: true
+volumes:
+  calibre_config:
+    name: calibre_config
+    external: true
+x-dockge:
+  urls:
+    - https://books.samskeyti.net/

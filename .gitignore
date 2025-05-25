@@ -1,0 +1,35 @@
+# TODO: migrate secrets elsewhere so you can track .env files
+# ignore sensitive files
+.env
+oauth2-proxy.cfg
+gluetun/data/
+radicale/configs/users
+soulseek/slskd.yml
+cloudflare-ddns/config.json
+
+# ignore temporary files
+*.swp
+
+# ignore intake
+dawarich/imports/
+
+# ignore backups
+*.bak*
+*/backups/
+*.dump
+
+# ignore extremely large folders
+dawarich/photon-db/
+
+# ignore archived stacks
++deprecated/
+*.7z*
+
+# ignore internal repos
+*.git/
+*build/
+
+# temporarily ignore certain apps (until I migrate to Docker volumes)
+backrest/
+firefox-sync/
+headscale/

@@ -1,0 +1,39 @@
+# TODO: route through VPN/gluetun
+services:
+  ladder:
+    image: ghcr.io/everywall/ladder:latest
+    container_name: ladder
+    #build: .
+    #restart: always
+    #command: sh -c ./ladder
+    ports:
+      - 8030:8030/tcp
+    env_file: .env
+    volumes:
+      - /self-hosted/ladder/handlers/form.html:/app/form.html:rw
+    restart: unless-stopped
+    networks:
+      - ladder-net
+  ladder-oauth:
+    container_name: ladder-oauth
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    command: --config /oauth2-proxy.cfg
+    restart: always
+    ports:
+      - 8031:8031/tcp
+    env_file: .env
+    volumes:
+      - /self-hosted/ladder/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+    networks:
+      - ladder-net
+      - proxy-net
+    depends_on:
+      - ladder
+networks:
+  ladder-net:
+    name: ladder-net
+  proxy-net:
+    external: true
+x-dockge:
+  urls:
+    - https://paywall.samskeyti.net/

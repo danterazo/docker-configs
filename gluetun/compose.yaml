@@ -1,0 +1,74 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    expose:
+      - 8090
+      - 50300
+      - 80
+    #ports:
+    #  - 8090:8090/tcp
+    #  - 50300:50300/tcp
+    #  - 9823:80/tcp
+    env_file: .env
+    volumes:
+      - /self-hosted/gluetun/data/:/gluetun/:rw
+    networks:
+      - gluetun-net
+      - proxy-net
+    security_opt:
+      - no-new-privileges:true
+    restart: always
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 2m
+  qbittorrent-oauth:
+    container_name: qbittorrent-oauth
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    command: --config /oauth2-proxy.cfg
+    restart: always
+    expose:
+      - 8091
+    #ports:
+    #  - 8091:8091/tcp
+    env_file: .env
+    volumes:
+      - /self-hosted/gluetun/oauth/qbittorrent/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+    networks:
+      - gluetun-net
+      - proxy-net
+    depends_on:
+      - gluetun
+  soulseek-oauth:
+    container_name: soulseek-oauth
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    command: --config /oauth2-proxy.cfg
+    restart: always
+    expose:
+      - 5030
+    #ports:
+    #  - 5030:5030/tcp
+    env_file: .env
+    volumes:
+      - /self-hosted/gluetun/oauth/soulseek/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+    networks:
+      - gluetun-net
+      - proxy-net
+    depends_on:
+      - gluetun
+networks:
+  gluetun-net:
+    name: gluetun-net
+  proxy-net:
+    external: true

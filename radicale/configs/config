@@ -1,0 +1,123 @@
+[server]
+
+# CalDAV server hostnames separated by a comma
+# IPv4 syntax: address:port
+# IPv6 syntax: [address]:port
+# For example: 0.0.0.0:9999, [::]:9999
+#hosts = localhost:5232
+hosts = 0.0.0.0:5232
+
+# Max parallel connections
+#max_connections = 8
+
+# Max size of request body (bytes)
+#max_content_length = 100000000
+
+# Socket timeout (seconds)
+#timeout = 30
+
+# SSL flag, enable HTTPS protocol
+ssl = False
+
+# SSL certificate path
+#certificate = /etc/ssl/radicale.cert.pem
+
+# SSL private key
+#key = /etc/ssl/radicale.key.pem
+
+# CA certificate for validating clients. This can be used to secure
+# TCP traffic between Radicale and a reverse proxy
+#certificate_authority =
+
+[auth]
+# Authentication method
+# Value: none | htpasswd | remote_user | http_x_remote_user
+#type = none
+type = htpasswd
+
+# Htpasswd filename
+#htpasswd_filename = /etc/radicale/users
+htpasswd_filename = /config/users
+
+# Htpasswd encryption method
+# Value: plain | bcrypt | md5
+# bcrypt requires the installation of radicale[bcrypt].
+htpasswd_encryption = bcrypt
+
+# Incorrect authentication delay (seconds)
+delay = 1
+
+# Message displayed in the client when a password is needed
+realm = Radicale - Password Required
+
+[storage]
+# Storage backend
+# Value: multifilesystem | multifilesystem_nolock
+type = multifilesystem
+
+# Folder for storing local collections, created if not present
+#filesystem_folder = /var/lib/radicale/collections
+filesystem_folder = /data/collections
+
+# Delete sync token that are older (seconds)
+#max_sync_token_age = 2592000
+
+# Command that is run after changes to storage
+# Example: ([ -d .git ] || git init) && git add -A && (git diff --cached --quiet || git commit -m "Changes by "%(user)s)
+# hook = git add -A && (git diff --cached --quiet || git commit -m "Changes in \"%(user)s\"")
+
+[logging]
+# Threshold for the logger
+# Value: debug | info | warning | error | critical
+level = warning
+
+# Don't include passwords in logs
+mask_passwords = True
+
+# radicale-docker-infcloud repo
+[web]
+type = radicale_infcloud
+infcloud_config = globalBackgroundSync=true;
+                globalSyncResourcesInterval=120000;
+                globalEnableRefresh=true;
+                globalEnableKbNavigation=true;
+                globalInterfaceLanguage='en_US';
+                globalResourceAlphabetSorting=true;
+                globalDatepickerFirstDayOfWeek=1;
+                globalTimeZoneSupport=true;
+                globalTimeZone='America/Chicago';
+                globalActiveView='agendaWeek';
+                globalOpenFormMode='double';
+                globalDefaultEventDuration=30;
+                globalRewriteTimezoneComponent=true;
+                globalMozillaSupport=true;
+                globalAppleRemindersMode=true;
+                globalRemoveUnknownTimezone=false;
+                globalUriHandlerTel='tel:';
+                globalUriHandlerEmail='mailto:';
+                globalUriHandlerUrl='https://';
+                globalDefaultAddressCountry='us';
+                globalContactStoreFN=['prefix',' first',' middle',' last',' suffix'];
+                globalTodoListFilterSelected=['filterAction', 'filterCompleted'];
+                globalTodoCalendarSelected='Inbox';
+
+
+
+# [encoding]
+# Encoding for responding requests
+#request = utf-8
+
+# Encoding for storing local collections
+#stock = utf-8
+
+# [rights]
+# Rights backend
+# Value: none | authenticated | owner_only | owner_write | from_file
+#type = owner_only
+
+# File for rights management from_file
+#file = /etc/radicale/rights
+
+#[headers]
+# Additional HTTP headers
+#Access-Control-Allow-Origin = *

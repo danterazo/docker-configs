@@ -1,0 +1,67 @@
+services:
+  radicale:
+    #image: tomsquest/docker-radicale:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: radicale
+    init: true
+    user: ${PUID}:${PGID}
+    read_only: false # true w/o user above
+    env_file: .env
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - CHOWN
+      - KILL
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          pids: 50
+    healthcheck:
+      test: curl -f http://127.0.0.1:5232 || exit 1
+      interval: 30s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - /self-hosted/radicale/configs/:/config/:ro
+      - radicale_data:/data/:rw
+      #- /home/dante/.gitconfig:/data/:rw
+      #- /ssh-agent:/ssh-agent # forward local machine SSH key to docker (for Git)
+    networks:
+      - radicale-net
+  radicale-oauth:
+    container_name: radicale-oauth
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    command: --config /oauth2-proxy.cfg
+    restart: always
+    # expose:
+    #   - "5232"
+    ports:
+      - 5232:5232/tcp
+    env_file: .env
+    volumes:
+      - /self-hosted/radicale/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+    networks:
+      - radicale-net
+      - proxy-net
+    depends_on:
+      - radicale
+
+volumes:
+  radicale_data:
+    name: radicale_data
+    external: true
+networks:
+  radicale-net:
+    name: radicale-net
+  proxy-net:
+    external: true
+x-dockge:
+  urls:
+    - https://dav.samskeyti.net/

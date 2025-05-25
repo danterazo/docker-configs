@@ -1,0 +1,26 @@
+services:
+  pocket-id:
+    container_name: pocket-id
+    image: ghcr.io/pocket-id/pocket-id:latest
+    restart: unless-stopped
+    env_file: .env
+    # expose:
+    #   - 80
+    ports:
+      - 3080:80/tcp
+    volumes:
+      - /self-hosted/pocket-id/data/:/app/backend/data/:rw
+    healthcheck:
+      test: curl -f http://localhost/health
+      interval: 1m30s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    networks:
+      - proxy-net
+networks:
+  proxy-net:
+    external: true
+x-dockge:
+  urls:
+    - https://id.samskeyti.net/

@@ -1,0 +1,23 @@
+services:
+  slskd:
+    image: slskd/slskd:latest
+    container_name: soulseek
+    env_file: .env
+    user: ${PUID}:${PGID}
+    volumes:
+      - /mnt/hdd-pool/downloads/soulseek/downloads/:/app/downloads/:rw
+      - /mnt/hdd-pool/downloads/soulseek/incomplete/:/app/incomplete/:rw
+      - soulseek_db:/app/data/:rw
+      - /self-hosted/soulseek/slskd.yml:/app/slskd.yml:rw
+    restart: unless-stopped
+    network_mode: container:gluetun # use VPN
+    security_opt:
+      - no-new-privileges:true
+x-dockge:
+  urls:
+    - https://soulseek.samskeyti.net/
+volumes:
+  soulseek_db:
+    name: soulseek_db
+    external: true
+networks: {}

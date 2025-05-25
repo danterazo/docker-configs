@@ -1,0 +1,43 @@
+services:
+  webdav:
+    container_name: webdav
+    #image: apachewebdav/apachewebdav:latest
+    build:
+      context: build/
+      dockerfile: Dockerfile
+    volumes:
+      - /mnt/hdd-pool/app-data/webdav/:/var/lib/dav/data/:rw
+    # expose:
+    #   - 80
+    ports:
+      - 842:80/tcp
+    env_file: .env
+    restart: unless-stopped
+    networks:
+      - webdav-net
+      - proxy-net
+
+  # TODO: fix, then re-enable
+  webdav-oauth:
+    container_name: webdav-oauth
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    command: --config /oauth2-proxy.cfg
+    restart: unless-stopped
+    #ports:
+    #  - 842:842/tcp
+    env_file: .env
+    volumes:
+      - /self-hosted/webdav/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+    networks:
+      - webdav-net
+      - proxy-net
+    depends_on:
+      - webdav
+networks:
+  webdav-net:
+    name: webdav-net
+  proxy-net:
+    external: true
+x-dockge:
+  urls:
+    - https://webdav.samskeyti.net/

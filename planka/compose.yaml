@@ -1,0 +1,72 @@
+services:
+  planka-app:
+    image: ghcr.io/plankanban/planka:latest
+    container_name: planka-app
+    restart: always
+    volumes:
+      - planka_avatars:/app/public/user-avatars/:rw
+      - planka_backgrounds:/app/public/project-background-images/:rw
+      - planka_attachments:/app/private/attachments/:rw
+    env_file: .env
+    depends_on:
+      planka-db:
+        condition: service_healthy
+    user: ${PUID}:${PGID}
+    networks:
+      - planka-net
+  planka-db:
+    image: postgres:16-alpine
+    container_name: planka-db
+    restart: always
+    env_file: .env
+    volumes:
+      - planka_db:/var/lib/postgresql/data/:rw
+    user: ${PUID}:${PGID}
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres -d planka
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - planka-net
+  planka-oauth:
+    container_name: planka-oauth
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    command: --config /oauth2-proxy.cfg
+    restart: always
+    # expose:
+    #   - ${PLANKA_PORT}
+    ports:
+     - ${PLANKA_PORT}:${PLANKA_PORT}/tcp
+    env_file: .env
+    volumes:
+      - /self-hosted/planka/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+    networks:
+      - planka-net
+      - proxy-net
+    depends_on:
+      - planka-app
+networks:
+  planka-net:
+    name: planka-net
+  proxy-net:
+    external: true
+volumes:
+  planka_avatars:
+    name: planka_avatars
+    external: true
+  planka_backgrounds:
+    name: planka_backgrounds
+    external: true
+  planka_attachments:
+    name: planka_attachments
+    external: true
+  planka_db:
+    name: planka_db
+    external: true
+
+x-dockge:
+  urls:
+    - https://planka.samskeyti.net/
