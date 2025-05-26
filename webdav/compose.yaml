@@ -6,7 +6,7 @@ services:
       context: build/
       dockerfile: Dockerfile
     volumes:
-      - /mnt/hdd-pool/app-data/webdav/:/var/lib/dav/data/:rw
+      - /mnt/hot-pool/app-data/webdav/:/var/lib/dav/data/:rw
     # expose:
     #   - 80
     ports:

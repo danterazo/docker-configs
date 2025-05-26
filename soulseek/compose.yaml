@@ -5,8 +5,8 @@ services:
     env_file: .env
     user: ${PUID}:${PGID}
     volumes:
-      - /mnt/hdd-pool/downloads/soulseek/downloads/:/app/downloads/:rw
-      - /mnt/hdd-pool/downloads/soulseek/incomplete/:/app/incomplete/:rw
+      - /mnt/hot-pool/downloads/soulseek/downloads/:/app/downloads/:rw
+      - /mnt/hot-pool/downloads/soulseek/incomplete/:/app/incomplete/:rw
       - soulseek_db:/app/data/:rw
       - /self-hosted/soulseek/slskd.yml:/app/slskd.yml:rw
     restart: unless-stopped
