@@ -21,7 +21,7 @@ services:
     env_file: .env
     volumes:
       - planka_db:/var/lib/postgresql/data/:rw
-    user: ${PUID}:${PGID}
+    #user: ${PUID}:${PGID}
     healthcheck:
       test:
         - CMD-SHELL
