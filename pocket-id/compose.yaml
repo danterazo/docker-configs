@@ -9,7 +9,7 @@ services:
     ports:
       - 3080:80/tcp
     volumes:
-      - /self-hosted/pocket-id/data/:/app/backend/data/:rw
+      - pocket-id_db:/app/backend/data/:rw
     healthcheck:
       test: curl -f http://localhost/health
       interval: 1m30s
@@ -21,6 +21,11 @@ services:
 networks:
   proxy-net:
     external: true
+volumes:
+  pocket-id_db:
+    name: pocket-id_db
+    external: true
+
 x-dockge:
   urls:
     - https://id.samskeyti.net/
