@@ -5,7 +5,7 @@ STACKS=("dawarich" "thunderbird" "immich")
 COMPOSE_DIR="/self-hosted"
 DATETIME=$(date +"%Y-%m-%d_%H-%M-%S")
 HOSTNAME=$(hostname)
-BACKUP_DIR="/mnt/hot-pool/backups/containers/kex/${HOSTNAME}"
+BACKUP_DIR="/mnt/mega-pool/backups/containers/kex/${HOSTNAME}"
 #LOG_FILE="/var/log/docker-volume-backup.log"
 COMPRESSION_LEVEL=9
 

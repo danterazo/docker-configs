@@ -10,7 +10,7 @@ services:
       - urbackup_clients:/backups/clients/:rw
       - urbackup_appdata:/backups/urbackup/:rw
       #- /self-hosted/urbackup/temp/:/backups/urbackup_tmp_files/:rw
-      - /mnt/hot-pool/app-data/urbackup/:/backups/:rw
+      - /mnt/mega-pool/app-data/urbackup/:/backups/:rw
     network_mode: host
     # Uncomment the following two lines if you're using BTRFS support
     #cap_add:
