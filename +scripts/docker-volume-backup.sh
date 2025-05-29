@@ -137,6 +137,10 @@ ls -1d */ | sort | head -n -7 | xargs -r rm -rf
 # sync backups to B2 for safekeeping
 rclone sync "${BACKUP_DIR}" \
 	b2-docker-prod:ssk-docker-prod/ \
-	--fast-list \
-	--progress \
+        --transfers=32 \
+        --b2-chunk-size=900M \
+        --fast-list \
+        --progress \
+        --size-only \
+        --b2-hard-delete \
 	-v
