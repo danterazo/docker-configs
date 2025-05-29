@@ -142,5 +142,5 @@ rclone sync "${BACKUP_DIR}" \
         --fast-list \
         --progress \
         --size-only \
-        --b2-hard-delete \
-	-v
+        --b2-hard-delete
+#	-v
