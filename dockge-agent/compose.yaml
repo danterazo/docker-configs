@@ -6,7 +6,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
       - dockge-agent_db:/app/data/:rw
-      - /apps/:/opt/stacks/:rw
+      - /apps/stacks/:/opt/stacks/:rw
     env_file: .env
     ports:
       - 5001:5001/tcp
