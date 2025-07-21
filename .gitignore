@@ -1,6 +1,5 @@
-# TODO: migrate secrets elsewhere so you can track .env files
 # ignore sensitive files
-.env
+.secrets
 oauth2-proxy.cfg
 gluetun/data/
 radicale/configs/users
