@@ -8,7 +8,7 @@ services:
     env_file: .env
     volumes:
       - ./data/:/config/:rw
-      - ./backups:/backups/:rw
+      - ./backups/:/backups/:rw
       - /media/:/media/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     networks:

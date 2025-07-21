@@ -40,7 +40,7 @@ services:
       service: cuda
     volumes:
       - /dev/bus/usb:/dev/bus/usb
-      - /cache/immich-model/:/cache/:rw
+      - ./ephemeral/model-cache/:/cache/:rw
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
     env_file: .env

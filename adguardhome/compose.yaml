@@ -4,6 +4,8 @@ services:
     container_name: adguardhome
     restart: unless-stopped
     volumes:
-      - ./ephemeral/:/opt/adguardhome/work
-      - ./config/yaml:/opt/adguardhome/conf/config.yaml:rw
+      - ./ephemeral/:/opt/adguardhome/work:rw
+      - ./configs/:/opt/adguardhome/conf/:rw
     network_mode: host
+
+

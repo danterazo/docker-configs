@@ -21,10 +21,8 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
-    - ""
     - https://dns.quad9.net/dns-query
     - https://dns9.quad9.net/dns-query
-    - ""
   upstream_dns_file: ""
   bootstrap_dns:
     - 1.1.1.1
@@ -192,7 +190,7 @@ filtering:
   blocking_ipv6: ""
   blocked_services:
     schedule:
-      time_zone: Local
+      time_zone: UTC
     ids: []
   protection_disabled_until: null
   safe_search:
@@ -245,7 +243,7 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: Local
+          time_zone: UTC
         ids: []
       name: Cerulean
       ids:
@@ -276,7 +274,7 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: Local
+          time_zone: UTC
         ids: []
       name: Hoppípolla
       ids:
@@ -307,7 +305,7 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: Local
+          time_zone: UTC
         ids: []
       name: Ichigo
       ids:
@@ -338,7 +336,7 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: Local
+          time_zone: UTC
         ids: []
       name: Kex
       ids:
@@ -369,7 +367,7 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: Local
+          time_zone: UTC
         ids: []
       name: Kvistur
       ids:
@@ -400,7 +398,7 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: Local
+          time_zone: UTC
         ids: []
       name: Ringo
       ids:
@@ -431,7 +429,7 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: Local
+          time_zone: UTC
         ids: []
       name: RingoM1
       ids:
@@ -462,7 +460,7 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: Local
+          time_zone: UTC
         ids: []
       name: Schnitzel
       ids:
@@ -493,7 +491,7 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: Local
+          time_zone: UTC
         ids: []
       name: Smáskífa
       ids:
@@ -524,7 +522,7 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: Local
+          time_zone: UTC
         ids: []
       name: Óveður
       ids:
