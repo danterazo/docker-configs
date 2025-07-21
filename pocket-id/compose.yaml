@@ -1,26 +1,26 @@
 services:
   pocket-id:
     container_name: pocket-id
-    image: ghcr.io/pocket-id/pocket-id:latest
+    image: ghcr.io/pocket-id/pocket-id:v1
     restart: unless-stopped
     env_file: .env
-    # expose:
-    #   - 80
     ports:
-      - 3080:80/tcp
+      - 1411:1411/tcp
     volumes:
-      - pocket-id_db:/app/backend/data/:rw
+      - pocket-id_db:/app/data/:rw
     healthcheck:
-      test: curl -f http://localhost/health
+      test: "curl -f http://localhost:1411/healthz"
       interval: 1m30s
       timeout: 5s
       retries: 2
       start_period: 10s
     networks:
-      - proxy-net
+      - pocket-id-net
+
+
 networks:
-  proxy-net:
-    external: true
+  pocket-id-net:
+    name: pocket-id-net
 volumes:
   pocket-id_db:
     name: pocket-id_db

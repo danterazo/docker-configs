@@ -1,0 +1,39 @@
+services:
+  dockge-master-app:
+    container_name: dockge-master
+    image: louislam/dockge:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - dockge-master_db:/app/data/:rw
+      - /apps/:/opt/stacks/:rw
+    env_file: .env
+    networks:
+      - dockge-master-net
+    extra_hosts:
+      - immich.lxc:192.168.30.104
+      - pocket-id.lxc:192.168.30.107
+  dockge-oauth:
+    container_name: dockge-master-oauth
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    command: --config /oauth2-proxy.cfg
+    restart: always
+    ports:
+      - 5002:5002/tcp
+    env_file: .env
+    volumes:
+      - /apps/dockge-master/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+    networks:
+      - dockge-master-net
+    depends_on:
+      - dockge-master-app
+networks:
+  dockge-master-net:
+    name: dockge-master-net
+volumes:
+  dockge-master_db:
+    name: dockge-master_db
+    external: true
+x-dockge:
+  urls:
+    - https://stacks.samskeyti.net/

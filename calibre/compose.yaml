@@ -7,7 +7,7 @@ services:
       - .env
     volumes:
       - calibre_config:/config/:rw
-      - /mnt/nvme-xpg/media/books/Calibre/:/library/:rw
+      - /mnt/mega-pool/media/books/calibre/:/library/:rw
     # expose:
     #   - 8083
     ports:

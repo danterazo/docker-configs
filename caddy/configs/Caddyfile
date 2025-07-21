@@ -1,0 +1,83 @@
+{
+	# global options: set admin email and acme provider
+	email admin.s91sr@samskeyti.net
+	acme_ca https://acme.zerossl.com/v2/DV90
+}
+
+# imports
+import snippets/*.conf
+import sites/*.conf
+
+# TODO: break into separate files
+*.samskeyti.net {
+	import common
+
+	@id host id.samskeyti.net
+	handle @id {
+		reverse_proxy http://192.168.30.107:1411
+	}
+
+	@stacks host stacks.samskeyti.net
+	handle @stacks {
+		reverse_proxy http://192.168.30.106:5002 {
+			import websockets
+		}
+	}
+
+	#	@books host books.samskeyti.net
+	#	handle @books {
+	#		reverse_proxy http://192.168.30.101:8083
+	#	}
+
+	@plexm host plexm.samskeyti.net
+	handle @plexm {
+		reverse_proxy https://192.168.30.203:32400 {
+			transport http {
+				tls_insecure_skip_verify
+			}
+		}
+	}
+
+	@plexv host plexv.samskeyti.net
+	handle @plexv {
+		reverse_proxy https://192.168.30.204:32400 {
+			transport http {
+				tls_insecure_skip_verify
+			}
+		}
+	}
+
+	#	@dav host dav.samskeyti.net
+	#	handle @dav {
+	#		reverse_proxy http://192.168.30.101:5232
+	#	}
+
+	@immich host immich.samskeyti.net
+	handle @immich {
+		reverse_proxy http://192.168.30.104:2283
+	}
+
+	# TODO: fix this web app!
+	# creality web interface
+	#	@k1c host k1c.samskeyti.net
+	#	handle @k1c {
+	#		reverse_proxy http://192.168.99.90:80 {
+	#			import websockets
+	#		}
+	#	}
+
+	@omv host omv.samskeyti.net
+	handle @omv {
+		reverse_proxy http://192.168.30.100:80
+	}
+
+	@agh host agh.samskeyti.net
+	handle @agh {
+		reverse_proxy http://192.168.30.103:3000
+	}
+
+	# default handler for undefined subdomains
+	handle {
+		abort
+	}
+}

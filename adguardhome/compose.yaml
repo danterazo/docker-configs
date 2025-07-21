@@ -1,0 +1,9 @@
+services:
+  adguardhome:
+    image: adguard/adguardhome:latest
+    container_name: adguardhome
+    restart: unless-stopped
+    volumes:
+      - ./ephemeral/:/opt/adguardhome/work
+      - ./config/yaml:/opt/adguardhome/conf/config.yaml:rw
+    network_mode: host

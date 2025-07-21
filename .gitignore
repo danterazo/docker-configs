@@ -10,6 +10,11 @@ cloudflare-ddns/config.json
 # ignore temporary files
 *.swp
 
+# ignore trash
+*.filen.trash.local/
+*.recycle/
+*.Trash-0/
+
 # ignore intake
 dawarich/imports/
 
@@ -28,6 +33,13 @@ dawarich/photon-db/
 # ignore internal repos
 *.git/
 *build/
+
+# ignore data backed up elsewhere
+*data/
+*backups/
+
+# ignore ephemeral files
+*ephemeral/
 
 # temporarily ignore certain apps (until I migrate to Docker volumes)
 backrest/

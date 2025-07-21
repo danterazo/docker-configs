@@ -1,0 +1,50 @@
+services:
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker:latest
+    restart: unless-stopped
+    #user: ${PUID}:${PGID}
+    ports:
+      - 32400:32400/tcp
+    devices:
+      - /dev/dri:/dev/dri
+    env_file: .env
+    volumes:
+      - /self-hosted/plex/plexmediaserver/:/config/:rw
+      - /self-hosted/plex/backups/:/backups/:rw
+      - /self-hosted/plex/scripts/:/scripts/:rw
+      - /mnt/cache-pool/app-data/plex/media/:/media/:rw
+      - /dev/shm/plex-transcode/:/transcode/:rw
+    #network_mode: host
+    networks:
+      - caddy-net
+      - plex-net
+  tautulli:
+    image: lscr.io/linuxserver/tautulli:latest
+    container_name: tautulli
+    env_file: .env
+    volumes:
+      - /self-hosted/plex/plexmediaserver/Logs/:/plex-logs/:ro
+      - /self-hosted/plex/tautulli/config/:/config/:rw
+    user: ${PUID}:${PGID}
+    ports:
+      - 8181:8181/tcp
+    restart: unless-stopped
+    depends_on:
+      - plex
+    networks:
+      - caddy-net
+      - plex-net
+      - sso-net
+networks:
+  plex-net:
+    name: plex-net
+  caddy-net:
+    external: true
+  sso-net:
+    external: true
+x-dockge:
+  urls:
+    - https://plex.samskeyti.net/
+    - https://tautulli.samskeyti.net/
+    - https://staralfur:32400/web/

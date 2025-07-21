@@ -1,0 +1,21 @@
+services:
+  plex-music:
+    container_name: plex-music
+    image: plexinc/pms-docker:latest
+    restart: unless-stopped
+    ports:
+      - 32400:32400/tcp
+    env_file: .env
+    volumes:
+      - ./data/:/config/:rw
+      - ./backups:/backups/:rw
+      - /media/:/media/:rw
+      - /dev/shm/plex-transcode/:/transcode/:rw
+    networks:
+      - plex-music-net
+networks:
+  plex-music-net:
+    name: plex-music-net
+x-dockge:
+  urls:
+    - https://plexm.samskeyti.net/

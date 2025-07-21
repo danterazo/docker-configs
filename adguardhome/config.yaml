@@ -1,0 +1,560 @@
+http:
+  pprof:
+    port: 6060
+    enabled: false
+  address: 0.0.0.0:3000
+  session_ttl: 720h
+users: []
+auth_attempts: 5
+block_auth_min: 15
+http_proxy: ""
+language: ""
+theme: auto
+dns:
+  bind_hosts:
+    - 0.0.0.0
+  port: 53
+  anonymize_client_ip: false
+  ratelimit: 30
+  ratelimit_subnet_len_ipv4: 16
+  ratelimit_subnet_len_ipv6: 56
+  ratelimit_whitelist: []
+  refuse_any: true
+  upstream_dns:
+    - ""
+    - https://dns.quad9.net/dns-query
+    - https://dns9.quad9.net/dns-query
+    - ""
+  upstream_dns_file: ""
+  bootstrap_dns:
+    - 1.1.1.1
+    - 9.9.9.9
+  fallback_dns:
+    - https://security.cloudflare-dns.com/dns-query
+  upstream_mode: load_balance
+  fastest_timeout: 1s
+  allowed_clients:
+    - 10.10.10.0/16
+    - 100.100.0.0/16
+    - 192.168.0.0/16
+    - 172.16.0.0/16
+  disallowed_clients: []
+  blocked_hosts:
+    - version.bind
+    - id.server
+    - hostname.bind
+  trusted_proxies:
+    - 127.0.0.0/8
+    - ::1/128
+  cache_size: 4194304
+  cache_ttl_min: 0
+  cache_ttl_max: 0
+  cache_optimistic: true
+  bogus_nxdomain: []
+  aaaa_disabled: false
+  enable_dnssec: true
+  edns_client_subnet:
+    custom_ip: ""
+    enabled: true
+    use_custom: false
+  max_goroutines: 300
+  handle_ddr: true
+  ipset: []
+  ipset_file: ""
+  bootstrap_prefer_ipv6: false
+  upstream_timeout: 10s
+  private_networks: []
+  use_private_ptr_resolvers: true
+  local_ptr_upstreams: []
+  use_dns64: false
+  dns64_prefixes: []
+  serve_http3: false
+  use_http3_upstreams: false
+  serve_plain_dns: true
+  hostsfile_enabled: true
+  pending_requests:
+    enabled: true
+tls:
+  enabled: false
+  server_name: dns.samskeyti.net
+  force_https: true
+  port_https: 5443
+  port_dns_over_tls: 853
+  port_dns_over_quic: 784
+  port_dnscrypt: 0
+  dnscrypt_config_file: ""
+  allow_unencrypted_doh: false
+  certificate_chain: ""
+  private_key: ""
+  certificate_path: ""
+  private_key_path: ""
+  strict_sni_check: false
+querylog:
+  dir_path: ""
+  ignored: []
+  interval: 168h
+  size_memory: 1000
+  enabled: true
+  file_enabled: false
+statistics:
+  dir_path: ""
+  ignored: []
+  interval: 24h
+  enabled: true
+filters:
+  - enabled: true
+    url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+    name: AdGuard DNS filter
+    id: 1
+  - enabled: true
+    url: https://adaway.org/hosts.txt
+    name: AdAway Default Blocklist
+    id: 2
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_30.txt
+    name: Phishing URL Blocklist (PhishTank and OpenPhish)
+    id: 1736737551
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt
+    name: AdGuard DNS filter
+    id: 1736737552
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_59.txt
+    name: AdGuard DNS Popup Hosts filter
+    id: 1736737553
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_18.txt
+    name: Phishing Army
+    id: 1736737554
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_50.txt
+    name: uBlock₀ filters – Badware risks
+    id: 1736737555
+  - enabled: false
+    url: https://raw.githubusercontent.com/ph00lt0/blocklist/master/blocklist.txt
+    name: Ph00lt0 Blocklist
+    id: 1736737556
+  - enabled: true
+    url: https://raw.githubusercontent.com/insomnimus/seo-garbage/refs/heads/main/lists/ddg-and-google.txt
+    name: Insomnia's Garbage Sites Filter
+    id: 1736737557
+  - enabled: true
+    url: https://raw.githubusercontent.com/laylavish/uBlockOrigin-HUGE-AI-Blocklist/main/list.txt
+    name: Huge AI Blocklist
+    id: 1736737558
+  - enabled: true
+    url: https://raw.githubusercontent.com/d3ward/toolz/master/src/d3host.txt
+    name: D3ward Toolz
+    id: 1737091402
+whitelist_filters: []
+user_rules:
+  - '# unblock Plex'
+  - '@@||app.plex.tv^$important'
+  - '@@||cpms.spop10.ams.plex.bz^$important'
+  - '@@||cpms35.spop10.ams.plex.bz^$important'
+  - '@@||dashboard.plex.tv^$important'
+  - '@@||meta-db-worker02.pop.ric.plex.bz^$important'
+  - '@@||meta.plex.bz^$important'
+  - '@@||meta.plex.tv^$important'
+  - '@@||my.plexapp.com^$important'
+  - '@@||nine.plugins.plexapp.com^$important'
+  - '@@||node.plexapp.com^$important'
+  - '@@||o1.email.plex.tv^$important'
+  - '@@||o2.sg0.plex.tv^$important'
+  - '@@||proxy.plex.bz^$important'
+  - '@@||proxy.plex.tv^$important'
+  - '@@||proxy02.pop.ord.plex.bz^$important'
+  - '@@||pubsub.plex.bz^$important'
+  - '@@||pubsub.plex.tv^$important'
+  - '@@||staging.plex.tv^$important'
+  - '@@||status.plex.tv^$important'
+  - '@@||tvdb2.plex.tv^$important'
+  - '@@||tvthemes.plexapp.com^$important'
+dhcp:
+  enabled: false
+  interface_name: eth0
+  local_domain_name: lan
+  dhcpv4:
+    gateway_ip: 192.168.10.1
+    subnet_mask: 255.255.0.0
+    range_start: 192.168.40.100
+    range_end: 192.168.40.200
+    lease_duration: 86400
+    icmp_timeout_msec: 1000
+    options: []
+  dhcpv6:
+    range_start: ""
+    lease_duration: 86400
+    ra_slaac_only: false
+    ra_allow_slaac: false
+filtering:
+  blocking_ipv4: ""
+  blocking_ipv6: ""
+  blocked_services:
+    schedule:
+      time_zone: Local
+    ids: []
+  protection_disabled_until: null
+  safe_search:
+    enabled: false
+    bing: true
+    duckduckgo: true
+    ecosia: true
+    google: true
+    pixabay: true
+    yandex: true
+    youtube: true
+  blocking_mode: default
+  parental_block_host: family-block.dns.adguard.com
+  safebrowsing_block_host: standard-block.dns.adguard.com
+  rewrites:
+    - domain: plex.direct
+      answer: 192.168.10.1
+    - domain: proxy
+      answer: 192.168.30.102
+    - domain: '*.samskeyti.net'
+      answer: proxy
+  safe_fs_patterns:
+    - /opt/AdGuardHome/data/userfilters/*
+  safebrowsing_cache_size: 1048576
+  safesearch_cache_size: 1048576
+  parental_cache_size: 1048576
+  cache_time: 30
+  filters_update_interval: 24
+  blocked_response_ttl: 10
+  filtering_enabled: true
+  parental_enabled: true
+  safebrowsing_enabled: true
+  protection_enabled: true
+clients:
+  runtime_sources:
+    whois: true
+    arp: true
+    rdns: true
+    dhcp: true
+    hosts: true
+  persistent:
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: false
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Local
+        ids: []
+      name: Cerulean
+      ids:
+        - 100.100.20.43
+        - 192.168.20.43
+      tags:
+        - device_other
+        - os_linux
+      upstreams: []
+      uid: 01945de5-1a39-7aa6-b821-5ae1243b6eb4
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Local
+        ids: []
+      name: Hoppípolla
+      ids:
+        - 100.100.20.46
+        - 192.168.20.46
+      tags:
+        - device_other
+        - os_linux
+      upstreams: []
+      uid: 0197f2b6-95e2-7c3d-9ff6-c8a8746d0135
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: false
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Local
+        ids: []
+      name: Ichigo
+      ids:
+        - 100.100.99.2
+        - 172.16.99.2
+      tags:
+        - device_tv
+        - os_other
+      upstreams: []
+      uid: 019816cb-d690-7bed-ac07-7814ecc5ddf0
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Local
+        ids: []
+      name: Kex
+      ids:
+        - 100.100.20.42
+        - 192.168.20.42
+      tags:
+        - device_nas
+        - os_linux
+      upstreams: []
+      uid: 0197f2b5-1cfa-781c-9487-dee8d5f287c0
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: false
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Local
+        ids: []
+      name: Kvistur
+      ids:
+        - 100.100.20.44
+        - 192.168.20.44
+      tags:
+        - device_nas
+        - os_linux
+      upstreams: []
+      uid: 01945db8-454a-7aa7-b8f7-60ce5ee5c9d3
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: false
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Local
+        ids: []
+      name: Ringo
+      ids:
+        - 100.100.20.30
+        - 192.168.20.30
+      tags:
+        - device_phone
+        - os_ios
+      upstreams: []
+      uid: 0194683a-d511-7899-b844-f35ad33fec96
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: false
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Local
+        ids: []
+      name: RingoM1
+      ids:
+        - 192.168.20.101
+        - 192.168.90.1
+      tags:
+        - device_laptop
+        - os_macos
+      upstreams: []
+      uid: 0194683b-5e1c-776d-8086-492c6fc62d3e
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: false
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Local
+        ids: []
+      name: Schnitzel
+      ids:
+        - 10.10.10.7
+        - 100.100.50.50
+      tags:
+        - device_other
+        - os_linux
+      upstreams: []
+      uid: 01945de4-e700-7e95-8fcd-8833d4770ec6
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: false
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Local
+        ids: []
+      name: Smáskífa
+      ids:
+        - 10.10.10.8
+        - 192.168.42.44
+      tags:
+        - device_nas
+        - os_linux
+      upstreams: []
+      uid: 0194683a-6202-7a51-952c-5beca92454de
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: false
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: Local
+        ids: []
+      name: Óveður
+      ids:
+        - 100.100.20.10
+        - 192.168.20.10
+      tags:
+        - device_pc
+        - os_windows
+      upstreams: []
+      uid: 01945da6-cd88-7d90-b99c-1e2350455344
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+log:
+  enabled: true
+  file: ""
+  max_backups: 0
+  max_size: 100
+  max_age: 3
+  compress: false
+  local_time: false
+  verbose: false
+os:
+  group: ""
+  user: ""
+  rlimit_nofile: 0
+schema_version: 29

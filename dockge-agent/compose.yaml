@@ -1,0 +1,27 @@
+services:
+  dockge-agent:
+    container_name: dockge-agent
+    image: louislam/dockge:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - dockge-agent_db:/app/data/:rw
+      - /apps/:/opt/stacks/:rw
+    env_file: .env
+    ports:
+      - 5001:5001/tcp
+    networks:
+      - dockge-agent-net
+
+networks:
+  dockge-agent-net:
+    name: dockge-agent-net
+
+volumes:
+  dockge-agent_db:
+    name: dockge-agent_db
+    external: true
+
+x-dockge:
+  urls:
+    - https://stacks.samskeyti.net/
