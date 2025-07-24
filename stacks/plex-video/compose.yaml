@@ -1,7 +1,7 @@
 services:
   plex-video:
     container_name: plex-video
-    image: lscr.io/linuxserver/plex:latest
+    image: plexinc/pms-docker:latest
     restart: unless-stopped
     ports:
       - 32400:32400/tcp
