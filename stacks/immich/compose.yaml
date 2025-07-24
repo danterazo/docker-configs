@@ -9,7 +9,7 @@ services:
     user: 1000:1000
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - /media/photos/:/usr/src/app/upload/:rw
+      - /data/:/usr/src/app/upload/:rw
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
@@ -51,7 +51,6 @@ services:
       - /ephemeral/model-cache/:/cache/:rw
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
-    user: 1000:1000
     env_file:
       - .env
       - .secrets
