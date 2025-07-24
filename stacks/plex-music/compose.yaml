@@ -1,8 +1,7 @@
 services:
   plex-music:
     container_name: plex-music
-#    image: plexinc/pms-docker:latest
-    image: linuxserver/plex:latest
+    image: lscr.io/linuxserver/plex:latest
     restart: unless-stopped
     ports:
       - 32400:32400/tcp
