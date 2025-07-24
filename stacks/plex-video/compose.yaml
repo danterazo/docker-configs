@@ -25,16 +25,16 @@ services:
     container_name: tautulli
     env_file: .env
     volumes:
-      - plex-music_data:/plex-data/:ro
+      - plex-video_data:/plex-data/:ro
       - tautulli-video_data:/config/:rw
     user: ${PUID}:${PGID}
     ports:
       - 8181:8181/tcp
     restart: unless-stopped
     depends_on:
-      - plex-music
+      - plex-video
     networks:
-      - plex-music-net
+      - plex-video-net
     logging:
       driver: "json-file"
       options:
