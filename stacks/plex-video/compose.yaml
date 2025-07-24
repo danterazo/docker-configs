@@ -27,7 +27,6 @@ services:
     volumes:
       - plex-video_data:/plex-data/:ro
       - tautulli-video_data:/config/:rw
-    user: ${PUID}:${PGID}
     ports:
       - 8181:8181/tcp
     restart: unless-stopped
