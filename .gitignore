@@ -1,6 +1,8 @@
 # ignore sensitive files
 .secrets
 oauth2-proxy.cfg
+
+# ignore sensitive files (TODO: remove)
 gluetun/data/
 radicale/configs/users
 soulseek/slskd.yml
@@ -9,12 +11,12 @@ cloudflare-ddns/config.json
 # ignore temporary files
 *.swp
 
-# ignore trash
+# ignore trashes
 *.filen.trash.local/
 *.recycle/
 *.Trash-0/
 
-# ignore intake
+# ignore intake (TODO: remove)
 dawarich/imports/
 
 # ignore backups
@@ -22,7 +24,7 @@ dawarich/imports/
 */backups/
 *.dump
 
-# ignore extremely large folders
+# ignore extremely large folders (TODO: remove, migrate to disk)
 dawarich/photon-db/
 
 # ignore archived stacks
@@ -33,14 +35,13 @@ dawarich/photon-db/
 *.git/
 *build/
 
-# ignore data backed up elsewhere
-*data/
-*backups/
+# ignore data backed up elsewhere (TODO: remove and migrate)
+*/data/
 
-# ignore ephemeral files
-*ephemeral/
+# ignore ephemeral folders/files
+*ephemeral
 
-# temporarily ignore certain apps (until I migrate to Docker volumes)
+# temporarily ignore certain apps (until I migrate to Docker volumes in LXCs) (TODO: remove)
 backrest/
 firefox-sync/
 headscale/
