@@ -33,6 +33,12 @@ services:
       timeout: 10s
       retries: 3
       start_period: 2m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
   qbittorrent-oauth:
     container_name: qbittorrent-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
@@ -50,6 +56,11 @@ services:
       - proxy-net
     depends_on:
       - gluetun
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
   soulseek-oauth:
     container_name: soulseek-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
@@ -67,6 +78,11 @@ services:
       - proxy-net
     depends_on:
       - gluetun
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
 networks:
   gluetun-net:
     name: gluetun-net

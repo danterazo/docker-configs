@@ -12,4 +12,8 @@ services:
     volumes:
       - /self-hosted/cloudflare-ddns/config.json:/config.json
     restart: always
-networks: {}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"

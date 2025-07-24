@@ -1,3 +1,4 @@
+# TODO: Migrate to Docker LXC
 services:
   traccar:
     image: traccar/traccar:latest
@@ -16,9 +17,16 @@ services:
       - /self-hosted/traccar/config/:/opt/traccar/conf/:rw
     networks:
       - proxy-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
 networks:
   proxy-net:
     external: true
+
 volumes:
   traccar_logs:
     name: traccar_logs

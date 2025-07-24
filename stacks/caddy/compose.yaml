@@ -16,6 +16,11 @@ services:
     volumes:
       - caddy_data:/data/caddy/:rw
       - ./configs/:/etc/caddy/:rw
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
 networks:
   caddy-net:
     name: caddy-net

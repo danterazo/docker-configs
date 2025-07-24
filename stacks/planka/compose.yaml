@@ -14,6 +14,12 @@ services:
     user: ${PUID}:${PGID}
     networks:
       - planka-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
   planka-db:
     image: postgres:16-alpine
     container_name: planka-db
@@ -31,6 +37,12 @@ services:
       retries: 5
     networks:
       - planka-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
   planka-oauth:
     container_name: planka-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
@@ -39,7 +51,7 @@ services:
     # expose:
     #   - ${PLANKA_PORT}
     ports:
-     - ${PLANKA_PORT}:${PLANKA_PORT}/tcp
+      - ${PLANKA_PORT}:${PLANKA_PORT}/tcp
     env_file: .env
     volumes:
       - /self-hosted/planka/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
@@ -48,6 +60,12 @@ services:
       - proxy-net
     depends_on:
       - planka-app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+        
 networks:
   planka-net:
     name: planka-net

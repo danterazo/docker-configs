@@ -1,3 +1,4 @@
+# TODO: Migrate from bare metal LXC -> Docker LXC
 services:
   urbackup:
     image: uroni/urbackup-server:latest
@@ -11,13 +12,19 @@ services:
       - urbackup_appdata:/backups/urbackup/:rw
       #- /self-hosted/urbackup/temp/:/backups/urbackup_tmp_files/:rw
       - /mnt/mega-pool/app-data/urbackup/:/backups/:rw
-    network_mode: host
+    network_mode: host  # TODO: do I really need host mode?
     # Uncomment the following two lines if you're using BTRFS support
     #cap_add:
     #  - SYS_ADMIN
     # Uncomment the following two lines if you're using ZFS support
     #devices:
     #  - /dev/zfs:/dev/zfs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
 volumes:
   urbackup_db:
     name: urbackup_db

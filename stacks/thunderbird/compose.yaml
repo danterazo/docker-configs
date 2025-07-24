@@ -17,6 +17,12 @@ services:
       - thunderbird-net
     depends_on:
       - proton-mail-bridge
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
   thunderbird-oauth:
     container_name: thunderbird-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
@@ -31,6 +37,12 @@ services:
       - proxy-net
     depends_on:
       - thunderbird
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
   proton-mail-bridge:
     container_name: proton-mail-bridge
     image: ghcr.io/videocurio/proton-mail-bridge:latest
@@ -40,6 +52,12 @@ services:
     restart: always
     networks:
       - thunderbird-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
 networks:
   thunderbird-net:
     name: thunderbird-net

@@ -13,6 +13,11 @@ services:
       - /dev/shm/plex-transcode/:/transcode/:rw
     networks:
       - plex-music-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
 networks:
   plex-music-net:
     name: plex-music-net

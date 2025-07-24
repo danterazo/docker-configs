@@ -13,6 +13,11 @@ services:
     extra_hosts:
       - immich.lxc:192.168.30.104
       - pocket-id.lxc:192.168.30.107
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
   dockge-oauth:
     container_name: dockge-master-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
@@ -27,6 +32,11 @@ services:
       - dockge-master-net
     depends_on:
       - dockge-master-app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
 networks:
   dockge-master-net:
     name: dockge-master-net

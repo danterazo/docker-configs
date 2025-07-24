@@ -7,5 +7,10 @@ services:
       - ./ephemeral/:/opt/adguardhome/work:rw
       - ./configs/:/opt/adguardhome/conf/:rw
     network_mode: host
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
 
 

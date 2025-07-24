@@ -1,24 +1,5 @@
+# TODO: update for split Plex servers
 services:
-  plex:
-    container_name: plex
-    image: plexinc/pms-docker:latest
-    restart: unless-stopped
-    #user: ${PUID}:${PGID}
-    ports:
-      - 32400:32400/tcp
-    devices:
-      - /dev/dri:/dev/dri
-    env_file: .env
-    volumes:
-      - /self-hosted/plex/plexmediaserver/:/config/:rw
-      - /self-hosted/plex/backups/:/backups/:rw
-      - /self-hosted/plex/scripts/:/scripts/:rw
-      - /mnt/cache-pool/app-data/plex/media/:/media/:rw
-      - /dev/shm/plex-transcode/:/transcode/:rw
-    #network_mode: host
-    networks:
-      - caddy-net
-      - plex-net
   tautulli:
     image: lscr.io/linuxserver/tautulli:latest
     container_name: tautulli
@@ -33,19 +14,17 @@ services:
     depends_on:
       - plex
     networks:
-      - caddy-net
-      - plex-net
-      - sso-net
+      - tautulli-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
 networks:
-  plex-net:
-    name: plex-net
-  caddy-net:
-    external: true
-  sso-net:
-    external: true
+  tautulli-net:
+    name: tautulli-net
 
 x-dockge:
   urls:
-    - https://plex.samskeyti.net/
     - https://tautulli.samskeyti.net/
-    - https://staralfur:32400/web/

@@ -14,6 +14,11 @@ services:
     runtime: nvidia
     networks:
       - plex-video-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
 networks:
   plex-video-net:
     name: plex-video-net

@@ -35,6 +35,12 @@ services:
       #- /ssh-agent:/ssh-agent # forward local machine SSH key to docker (for Git)
     networks:
       - radicale-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
   radicale-oauth:
     container_name: radicale-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
@@ -52,7 +58,11 @@ services:
       - proxy-net
     depends_on:
       - radicale
-
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
 volumes:
   radicale_data:
     name: radicale_data

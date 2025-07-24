@@ -15,7 +15,11 @@ services:
     restart: unless-stopped
     networks:
       - webdav-net
-      - proxy-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
 
   # TODO: fix, then re-enable
   webdav-oauth:
@@ -30,14 +34,17 @@ services:
       - /self-hosted/webdav/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
     networks:
       - webdav-net
-      - proxy-net
     depends_on:
       - webdav
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
 networks:
   webdav-net:
     name: webdav-net
-  proxy-net:
-    external: true
 
 x-dockge:
   urls:
