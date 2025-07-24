@@ -19,11 +19,7 @@ networks:
 volumes:
   plex-music_data:
     external: true
-logging:
-  driver: "json-file"
-  options:
-    max-size: "20m"
-    max-file: "1"
+
 x-dockge:
   urls:
     - https://plexm.samskeyti.net/

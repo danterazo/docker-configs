@@ -67,11 +67,7 @@ volumes:
     name: planka_db
     external: true
 
-logging:
-  driver: "json-file"
-  options:
-    max-size: "20m"
-    max-file: "1"
+
 x-dockge:
   urls:
     - https://planka.samskeyti.net/
