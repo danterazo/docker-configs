@@ -43,6 +43,11 @@ networks:
     external: true
   sso-net:
     external: true
+logging:
+  driver: "json-file"
+  options:
+    max-size: "20m"
+    max-file: "1"
 x-dockge:
   urls:
     - https://plex.samskeyti.net/

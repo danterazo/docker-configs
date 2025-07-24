@@ -34,6 +34,11 @@ volumes:
   dockge-master_db:
     name: dockge-master_db
     external: true
+logging:
+  driver: "json-file"
+  options:
+    max-size: "20m"
+    max-file: "1"
 x-dockge:
   urls:
     - https://stacks.samskeyti.net/

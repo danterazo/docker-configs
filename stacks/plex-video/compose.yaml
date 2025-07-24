@@ -7,15 +7,24 @@ services:
       - 32400:32400/tcp
     env_file: .env
     volumes:
-      - ./data/:/config/:rw
-      - ./backups:/backups/:rw
+      - plex-video_data:/config/:rw
+      - /ephemeral/backups/:/backups/:rw
       - /media/:/media/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
+    runtime: nvidia
     networks:
       - plex-video-net
 networks:
   plex-video-net:
     name: plex-video-net
+volumes:
+  plex-video_data:
+    external: true
+logging:
+  driver: "json-file"
+  options:
+    max-size: "20m"
+    max-file: "1"
 x-dockge:
   urls:
     - https://plexv.samskeyti.net/

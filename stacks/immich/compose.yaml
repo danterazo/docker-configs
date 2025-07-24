@@ -15,7 +15,9 @@ services:
       - /ephemeral/model-cache/:/usr/src/app/upload/model-cache/:rw
       - /ephemeral/backups/:/usr/src/app/upload/backups/:rw
       - /etc/localtime:/etc/localtime:ro
-    env_file: .env
+    env_file:
+      - .env
+      - .secrets
     ports:
       - 2283:2283/tcp
     depends_on:
@@ -48,7 +50,9 @@ services:
       - /ephemeral/model-cache/:/cache/:rw
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
-    env_file: .env
+    env_file:
+      - .env
+      - .secrets
     restart: always
     healthcheck:
       disable: false
@@ -68,7 +72,9 @@ services:
     restart: always
     networks:
       - immich-net
-    env_file: .env
+    env_file:
+      - .env
+      - .secrets
     security_opt:
       # Prevent escalation of privileges after the container is started
       - no-new-privileges:true
@@ -78,7 +84,9 @@ services:
   immich-db:
     container_name: immich-db
     image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
-    env_file: .env
+    env_file:
+      - .env
+      - .secrets
     volumes:
       # Do not edit the next line. If you want to change the database storage location on your system, edit the value of DB_DATA_LOCATION in the .env file
       - immich_db:/var/lib/postgresql/data/:rw
@@ -112,7 +120,9 @@ services:
   #   container_name: immich-backup
   #   image: prodrigestivill/postgres-backup-local:14
   #   restart: always
-  #   env_file: .env
+  #   env_file:
+  #    - .env
+  #    - .secrets
   #   environment:
   #     POSTGRES_HOST: immich-postgres
   #     POSTGRES_CLUSTER: "TRUE"
@@ -141,6 +151,11 @@ volumes:
   immich_profile:
     name: immich_profile
     external: true
+logging:
+  driver: "json-file"
+  options:
+    max-size: "20m"
+    max-file: "1"
 x-dockge:
   urls:
     - https://immich.samskeyti.net/

@@ -7,8 +7,8 @@ services:
       - 32400:32400/tcp
     env_file: .env
     volumes:
-      - ./data/:/config/:rw
-      - ./backups/:/backups/:rw
+      - plex-music_data:/config/:rw
+      - /backups/:/backups/:rw
       - /media/:/media/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     networks:
@@ -16,6 +16,14 @@ services:
 networks:
   plex-music-net:
     name: plex-music-net
+volumes:
+  plex-music_data:
+    external: true
+logging:
+  driver: "json-file"
+  options:
+    max-size: "20m"
+    max-file: "1"
 x-dockge:
   urls:
     - https://plexm.samskeyti.net/

@@ -34,6 +34,11 @@ networks:
     name: ladder-net
   proxy-net:
     external: true
+logging:
+  driver: "json-file"
+  options:
+    max-size: "20m"
+    max-file: "1"
 x-dockge:
   urls:
     - https://paywall.samskeyti.net/

@@ -55,6 +55,11 @@ volumes:
   proton-mail-bridge_data:
     external: true
     name: proton-mail-bridge_data
+logging:
+  driver: "json-file"
+  options:
+    max-size: "20m"
+    max-file: "1"
 x-dockge:
   urls:
     - https://mail.samskeyti.net/
