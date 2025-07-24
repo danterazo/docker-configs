@@ -168,6 +168,7 @@ user_rules:
   - '@@||status.plex.tv^$important'
   - '@@||tvdb2.plex.tv^$important'
   - '@@||tvthemes.plexapp.com^$important'
+  - '@@||nyaa.si^$important'
 dhcp:
   enabled: false
   interface_name: eth0
