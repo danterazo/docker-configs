@@ -26,7 +26,7 @@ services:
     volumes:
       - plex-music_data:/plex-data/:ro
       - tautulli-music_data:/config/:rw
-    user: ${PUID}:${PGID}
+#    user: ${PUID}:${PGID}
     ports:
       - 8181:8181/tcp
     restart: unless-stopped
