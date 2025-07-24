@@ -31,7 +31,7 @@ services:
       - 8181:8181/tcp
     restart: unless-stopped
     depends_on:
-      - plex
+      - plex-music
     networks:
       - plex-music-net
     logging:
