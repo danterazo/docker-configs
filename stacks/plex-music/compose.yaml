@@ -25,7 +25,7 @@ services:
     env_file: .env
     volumes:
       - plex-music_data:/plex-data/:ro
-      - ./config/:/config/:rw
+      - ./tautulli/:/config/:rw
     user: ${PUID}:${PGID}
     ports:
       - 8181:8181/tcp
