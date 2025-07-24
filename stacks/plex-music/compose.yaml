@@ -25,7 +25,7 @@ services:
     env_file: .env
     volumes:
       - plex-music_data:/plex-data/:ro
-      - ./tautulli/:/config/:rw
+      - tautulli-music_data:/config/:rw
     user: ${PUID}:${PGID}
     ports:
       - 8181:8181/tcp
@@ -47,7 +47,8 @@ networks:
 volumes:
   plex-music_data:
     external: true
-
+  tautulli-music_data:
+    external: true
 x-dockge:
   urls:
     - https://plexm.samskeyti.net/
