@@ -8,11 +8,12 @@ services:
       service: nvenc # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - /media/photos/library/:/usr/src/app/upload/library/:rw
-      - /media/photos/upload/:/usr/src/app/upload/upload/:rw
+      - /media/photos/:/usr/src/app/upload/:rw
       - immich_profile:/usr/src/app/upload/profile/:rw
       - /ephemeral/thumbs/:/usr/src/app/upload/thumbs/:rw
       - /ephemeral/encoded-video/:/usr/src/app/upload/encoded-video/:rw
+      - /ephemeral/model-cache/:/usr/src/app/upload/model-cache/:rw
+      - /ephemeral/backups/:/usr/src/app/upload/backups/:rw
       - /etc/localtime:/etc/localtime:ro
     env_file: .env
     ports:
@@ -44,7 +45,7 @@ services:
       service: cuda
     volumes:
       - /dev/bus/usb:/dev/bus/usb
-      - ./ephemeral/model-cache/:/cache/:rw
+      - /ephemeral/model-cache/:/cache/:rw
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
     env_file: .env
