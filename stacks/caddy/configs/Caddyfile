@@ -57,6 +57,18 @@ import sites/*.conf
 		reverse_proxy http://192.168.30.104:2283
 	}
 
+	# tautulli (music)
+	@ttm host ttm.samskeyti.net
+	handle @ttm {
+		reverse_proxy http://192.168.30.203:8181
+	}
+	
+	# tautulli (video)
+	@ttv host ttv.samskeyti.net
+	handle @ttv {
+		reverse_proxy http://192.168.30.204:8181
+	}
+
 	# TODO: fix this web app!
 	# creality web interface
 	#	@k1c host k1c.samskeyti.net
