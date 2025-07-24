@@ -38,6 +38,11 @@ services:
     cap_drop:
       # Prevent access to raw network traffic
       - NET_RAW
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
   immich-ml:
     container_name: immich-ml
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-cuda
@@ -64,6 +69,11 @@ services:
     cap_drop:
       # Prevent access to raw network traffic
       - NET_RAW
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
   immich-redis:
     container_name: immich-redis
     image: docker.io/redis:6.2-alpine@sha256:eaba718fecd1196d88533de7ba49bf903ad33664a92debb24660a922ecd9cac8
@@ -78,6 +88,11 @@ services:
     security_opt:
       # Prevent escalation of privileges after the container is started
       - no-new-privileges:true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
     cap_drop:
       # Prevent access to raw network traffic
       - NET_RAW
@@ -113,6 +128,12 @@ services:
       - shared_buffers=512MB
       - -c
       - wal_compression=on
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
     restart: always
     networks:
       - immich-net
@@ -144,6 +165,7 @@ services:
 networks:
   immich-net:
     name: immich-net
+
 volumes:
   immich_db:
     name: immich_db
@@ -151,11 +173,7 @@ volumes:
   immich_profile:
     name: immich_profile
     external: true
-logging:
-  driver: "json-file"
-  options:
-    max-size: "20m"
-    max-file: "1"
+
 x-dockge:
   urls:
     - https://immich.samskeyti.net/
