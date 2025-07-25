@@ -7,9 +7,10 @@ services:
       - 32400:32400/tcp
     env_file: .env
     volumes:
-      - plex-music_data:/config/:rw
+      - /data/:/config/:rw
       - /backups/:/backups/:rw
       - /media/:/media/:rw
+      - /root/installers/DBRepair/:/repair/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     networks:
       - plex-music-net
@@ -24,7 +25,7 @@ services:
     container_name: tautulli
     env_file: .env
     volumes:
-      - plex-music_data:/plex-data/:ro
+      - /data/:/plex-data/:ro
       - tautulli-music_data:/config/:rw
 #    user: ${PUID}:${PGID}
     ports:
@@ -45,8 +46,6 @@ networks:
   plex-music-net:
     name: plex-music-net
 volumes:
-  plex-music_data:
-    external: true
   tautulli-music_data:
     external: true
 x-dockge:
