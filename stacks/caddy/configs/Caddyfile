@@ -14,7 +14,10 @@ import sites/*.conf
 
 	@id host id.samskeyti.net
 	handle @id {
-		reverse_proxy http://192.168.30.107:1411
+		reverse_proxy http://192.168.30.107:1411 {
+			header_up Host {http.request.host}
+			header_up X-Real-IP {http.request.remote.host}
+		}
 	}
 
 	@stacks host stacks.samskeyti.net
