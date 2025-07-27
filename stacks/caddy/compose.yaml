@@ -9,12 +9,11 @@ services:
       - 443:443 # HTTPS
       - 443:443/udp # HTTP/3
     env_file: .env
-    #network_mode: host
     networks:
       - caddy-net
     restart: always
     volumes:
-      - caddy_data:/data/caddy/:rw
+      - /data/:/data/caddy/:rw
       - ./configs/:/etc/caddy/:rw
     logging:
       driver: "json-file"
@@ -24,6 +23,3 @@ services:
 networks:
   caddy-net:
     name: caddy-net
-volumes:
-  caddy_data:
-    external: true
