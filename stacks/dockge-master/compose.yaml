@@ -27,7 +27,7 @@ services:
       - 5002:5002/tcp
     env_file: .env
     volumes:
-      - /apps/dockge-master/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+      - ./oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
     networks:
       - dockge-master-net
     depends_on:
