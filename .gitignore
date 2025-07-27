@@ -7,7 +7,7 @@ gluetun/data/
 radicale/configs/users
 soulseek/slskd.yml
 cloudflare-ddns/config.json
-caddy/configs/snippets/common.conf
+stacks/caddy/configs/snippets/common.conf
 
 # ignore temporary files
 *.swp
