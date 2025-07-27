@@ -6,6 +6,7 @@ services:
     ports:
       - 32400:32400/tcp
     env_file: .env
+#    privileged: true
     volumes:
       - /data/:/config/:rw
       - /backups/:/backups/:rw
