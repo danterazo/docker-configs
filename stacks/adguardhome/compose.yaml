@@ -4,7 +4,7 @@ services:
     container_name: adguardhome
     restart: unless-stopped
     volumes:
-      - ./ephemeral/:/opt/adguardhome/work:rw
+      - adguardhome_ephemeral:/opt/adguardhome/work:rw
       - ./configs/:/opt/adguardhome/conf/:rw
     network_mode: host
     logging:
@@ -13,4 +13,6 @@ services:
         max-size: "20m"
         max-file: "1"
 
-
+volumes:
+  adguardhome_ephemeral:
+    external: true

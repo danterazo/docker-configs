@@ -8,7 +8,7 @@ services:
       - 1411:1411/tcp
     user: 1000:1000
     volumes:
-      - /data/:/app/data/:rw
+      - pocket-id_data:/app/data/:rw
     healthcheck:
       test: "curl -f http://localhost:1411/healthz"
       interval: 1m30s
@@ -26,6 +26,10 @@ services:
 networks:
   pocket-id-net:
     name: pocket-id-net
+
+volumes:
+  pocket-id_data:
+    external: true
 
 x-dockge:
   urls:
