@@ -7,9 +7,9 @@ services:
       - 32400:32400/tcp
     env_file: .env
     volumes:
-      - /mnt/data/plex-video/appdata/:/config/:rw
-      - /mnt/ephemeral/backups/:/backups/:rw
-      - data_nfs:/media/:rw
+      - plex-video_data:/config/:rw
+      - /ephemeral/backups/:/backups/:rw
+      - /media/:/media/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     runtime: nvidia
     networks:
@@ -25,7 +25,7 @@ services:
     container_name: tautulli
     env_file: .env
     volumes:
-      - /mnt/data/plex-video/appdata/:/plex-data/:ro
+      - plex-video_data:/plex-data/:ro
       - tautulli-video_data:/config/:rw
     ports:
       - 8181:8181/tcp
@@ -50,12 +50,7 @@ volumes:
     external: true
   tautulli-video_data:
     external: true
-  data_nfs:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=192.168.20.42,rw,nfsvers=4.2"
-      device: ":/srv/mergerfs/cold_pool/media/videos/plex/"
+
 x-dockge:
   urls:
     - https://plexv.samskeyti.net/
