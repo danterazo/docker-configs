@@ -9,7 +9,7 @@ services:
     user: 1000:1000
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - data_nfs:/usr/src/app/upload/:rw
+      - immich_data_nfs:/usr/src/app/upload/:rw
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
@@ -166,7 +166,7 @@ volumes:
   immich_db:
     name: immich_db
     external: true
-  data_nfs:
+  immich_data_nfs:
     driver: local
     driver_opts:
       type: "nfs"
