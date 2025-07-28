@@ -43,11 +43,14 @@ services:
 
 
 networks:
+  plex-music_data:
+    external: true
   plex-music-net:
     name: plex-music-net
 volumes:
   tautulli-music_data:
     external: true
+
 x-dockge:
   urls:
     - https://plexm.samskeyti.net/
