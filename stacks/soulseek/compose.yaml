@@ -5,10 +5,10 @@ services:
     env_file: .env
     user: ${PUID}:${PGID}
     volumes:
-      - /mnt/mega-pool/downloads/soulseek/downloads/:/app/downloads/:rw
-      - /mnt/mega-pool/downloads/soulseek/incomplete/:/app/incomplete/:rw
       - soulseek_db:/app/data/:rw
-      - /self-hosted/soulseek/slskd.yml:/app/slskd.yml:rw
+      - /mnt/cold-pool/downloads/soulseek/downloads/:/app/downloads/:rw
+      - /mnt/cold-pool/downloads/soulseek/incomplete/:/app/incomplete/:rw
+      -./slskd.yml:/app/slskd.yml:rw
     restart: unless-stopped
     network_mode: container:gluetun # use VPN
     security_opt:
