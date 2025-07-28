@@ -40,11 +40,6 @@ import sites/*.conf
 	#		reverse_proxy http://192.168.30.101:5232
 	#	}
 
-	@immich host immich.samskeyti.net
-	handle @immich {
-		reverse_proxy http://192.168.30.104:2283
-	}
-
 	# tautulli (music)
 	@ttm host ttm.samskeyti.net
 	handle @ttm {
