@@ -8,8 +8,8 @@ services:
     env_file: .env
     volumes:
       - plex-video_data:/config/:rw
-      - /ephemeral/backups/:/backups/:rw
-      - /media/:/media/:rw
+      - /mnt/hot-pool/backups/plex-video-vm/:/backups/:rw
+      - /mnt/cold-pool/media/videos/plex/:/media/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     runtime: nvidia
     networks:
