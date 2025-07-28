@@ -9,7 +9,7 @@ services:
     volumes:
       - plex-video_data:/config/:rw
       - /mnt/hot-pool/backups/virtual-machines/plex-video/:/backups/:rw
-      - /mnt/cold-pool/media/videos/plex/:/media/:rw
+      - /mnt/cold-pool/media/videos/plex/:/media/videos/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     runtime: nvidia
     networks:
