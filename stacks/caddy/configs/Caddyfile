@@ -17,40 +17,10 @@ import sites/*.conf
 	#		reverse_proxy http://192.168.30.101:8083
 	#	}
 
-	@plexm host plexm.samskeyti.net
-	handle @plexm {
-		reverse_proxy https://192.168.30.203:32400 {
-			transport http {
-				tls_insecure_skip_verify
-			}
-		}
-	}
-
-	@plexv host plexv.samskeyti.net
-	handle @plexv {
-		reverse_proxy https://192.168.30.204:32400 {
-			transport http {
-				tls_insecure_skip_verify
-			}
-		}
-	}
-
 	#	@dav host dav.samskeyti.net
 	#	handle @dav {
 	#		reverse_proxy http://192.168.30.101:5232
 	#	}
-
-	# tautulli (music)
-	@ttm host ttm.samskeyti.net
-	handle @ttm {
-		reverse_proxy http://192.168.30.203:8181
-	}
-	
-	# tautulli (video)
-	@ttv host ttv.samskeyti.net
-	handle @ttv {
-		reverse_proxy http://192.168.30.204:8181
-	}
 
 	# TODO: fix this web app!
 	# creality web interface
