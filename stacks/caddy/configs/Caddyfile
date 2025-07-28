@@ -12,23 +12,6 @@ import sites/*.conf
 *.samskeyti.net {
 	import common
 
-	@id host id.samskeyti.net
-	handle @id {
-		reverse_proxy http://192.168.30.107:1411 {
-			header_up Host {host}
-			header_up X-Forwarded-Proto {scheme}
-			header_up X-Forwarded-Host {host}
-			header_up X-Forwarded-For {remote}
-		}
-	}
-
-	@stacks host stacks.samskeyti.net
-	handle @stacks {
-		reverse_proxy http://192.168.30.106:5002 {
-			import websockets
-		}
-	}
-
 	#	@books host books.samskeyti.net
 	#	handle @books {
 	#		reverse_proxy http://192.168.30.101:8083
@@ -83,15 +66,10 @@ import sites/*.conf
 	#		}
 	#	}
 
-	@omv host omv.samskeyti.net
-	handle @omv {
-		reverse_proxy http://192.168.30.100:80
-	}
-
-	@agh host agh.samskeyti.net
-	handle @agh {
-		reverse_proxy http://192.168.30.103:3000
-	}
+	# @omv host omv.samskeyti.net
+	# handle @omv {
+	# 	reverse_proxy http://192.168.30.100:80
+	# }
 
 	# default handler for undefined subdomains
 	handle {
