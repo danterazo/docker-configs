@@ -10,16 +10,13 @@ services:
       - 8090
       - 50300
       - 80
-    #ports:
-    #  - 8090:8090/tcp
-    #  - 50300:50300/tcp
-    #  - 9823:80/tcp
-    env_file: .env
+    env_file:
+      - .env
+      - .secrets
     volumes:
       - /self-hosted/gluetun/data/:/gluetun/:rw
     networks:
       - gluetun-net
-      - proxy-net
     security_opt:
       - no-new-privileges:true
     restart: always
@@ -46,14 +43,11 @@ services:
     restart: always
     expose:
       - 8091
-    #ports:
-    #  - 8091:8091/tcp
     env_file: .env
     volumes:
       - /self-hosted/gluetun/oauth/qbittorrent/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
     networks:
       - gluetun-net
-      - proxy-net
     depends_on:
       - gluetun
     logging:
@@ -68,14 +62,11 @@ services:
     restart: always
     expose:
       - 5030
-    #ports:
-    #  - 5030:5030/tcp
     env_file: .env
     volumes:
       - /self-hosted/gluetun/oauth/soulseek/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
     networks:
       - gluetun-net
-      - proxy-net
     depends_on:
       - gluetun
     logging:
@@ -86,5 +77,3 @@ services:
 networks:
   gluetun-net:
     name: gluetun-net
-  proxy-net:
-    external: true

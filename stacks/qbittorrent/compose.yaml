@@ -16,9 +16,7 @@ services:
       options:
         max-size: "20m"
         max-file: "1"
-x-dockge:
-  urls:
-    - https://qb.samskeyti.net/
+
 volumes:
   qbittorrent_config:
     name: qbittorrent_config
@@ -26,6 +24,7 @@ volumes:
   qbittorrent_ui:
     name: qbittorrent_ui
     external: true
-networks:
-  proxy-net:
-    external: true
+
+x-dockge:
+  urls:
+    - https://qb.samskeyti.net/

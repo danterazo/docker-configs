@@ -19,11 +19,11 @@ services:
         max-size: "20m"
         max-file: "1"
 
-x-dockge:
-  urls:
-    - https://soulseek.samskeyti.net/
 volumes:
   soulseek_db:
     name: soulseek_db
     external: true
-networks: {}
+
+x-dockge:
+  urls:
+    - https://soulseek.samskeyti.net/
