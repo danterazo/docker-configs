@@ -8,10 +8,9 @@ services:
     env_file: .env
 #    privileged: true
     volumes:
-      - /data/:/config/:rw
-      - /backups/:/backups/:rw
-      - /media/:/media/:rw
-      - /root/installers/DBRepair/:/repair/:rw
+      - plex-music_data:/config/:rw
+      - /mnt/hot-pool/backups/virtual-machines/plex-music/:/backups/:rw
+      - /mnt/hot-pool/media/audio/:/media/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     networks:
       - plex-music-net
