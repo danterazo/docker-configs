@@ -62,7 +62,7 @@ services:
     command: --config /oauth2-proxy.cfg
     restart: always
     expose:
-      - 5030
+      - 5031
     env_file: .env
     volumes:
       - ./ss-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
