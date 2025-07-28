@@ -41,13 +41,13 @@ services:
         max-size: "20m"
         max-file: "1"
 
-
 networks:
-  plex-music_data:
-    external: true
   plex-music-net:
     name: plex-music-net
+
 volumes:
+  plex-music_data:
+    external: true
   tautulli-music_data:
     external: true
 
