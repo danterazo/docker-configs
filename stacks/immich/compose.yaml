@@ -9,7 +9,7 @@ services:
     user: 1000:1000
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - /mnt/hot_pool/media/photos/immich/:/usr/src/app/upload/:rw
+      - /mnt/hot-pool/media/photos/immich/:/usr/src/app/upload/:rw
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
