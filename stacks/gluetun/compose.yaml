@@ -78,3 +78,6 @@ services:
 networks:
   gluetun-net:
     name: gluetun-net
+volumes:
+  gluetun_data:
+    external: true
