@@ -5,7 +5,7 @@ oauth2-proxy.cfg
 # ignore sensitive files (TODO: remove)
 gluetun/data/
 radicale/configs/users
-soulseek/slskd.yml
+stacks/soulseek/slskd.yml
 cloudflare-ddns/config.json
 stacks/caddy/configs/snippets/common.conf
 
