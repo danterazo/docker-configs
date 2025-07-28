@@ -14,7 +14,7 @@ services:
       - .env
       - .secrets
     volumes:
-      - /self-hosted/gluetun/data/:/gluetun/:rw
+      - gluetun_data:/gluetun/:rw
     networks:
       - gluetun-net
     security_opt:
@@ -45,7 +45,7 @@ services:
       - 8091
     env_file: .env
     volumes:
-      - /self-hosted/gluetun/oauth/qbittorrent/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+      - ./qb-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
     networks:
       - gluetun-net
     depends_on:
@@ -55,6 +55,7 @@ services:
       options:
         max-size: "20m"
         max-file: "1"
+
   soulseek-oauth:
     container_name: soulseek-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
@@ -64,7 +65,7 @@ services:
       - 5030
     env_file: .env
     volumes:
-      - /self-hosted/gluetun/oauth/soulseek/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+      - ./ss-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
     networks:
       - gluetun-net
     depends_on:

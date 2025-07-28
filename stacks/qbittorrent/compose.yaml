@@ -8,7 +8,7 @@ services:
     volumes:
       - qbittorrent_config:/config/qBittorrent/:rw
       - qbittorrent_ui:/ui/:rw
-      - /mnt/mega-pool/downloads/qbittorrent/:/hdd/:rw
+      - /mnt/hot-pool/downloads/qbittorrent/:/hot/:rw
     network_mode: container:gluetun # use VPN
     security_opt:
       - no-new-privileges:true
