@@ -10,7 +10,7 @@ services:
     volumes:
       - plex-music_data:/config/:rw
       - /mnt/hot-pool/backups/virtual-machines/plex-music/:/backups/:rw
-      - /mnt/hot-pool/media/audio/:/media/:rw
+      - audio_nfs:/media/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     networks:
       - plex-music-net
@@ -50,12 +50,12 @@ volumes:
     external: true
   tautulli-music_data:
     external: true
-  media_nfs:
+  audio_nfs:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/srv/mergerfs/hot_pool/media/photos/immich/"
+      device: ":/srv/mergerfs/hot_pool/media/audio/"
 
 x-dockge:
   urls:
