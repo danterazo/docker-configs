@@ -9,7 +9,7 @@ services:
     user: 1000:1000
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - /mnt/hot-pool/media/photos/immich/:/usr/src/app/upload/:rw
+      - photos_nfs:/usr/src/app/upload/:rw
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
@@ -166,7 +166,12 @@ volumes:
   immich_db:
     name: immich_db
     external: true
-
+  photos_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/srv/mergerfs/hot_pool/media/photos/immich/"
 x-dockge:
   urls:
     - https://immich.samskeyti.net/

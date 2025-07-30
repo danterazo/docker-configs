@@ -9,7 +9,7 @@ services:
 #    privileged: true
     volumes:
       - plex-music_data:/config/:rw
-      - /mnt/hot-pool/backups/virtual-machines/plex-music/:/backups/:rw
+      - plex-music_backups_nfs:/backups/:rw
       - audio_nfs:/media/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     networks:
@@ -56,6 +56,12 @@ volumes:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
       device: ":/srv/mergerfs/hot_pool/media/audio/"
+  plex-music-backups_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/srv/mergerfs/hot_pool/backups/virtual-machines/plex-music/"
 
 x-dockge:
   urls:

@@ -8,8 +8,8 @@ services:
     env_file: .env
     volumes:
       - plex-video_data:/config/:rw
-      - /mnt/hot-pool/backups/virtual-machines/plex-video/:/backups/:rw
-      - /mnt/cold-pool/media/videos/plex/:/media/videos/:rw
+      - plex-video_backups_nfs:/backups/:rw
+      - videos_nfs:/media/videos/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     runtime: nvidia
     networks:
@@ -50,6 +50,18 @@ volumes:
     external: true
   tautulli-video_data:
     external: true
+  videos_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/srv/mergerfs/cold_pool/media/videos/plex/"
+  plex-video-backups_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/srv/mergerfs/hot_pool/backups/virtual-machines/plex-video/"
 
 x-dockge:
   urls:

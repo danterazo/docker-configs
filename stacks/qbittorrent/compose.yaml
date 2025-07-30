@@ -8,7 +8,8 @@ services:
     volumes:
       - qbittorrent_config:/config/qBittorrent/:rw
       - qbittorrent_ui:/ui/:rw
-      - /mnt/hot-pool/downloads/qbittorrent/:/hot/:rw
+      - qbittorrent-working_nfs:/hot/:rw
+      - qbittorrent-complete_nfs:/cold/:rw
     network_mode: container:gluetun # use VPN
     security_opt:
       - no-new-privileges:true
@@ -26,6 +27,18 @@ volumes:
   qbittorrent_ui:
     name: qbittorrent_ui
     external: true
+  qbittorrent-working_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/srv/mergerfs/hot_pool/downloads/qbittorrent/"
+  qbittorrent-complete_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/srv/mergerfs/cold_pool/downloads/qbittorrent/"
 
 x-dockge:
   urls:
