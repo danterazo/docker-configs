@@ -6,6 +6,7 @@ services:
     ports:
       - 32400:32400/tcp
     env_file: .env
+    cpus: "4.0"
     volumes:
       - plex-music_data:/config/:rw
       - backups_nfs:/backups/:rw
