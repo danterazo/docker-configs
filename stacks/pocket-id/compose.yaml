@@ -2,7 +2,8 @@ services:
   pocket-id:
     container_name: pocket-id
     image: ghcr.io/pocket-id/pocket-id:latest
-    restart: unless-stopped
+    restart: always
+    cpus: 1.0
     env_file: .env
     ports:
       - 1411:1411/tcp

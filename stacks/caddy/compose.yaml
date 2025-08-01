@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    cpus: 1.0
     ports:
       - 80:80/tcp # HTTP
       - 443:443 # HTTPS

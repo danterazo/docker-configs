@@ -2,7 +2,8 @@ services:
   adguardhome:
     image: adguard/adguardhome:latest
     container_name: adguardhome
-    restart: unless-stopped
+    restart: always
+    cpus: 1.0
     volumes:
       - adguardhome_ephemeral:/opt/adguardhome/work:rw
       - ./configs/:/opt/adguardhome/conf/:rw
