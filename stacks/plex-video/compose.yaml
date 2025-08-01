@@ -3,6 +3,8 @@ services:
     container_name: plex-video
     image: plexinc/pms-docker:latest
     restart: unless-stopped
+    runtime: "nvidia"
+    cpus: "4.0"
     ports:
       - 32400:32400/tcp
     env_file: .env
@@ -11,8 +13,6 @@ services:
       - backups_nfs:/backups/:rw
       - videos_nfs:/media/videos/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
-    runtime: "nvidia"
-    cpus: "4.0"
     networks:
       - plex-video-net
     logging:
@@ -22,8 +22,9 @@ services:
         max-file: "1"
   # TODO: add oauth2
   tautulli-video:
-    image: lscr.io/linuxserver/tautulli:latest
     container_name: tautulli
+    image: lscr.io/linuxserver/tautulli:latest
+    cpus: "1.0"
     env_file: .env
     volumes:
       - plex-video_data:/plex-data/:ro
