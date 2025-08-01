@@ -11,7 +11,8 @@ services:
       - backups_nfs:/backups/:rw
       - videos_nfs:/media/videos/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
-    runtime: nvidia
+    runtime: "nvidia"
+    cpus: "4.0"
     networks:
       - plex-video-net
     logging:
