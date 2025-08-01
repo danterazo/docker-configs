@@ -5,6 +5,7 @@ services:
     security_opt:
       - no-new-privileges:true
     network_mode: host # required for IPv6
+    cpus: 0.5
     dns:
       - 1.1.1.1
       - 1.0.0.1
