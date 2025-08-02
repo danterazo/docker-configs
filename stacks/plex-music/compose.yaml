@@ -56,13 +56,13 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/srv/mergerfs/hot_pool/media/audio/"
+      device: ":/mnt/zfs/hot-pool/media/audio/"
   backups_nfs:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/srv/mergerfs/hot_pool/backups/virtual-machines/plex-music/"
+      device: ":/mnt/zfs/hot-pool/backups/virtual-machines/plex-music/"
 
 x-dockge:
   urls:

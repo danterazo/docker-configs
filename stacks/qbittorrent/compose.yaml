@@ -32,13 +32,13 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/srv/mergerfs/hot_pool/downloads/qbittorrent/"
+      device: ":/mnt/zfs/hot-pool/downloads/qbittorrent/"
   qbittorrent-complete_nfs:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/srv/mergerfs/cold_pool/downloads/qbittorrent/"
+      device: ":/mnt/zfs/cold-pool/downloads/qbittorrent/"
 
 x-dockge:
   urls:
