@@ -10,7 +10,8 @@ services:
     volumes:
       - plex-music_data:/config/:rw
       - backups_nfs:/backups/:rw
-      - audio_nfs:/media/:rw
+      - music_nfs:/media/music/:rw
+      - audiobooks_nfs:/media/audiobooks/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
     networks:
       - plex-music-net
@@ -51,12 +52,18 @@ volumes:
     external: true
   tautulli-music_data:
     external: true
-  audio_nfs:
+  music_nfs:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/mnt/zfs/hot-pool/media/audio/"
+      device: ":/mnt/zfs/hot-pool/media/music/"
+  audiobooks_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/mnt/zfs/hot-pool/media/audiobooks/"
   backups_nfs:
     driver: local
     driver_opts:
