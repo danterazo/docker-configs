@@ -10,7 +10,8 @@ services:
     cpus: 4.0
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - photos_nfs:/data/:rw
+      - data_nfs:/data/:rw
+      - photography_nfs:/external/:rw
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
@@ -170,12 +171,19 @@ volumes:
   immich_db:
     name: immich_db
     external: true
-  photos_nfs:
+  data_nfs:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
       device: ":/mnt/zfs/hot-pool/media/photos/immich/"
+  photography_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/mnt/zfs/hot-pool/media/photos/photography/"
+
 x-dockge:
   urls:
     - https://immich.samskeyti.net/
