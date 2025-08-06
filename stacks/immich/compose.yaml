@@ -11,7 +11,7 @@ services:
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - data_nfs:/data/:rw
-      - photography_nfs:/external/:rw
+      - photography_nfs:/external/photography/:rw
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
