@@ -6,6 +6,7 @@ services:
     extends:
       file: hwaccel.transcoding.yml
       service: nvenc # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+    default-runtime: nvidia
     user: 1000:1000
     cpus: 4.0
     volumes:
@@ -48,6 +49,7 @@ services:
       file: hwaccel.ml.yml
       # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
       service: cuda
+    default-runtime: nvidia
     cpus: 4.0
     volumes:
       - /dev/bus/usb:/dev/bus/usb
