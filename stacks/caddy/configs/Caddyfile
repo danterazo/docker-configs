@@ -31,11 +31,6 @@ import sites/*.conf
 	#		}
 	#	}
 
-	# @omv host omv.samskeyti.net
-	# handle @omv {
-	# 	reverse_proxy http://192.168.30.100:80
-	# }
-
 	# default handler for undefined subdomains
 	handle {
 		abort
