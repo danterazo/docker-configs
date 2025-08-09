@@ -17,20 +17,10 @@ stacks/caddy/configs/snippets/common.conf
 *.recycle/
 *.Trash-0/
 
-# ignore intake (TODO: remove)
-dawarich/imports/
-
 # ignore backups
 *.bak*
 */backups/
 *.dump
-
-# ignore extremely large folders (TODO: remove, migrate to disk)
-dawarich/photon-db/
-
-# ignore archived stacks
-+deprecated/
-*.7z*
 
 # ignore internal repos
 *.git/
@@ -41,8 +31,3 @@ dawarich/photon-db/
 
 # ignore ephemeral folders/files
 *ephemeral
-
-# temporarily ignore certain apps (until I migrate to Docker volumes in LXCs) (TODO: remove)
-backrest/
-firefox-sync/
-headscale/
