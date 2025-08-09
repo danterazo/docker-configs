@@ -25,4 +25,4 @@ done
 
 # complete
 echo -e "\nAll done!\n"
-cd ~
+cd -
