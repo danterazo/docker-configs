@@ -8,7 +8,7 @@ services:
       service: nvenc # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     runtime: nvidia
     user: 1000:1000
-    cpus: 4.0
+    cpus: 8.0
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - data_nfs:/data/:rw
@@ -50,7 +50,7 @@ services:
       # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
       service: cuda
     runtime: nvidia
-    cpus: 4.0
+    cpus: 8.0
     volumes:
       - /dev/bus/usb:/dev/bus/usb
       - /mnt/ephemeral/model-cache/:/cache/:rw
