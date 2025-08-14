@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# save current directory
+CURR_PWD=$(pwd)
+
 # pull config changes
 echo -e "Pulling from Git repo..."
 cd /apps/
@@ -25,4 +28,4 @@ done
 
 # complete
 echo -e "\nAll done!\n"
-cd -
+cd $CURR_PWD
