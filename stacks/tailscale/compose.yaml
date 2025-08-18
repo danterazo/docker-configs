@@ -1,0 +1,38 @@
+services:
+  tailscale-laptop:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-laptop
+    privileged: true
+    cpus: 1.0
+    network_mode: host
+    env_file:
+      - .env
+      - .secrets
+    volumes:
+      - tailscale-laptop_data:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    restart: always
+  tailscale-phone:
+    image: tailscale/tailscale:latest
+    container_name: tailscale-phone
+    privileged: true
+    cpus: 1.0
+    network_mode: host
+    env_file:
+      - .env
+      - .secrets
+    volumes:
+      - tailscale-phone_data:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    restart: always
+volumes:
+  tailscale-laptop_data:
+    external: true
+  tailscale-phone_data:
+    external: true
