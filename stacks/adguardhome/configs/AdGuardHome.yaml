@@ -219,10 +219,10 @@ filtering:
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
   cache_time: 30
-  filters_update_interval: 12
+  filters_update_interval: 1
   blocked_response_ttl: 10
   filtering_enabled: true
-  parental_enabled: true
+  parental_enabled: false
   safebrowsing_enabled: true
   protection_enabled: true
 clients:
@@ -469,6 +469,34 @@ clients:
         - os_linux
       upstreams: []
       uid: 0198522e-8908-7c5e-a482-780387365e2d
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: false
+        duckduckgo: false
+        ecosia: false
+        google: false
+        pixabay: false
+        yandex: false
+        youtube: false
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: PBS VM
+      ids:
+        - 192.168.30.110
+      tags: []
+      upstreams: []
+      uid: 01987d9b-61be-7cc6-9a0b-ab327e2daa6f
       upstreams_cache_size: 0
       upstreams_cache_enabled: false
       use_global_settings: true
