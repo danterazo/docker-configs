@@ -8,6 +8,8 @@ services:
     env_file:
       - .env
       - .secrets
+    environment:
+      - TS_HOSTNAME=kex-vm-laptop
     volumes:
       - tailscale-laptop_data:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
@@ -24,6 +26,8 @@ services:
     env_file:
       - .env
       - .secrets
+    environment:
+      - TS_HOSTNAME=kex-vm-phone
     volumes:
       - tailscale-phone_data:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
