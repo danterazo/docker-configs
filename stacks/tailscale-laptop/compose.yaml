@@ -1,7 +1,7 @@
 services:
   tailscale:
     image: tailscale/tailscale:latest
-    container_name: tailscale
+    container_name: tailscale-laptop
     privileged: true
     cpus: 2.0
     network_mode: host
@@ -9,12 +9,12 @@ services:
       - .env
       - .secrets
     volumes:
-      - tailscale_data:/var/lib/tailscale
+      - tailscale-laptop_data:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
     cap_add:
       - net_admin
       - sys_module
     restart: always
 volumes:
-  tailscale_data:
+  tailscale-laptop_data:
     external: true
