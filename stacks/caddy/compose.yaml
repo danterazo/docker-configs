@@ -13,6 +13,7 @@ services:
     networks:
       - caddy-net
     restart: always
+    dns: 192.168.30.100
     volumes:
       - caddy_data:/data/caddy/:rw
       - ./configs/:/etc/caddy/:rw
