@@ -44,6 +44,7 @@ dns:
   trusted_proxies:
     - 127.0.0.0/8
     - ::1/128
+  cache_enabled: true
   cache_size: 4194304
   cache_ttl_min: 0
   cache_ttl_max: 0
@@ -268,37 +269,6 @@ clients:
         enabled: false
         bing: true
         duckduckgo: true
-        ecosia: true
-        google: true
-        pixabay: true
-        yandex: true
-        youtube: true
-      blocked_services:
-        schedule:
-          time_zone: UTC
-        ids: []
-      name: Hoppípolla
-      ids:
-        - 100.100.20.46
-        - 192.168.20.46
-      tags:
-        - device_other
-        - os_linux
-      upstreams: []
-      uid: 0197f2b6-95e2-7c3d-9ff6-c8a8746d0135
-      upstreams_cache_size: 0
-      upstreams_cache_enabled: false
-      use_global_settings: true
-      filtering_enabled: false
-      parental_enabled: false
-      safebrowsing_enabled: false
-      use_global_blocked_services: true
-      ignore_querylog: false
-      ignore_statistics: false
-    - safe_search:
-        enabled: false
-        bing: true
-        duckduckgo: true
         ecosia: false
         google: true
         pixabay: true
@@ -348,37 +318,6 @@ clients:
         - os_linux
       upstreams: []
       uid: 0197f2b5-1cfa-781c-9487-dee8d5f287c0
-      upstreams_cache_size: 0
-      upstreams_cache_enabled: false
-      use_global_settings: true
-      filtering_enabled: false
-      parental_enabled: false
-      safebrowsing_enabled: false
-      use_global_blocked_services: true
-      ignore_querylog: false
-      ignore_statistics: false
-    - safe_search:
-        enabled: false
-        bing: true
-        duckduckgo: true
-        ecosia: false
-        google: true
-        pixabay: true
-        yandex: true
-        youtube: true
-      blocked_services:
-        schedule:
-          time_zone: America/Chicago
-        ids: []
-      name: Kvistur
-      ids:
-        - 100.100.20.44
-        - 192.168.20.44
-      tags:
-        - device_nas
-        - os_linux
-      upstreams: []
-      uid: 01945db8-454a-7aa7-b8f7-60ce5ee5c9d3
       upstreams_cache_size: 0
       upstreams_cache_enabled: false
       use_global_settings: true
@@ -581,10 +520,10 @@ clients:
         schedule:
           time_zone: UTC
         ids: []
-      name: Schnitzel
+      name: SchnitzelNG
       ids:
         - 10.10.10.7
-        - 100.100.50.50
+        - 100.100.50.55
       tags:
         - device_other
         - os_linux
@@ -674,4 +613,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 0
-schema_version: 29
+schema_version: 30
