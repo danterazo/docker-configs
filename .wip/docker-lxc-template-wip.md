@@ -7,8 +7,8 @@
 
 ## Mount Points
 ```
-mp0: /mnt/hdd-pool/apps/docker/+scripts,mp=/scripts,mountoptions=lazytime;noatime;nodev;nosuid,shared=1
-mp1: /mnt/hdd-pool/apps/docker/dockge-agent,mp=/dockge-agent,mountoptions=lazytime;noatime;nodev;nosuid,shared=1
-mp2: /mnt/hdd-pool/apps/docker/APPNAME,mp=/apps/APPNAME,mountoptions=lazytime;noatime;nodev;nosuid,shared=1
-mp3: /mnt/hdd-pool/apps/docker/+volumes,mp=/transfer,mountoptions=lazytime;noatime;nodev;nosuid,shared=1,ro=1
+mp0: /mnt/zfs/raid-pool/apps/docker/+scripts,mp=/scripts,mountoptions=lazytime;noatime;nodev;nosuid,shared=1
+mp1: /mnt/zfs/raid-pool/apps/docker/dockge-agent,mp=/dockge-agent,mountoptions=lazytime;noatime;nodev;nosuid,shared=1
+mp2: /mnt/zfs/raid-pool/apps/docker/APPNAME,mp=/apps/APPNAME,mountoptions=lazytime;noatime;nodev;nosuid,shared=1
+mp3: /mnt/zfs/raid-pool/apps/docker/+volumes,mp=/transfer,mountoptions=lazytime;noatime;nodev;nosuid,shared=1,ro=1
 ```
