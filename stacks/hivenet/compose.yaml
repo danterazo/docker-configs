@@ -7,8 +7,8 @@ services:
     ports:
       - 8080:8080/tcp # web UI
       - 8082:8082/tcp # metrics
-      - 4201:4001     # data plane (udp/tcp)
-      - 4243:4443     # control plane (udp/tcp)
+      - 4001:4001     # data plane (udp/tcp)
+      - 4443:4443     # control plane (udp/tcp)
     env_file: .env
     cpus: 2.0
     command: hive-agent contribute 6000 # 6TB contribution
