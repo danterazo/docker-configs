@@ -1,6 +1,7 @@
 services:
   hivenet-contribution:
     container_name: hivenet-contribution
+    hostname: kex-vm
     image: hivecomputing/hive-disk:latest
     restart: always
     network_mode: host
