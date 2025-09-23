@@ -1,6 +1,6 @@
 services:
-  hivenet-contribution:
-    container_name: hivenet-contribution
+  hivenet:
+    container_name: hivenet
     hostname: kex-vm
     image: hivecomputing/hive-disk:latest
     restart: always
@@ -27,7 +27,7 @@ services:
 networks:
   hive-disk-net:
     name: hive-disk-net
-
+    
 volumes:
   hivenet_nfs:
     driver: local
