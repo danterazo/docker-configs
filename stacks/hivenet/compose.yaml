@@ -1,0 +1,36 @@
+services:
+  hivenet-contribution:
+    container_name: hivenet-contribution
+    image: hivecomputing/hive-disk:latest
+    restart: always
+    network_mode: host
+    env_file: .env
+    cpus: 2.0
+    command: hive-agent contribute 6000 # 6TB contribution
+    volumes:
+      - hive-disk_data:/config/:rw
+      - backups_nfs:/backups/:rw
+      - hivenet_nfs:/media/music/:rw
+      - audiobooks_nfs:/media/audiobooks/:rw
+      - /dev/shm/plex-transcode/:/transcode/:rw
+    networks:
+      - hive-disk-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
+networks:
+  hive-disk-net:
+    name: hive-disk-net
+
+volumes:
+  hive-disk_data:
+    external: true
+  hivenet_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/mnt/zfs/hdd-pool/ephemeral/hivenet-contributions/"
