@@ -8,13 +8,8 @@ services:
     cpus: 2.0
     command: hive-agent contribute 6000 # 6TB contribution
     volumes:
-      - hive-disk_data:/config/:rw
-      - backups_nfs:/backups/:rw
-      - hivenet_nfs:/media/music/:rw
-      - audiobooks_nfs:/media/audiobooks/:rw
-      - /dev/shm/plex-transcode/:/transcode/:rw
-    networks:
-      - hive-disk-net
+      - ./machine-config/machine-id:/etc/machine-id:ro
+      - hivenet_nfs:/home/hive/.hive/:rw
     logging:
       driver: "json-file"
       options:
@@ -26,8 +21,6 @@ networks:
     name: hive-disk-net
 
 volumes:
-  hive-disk_data:
-    external: true
   hivenet_nfs:
     driver: local
     driver_opts:

@@ -3,11 +3,12 @@
 oauth2-proxy.cfg
 
 # ignore sensitive files (TODO: remove)
-gluetun/data/
-radicale/configs/users
-stacks/soulseek/slskd.yml
-cloudflare-ddns/config.json
-stacks/caddy/configs/snippets/common.conf
+*/gluetun/data/
+*/radicale/configs/users
+*/soulseek/slskd.yml
+*/cloudflare-ddns/config.json
+*/caddy/configs/snippets/common.conf
+*/hivenet/machine-config/machine-id
 
 # ignore temporary files
 *.swp
