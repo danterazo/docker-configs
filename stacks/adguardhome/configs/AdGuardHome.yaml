@@ -210,10 +210,13 @@ filtering:
   rewrites:
     - domain: plex.direct
       answer: 192.168.10.1
+      enabled: true
     - domain: proxy
       answer: 192.168.30.100
+      enabled: true
     - domain: '*.samskeyti.net'
       answer: proxy
+      enabled: true
   safe_fs_patterns:
     - /opt/AdGuardHome/data/userfilters/*
   safebrowsing_cache_size: 1048576
@@ -223,6 +226,7 @@ filtering:
   filters_update_interval: 1
   blocked_response_ttl: 10
   filtering_enabled: true
+  rewrites_enabled: true
   parental_enabled: false
   safebrowsing_enabled: true
   protection_enabled: true
@@ -613,4 +617,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 0
-schema_version: 30
+schema_version: 31
