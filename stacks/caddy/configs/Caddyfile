@@ -5,7 +5,6 @@
 	tls internal
 }
 
-
 # imports
 import snippets/*.conf
 import sites/*.conf
