@@ -1,0 +1,37 @@
+services:
+  hivenet:
+    container_name: hivenet
+    hostname: kex-vm
+    image: hivecomputing/hive-disk:latest
+    restart: always
+    ports:
+      - 8080:8080/tcp # web UI
+      - 8082:8082/tcp # metrics
+      - 4001:4001     # data plane (udp/tcp)
+      - 4443:4443     # control plane (udp/tcp)
+    env_file: .env
+    cpus: 2.0
+    #command: hive-agent contribute 6000 # 6TB contribution
+    command: hive-agent daemon
+    networks:
+      - hive-disk-net
+    volumes:
+      - ./machine-config/machine-id:/etc/machine-id:ro
+      - hivenet_nfs:/home/hive/.hive/:rw
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
+networks:
+  hive-disk-net:
+    name: hive-disk-net
+
+volumes:
+  hivenet_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/tank/ephemeral/hivenet-contributions/"

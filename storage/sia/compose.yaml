@@ -1,0 +1,22 @@
+services:
+  sia-host:
+    image: siacentral/hostd:latest
+    container_name: sia-host
+    network_mode: container:gluetun # use VPN
+    security_opt:
+      - no-new-privileges:true
+    env_file: .env
+    volumes:
+      - sia-host_data:/data:rw
+      - /mnt/mega-pool/decentralized/sia/:/storage/:rw
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
+volumes:
+  sia-host_data:
+    name: sia-host_data
+    external: true
