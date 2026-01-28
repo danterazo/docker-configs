@@ -1,0 +1,7 @@
+[
+  {
+    "id": "github-deploy",
+    "execute-command": "/var/lib/webhookd/scripts/github/deploy.sh",
+    "command-working-directory": "/var/lib/webhookd"
+  }
+]
