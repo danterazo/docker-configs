@@ -18,7 +18,7 @@ jobs:
       - run: bash .github/scripts/update-lxc.sh
 
   deploy:
-    needs: pull
+    needs: [update, pull]
     runs-on: github-runner-lxc
     steps:
       - uses: actions/checkout@v4
