@@ -6,6 +6,7 @@ services:
       - 8080:8080/tcp
     volumes:
       - ./scripts/:/var/lib/webhookd/scripts/:rw
+      - ./hooks.json:/etc/webhookd/hooks.json:ro
       - /root/.ssh/:/root/.ssh/:ro
     env_file: .env
     restart: unless-stopped
