@@ -1,0 +1,19 @@
+name: Docker Apps Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  update:
+    runs-on: github-runner-lxc
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash .github/scripts/update-lxc.sh
+
+  deploy:
+    needs: update
+    runs-on: github-runner-lxc
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash .github/scripts/docker-deploy.sh
