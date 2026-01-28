@@ -32,3 +32,6 @@ oauth2-proxy.cfg
 
 # ignore ephemeral folders/files
 *ephemeral
+
+# actions
+*github-runner/
