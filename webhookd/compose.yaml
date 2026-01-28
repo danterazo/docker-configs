@@ -1,0 +1,11 @@
+services:
+  webhookd:
+    image: ncarlier/webhookd:latest
+    container_name: webhook-listener
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./scripts:/var/lib/webhookd/scripts
+      - /root/.ssh:/root/.ssh:ro
+    env_file: .env
+    restart: unless-stopped
