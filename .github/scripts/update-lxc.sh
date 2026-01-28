@@ -1,4 +1,5 @@
 #!/bin/bash
+## update all LXCs
 set -e
 
 LXCS=(100 101)

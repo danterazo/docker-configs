@@ -1,4 +1,5 @@
 #!/bin/bash
+## Deploy all Docker apps
 set -e
 
 LXCS=(100 101)
