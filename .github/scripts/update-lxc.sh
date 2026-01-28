@@ -8,7 +8,6 @@ for lxc in "${LXCS[@]}"; do
   echo "Updating LXC $lxc @ $ip..."
 
   ssh root@ip 'update'
-  ssh root@$ip 'cd /apps/$(hostname)/ && git pull && docker compose -f compose.yaml up -d --build'
 done
 
-echo -e "\nAll LXCs updated successfully.\n"
+echo -e "\nAll LXCs updated successfully\n"
