@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: github-runner-lxc
     steps:
       - uses: actions/checkout@v4
       - run: bash .github/scripts/deploy.sh
