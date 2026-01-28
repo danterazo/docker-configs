@@ -5,7 +5,7 @@ services:
     ports:
       - 8080:8080/tcp
     volumes:
-      - ./scripts:/var/lib/webhookd/scripts:rw
-      - /root/.ssh:/root/.ssh:ro
+      - ./scripts/:/var/lib/webhookd/scripts/:rw
+      - /root/.ssh/:/root/.ssh/:ro
     env_file: .env
     restart: unless-stopped
