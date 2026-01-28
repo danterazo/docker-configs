@@ -5,14 +5,14 @@ on:
     branches: [main]
 
 jobs:
-  update:
+  update-lxc:
     runs-on: github-runner-lxc
     steps:
       - uses: actions/checkout@v4
       - run: bash .github/scripts/update-lxc.sh
 
-  deploy:
-    needs: update
+  deploy-app:
+    needs: update-lxc
     runs-on: github-runner-lxc
     steps:
       - uses: actions/checkout@v4
