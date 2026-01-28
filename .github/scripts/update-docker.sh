@@ -11,4 +11,4 @@ for lxc in "${LXCS[@]}"; do
   ssh root@$ip 'docker compose -f /apps/apps/$(hostname)/compose.yaml up -d --build'
 done
 
-echo -e "\nAll LXC containers deployed successfully\n"
+echo -e "\nAll LXC containers deployed successfully!\n"

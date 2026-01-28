@@ -11,4 +11,4 @@ for lxc in "${LXCS[@]}"; do
   ssh root@ip 'update'
 done
 
-echo -e "\nAll LXCs updated successfully\n"
+echo -e "\nAll LXCs updated successfully!\n"
