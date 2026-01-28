@@ -6,20 +6,20 @@ on:
 
 jobs:
   update:
-    runs-on: github-runner-lxc
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - run: bash .github/scripts/update-lxc.sh
 
   pull:
-    runs-on: github-runner-lxc
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - run: bash .github/scripts/update-lxc.sh
 
   deploy:
     needs: [update, pull]
-    runs-on: github-runner-lxc
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - run: bash .github/scripts/docker-deploy.sh
