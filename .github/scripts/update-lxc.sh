@@ -8,7 +8,7 @@ for lxc in "${LXCS[@]}"; do
   ip="192.168.30.$lxc"
   echo "Updating LXC $lxc @ $ip..."
 
-  ssh root@"$ip" "update"
+  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$ip" "update"
 done
 
 echo -e "\nAll LXCs updated successfully!\n"
