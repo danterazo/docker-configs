@@ -1,6 +1,7 @@
 # ignore sensitive files
 .secrets
 oauth2-proxy.cfg
+*.credential*
 
 # ignore sensitive files (TODO: remove)
 */gluetun/data/
@@ -33,5 +34,5 @@ oauth2-proxy.cfg
 # ignore ephemeral folders/files
 *ephemeral
 
-# actions
+# ignore actions
 *github-runner/
