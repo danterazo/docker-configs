@@ -38,7 +38,7 @@ apt install -y docker-ce docker-ce-cli containerd.io \
 if [ ! -d "${ROOT_DIR}/.git" ]; then
 	# first-time setup; clone and init sparse-checkout
 	git clone --filter=blob:none --sparse \
-		https://github.com/danterazo/docker-configs.git \
+		git@github.com:danterazo/docker-configs.git \
 		"${ROOT_DIR}"
 
 	cd "${ROOT_DIR}"
