@@ -98,6 +98,7 @@ chown -R dante:dante "${ROOT_DIR}"
 git config --global user.name "Dante Razo"
 git config --global user.email "github.d2brf@simplelogin.fr"
 git config pull.rebase false
+git config --global --add safe.directory /docker
 
 
 : 'NOTICES TO USER'
