@@ -5,11 +5,11 @@ CURR_PWD=$(pwd)
 
 # pull config changes
 echo -e "Pulling from Git repo..."
-cd /apps/
+cd /docker/
 git pull
 
-# loop through each folder inside /apps/stacks
-for app_dir in /apps/stacks/*/; do
+# loop through each folder inside /docker/
+for app_dir in /docker/*/; do
         cd "$app_dir" || continue
 
         echo -e "\nProcessing $app_dir..."
