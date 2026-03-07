@@ -3,19 +3,19 @@ services:
     image: adguard/adguardhome:latest
     container_name: adguardhome
     restart: always
-    cpus: 1.0
     volumes:
-      - work:/opt/adguardhome/work:rw
+      - work:/opt/adguardhome/work/:rw
       - ./configs/:/opt/adguardhome/conf/:rw
     ports:
-      - "53:53/tcp"     # DNS
-      - "53:53/udp"     # DNS
-      - "3000:3000/tcp" # web
+      - "53:53/tcp"      # DNS
+      - "53:53/udp"      # DNS
+      - "3000:3000/tcp"  # web
     logging:
       driver: "json-file"
       options:
         max-size: "20m"
         max-file: "1"
 
+# named volumes
 volumes:
   work: {}
