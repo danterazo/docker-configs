@@ -5,7 +5,7 @@ services:
     restart: always
     cpus: 1.0
     volumes:
-      - adguardhome_ephemeral:/opt/adguardhome/work:rw
+      - adguardhome_work:/opt/adguardhome/work:rw
       - ./configs/:/opt/adguardhome/conf/:rw
     user: 1000:1000
     network_mode: host
@@ -16,5 +16,4 @@ services:
         max-file: "1"
 
 volumes:
-  adguardhome_ephemeral:
-    external: true
+  adguardhome_work: {}
