@@ -30,7 +30,7 @@ apt install -y docker-ce docker-ce-cli containerd.io \
 
 : 'INIT CONFIG REPOSITORY'
 git clone --filter=blob:none --sparse \
-	https://github.com/danterazo/docker-configs.git \
+	git@github.com:danterazo/docker-configs.git \
 	"${ROOT_DIR}"
 
 cd "${ROOT_DIR}"
