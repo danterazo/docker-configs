@@ -91,7 +91,7 @@ usermod -aG video,render root || true
 usermod -aG video,render dante || true
 
 # fix bind permissions
-chown -R dante:dante "${ROOT_DIR}/*" "${ROOT_DIR}/.*"
+chown -R dante:dante "${ROOT_DIR}"
 
 
 : 'GIT CONFIG'
