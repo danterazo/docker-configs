@@ -88,6 +88,11 @@ groupadd -f render
 usermod -aG video,render root || true
 usermod -aG video,render dante || true
 
+# fix bind permissions
+if [ -d "${ROOT_DIR}/${APP_NAME}" ]; then
+	chown -R dante:dante "$CONFIG_DIR"
+fi
+
 
 : 'GIT CONFIG'
 git config --global user.name "Dante Razo"
