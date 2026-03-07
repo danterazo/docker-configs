@@ -102,22 +102,24 @@ git config pull.rebase false
 git config --global --add safe.directory /docker
 
 : 'SOURCE PROFILE SCRIPTS FROM BASHRC FOR PCT'
-PROFILE_DIR="${ROOT_DIR}/.profile-scripts"
+PROFILE_DIR="/etc/profile.d"
 BASHRC="/root/.bashrc"
 
 if [ -d "$PROFILE_DIR" ]; then
 	# append only if not already present
-	if ! grep -q 'profile-scripts' "$BASHRC" 2>/dev/null; then
+	if ! grep -q '/docker/.profile-scripts' "$BASHRC" 2>/dev/null; then
 		cat << 'EOF' >> "$BASHRC"
-			# load common profile scripts
-			if [ -d /docker/.profile-scripts ]; then
-				for f in /docker/.profile-scripts/*.sh; do
-					[ -r "$f" ] && . "$f"
-				done
-			fi
-		EOF
+
+# load common profile scripts
+if [ -d /etc/profile.d ]; then
+	for f in /etc/profile.d/*.sh; do
+		[ -r "$f" ] && . "$f"
+	done
+fi
+EOF
 	fi
 fi
+
 
 
 : 'NOTICES TO USER'
