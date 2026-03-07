@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# only define aliases for interactive shells
-case $- in
-	*i*) ;;
-	*) return ;;
-esac
-
 # prefer docker compose v2 syntax
 alias dcp="docker compose pull"
 alias dcd="docker compose down -v"
