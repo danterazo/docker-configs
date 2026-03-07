@@ -95,6 +95,7 @@ chown -R dante:dante "${ROOT_DIR}/${APP_NAME}/*" "${ROOT_DIR}/${APP_NAME}/.*"
 : 'GIT CONFIG'
 git config --global user.name "Dante Razo"
 git config --global user.email "github.d2brf@simplelogin.fr"
+git config pull.rebase false
 
 
 : 'NOTICES TO USER'
