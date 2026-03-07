@@ -88,5 +88,11 @@ groupadd -f render
 usermod -aG video,render root || true
 usermod -aG video,render dante || true
 
+
+: 'GIT CONFIG'
+git config --global user.name "Dante Razo"
+git config --global user.email "github.d2brf@simplelogin.fr"
+
+
 : 'NOTICES TO USER'
 echo -e "\nDouble-check IP in PVE UI before proceeding!\n\n"
