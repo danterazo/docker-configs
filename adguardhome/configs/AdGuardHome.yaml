@@ -95,12 +95,14 @@ querylog:
   interval: 168h
   size_memory: 1000
   enabled: true
+  ignored_enabled: false
   file_enabled: false
 statistics:
   dir_path: ""
   ignored: []
   interval: 24h
   enabled: true
+  ignored_enabled: false
 filters:
   - enabled: true
     url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
@@ -686,4 +688,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 0
-schema_version: 32
+schema_version: 33
