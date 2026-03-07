@@ -101,4 +101,4 @@ git config pull.rebase false
 
 
 : 'NOTICES TO USER'
-echo -e "\nDouble-check IP in PVE UI before proceeding!\n\n"
+echo -e "\nDouble-check IP in PVE UI before proceeding! \n\n"
