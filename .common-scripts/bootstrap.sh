@@ -61,6 +61,10 @@ for script in "${ROOT_DIR}"/.common-scripts/*.sh; do
 	ln -sf "$script" "/etc/profile.d/00-${base}"
 done
 
+# remove community-scripts details loader
+rm -f /etc/profile.d/00_lxc-details.sh || true
+
+
 : 'INIT PERMISSIONS'
 # create dante group if missing
 if ! getent group dante >/dev/null; then
