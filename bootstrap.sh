@@ -102,19 +102,5 @@ git config pull.rebase false
 git config --global --add safe.directory /docker
 
 
-: 'SOURCE ALIASES FROM BASHRC'
-BASHRC="/root/.bashrc"
-
-if ! grep -q 'docker-aliases.sh' "$BASHRC" 2>/dev/null; then
-	cat << 'EOF' >> "$BASHRC"
-
-# load docker aliases
-if [ -r /docker/.common-scripts/docker-aliases.sh ]; then
-	. /docker/.common-scripts/docker-aliases.sh
-fi
-EOF
-fi
-
-
 : 'NOTICES TO USER'
 echo -e "\nDouble-check IP in PVE UI before proceeding! \n\n"
