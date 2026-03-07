@@ -7,4 +7,4 @@ case $- in
 esac
 
 # run fastfetch if available
-fastfetch
+fastfetch --pipe false
