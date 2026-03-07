@@ -5,9 +5,13 @@ APP_NAME="$(hostname)"
 ROOT_DIR="/docker"
 
 : 'INSTALL HELPFUL PACKAGES'
+apt update
+apt install -y tree ca-certificates curl git software-properties-common
+
+# install fastfetch
 add-apt-repository -y ppa:zhangsongcui3371/fastfetch
 apt update
-apt install -y tree ca-certificates curl git software-properties-common fastfetch
+apt install -y fastfetch
 
 
 : 'INSTALL DOCKER'
