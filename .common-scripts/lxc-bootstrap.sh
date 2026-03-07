@@ -64,4 +64,4 @@ usermod -aG video,render root || true
 usermod -aG video,render dante || true
 
 : 'NOTICES TO USER'
-echo -e "\nDouble-check IP in PVE UI before proceeding!"
+echo -e "\nDouble-check IP in PVE UI before proceeding!\n\n"
