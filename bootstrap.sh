@@ -34,6 +34,8 @@ apt update
 apt install -y docker-ce docker-ce-cli containerd.io \
 	docker-buildx-plugin docker-compose-plugin
 
+# TODO: set up SSH key sharing
+
 : 'INIT CONFIG REPOSITORY'
 if [ ! -d "${ROOT_DIR}/.git" ]; then
 	# first-time setup; clone and init sparse-checkout
