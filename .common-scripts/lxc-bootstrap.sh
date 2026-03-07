@@ -42,9 +42,14 @@ git sparse-checkout set \
 	.common-scripts \
 	"${APP_NAME}"
 
-# enable automatic cd
-ln -sf "${ROOT_DIR}/.common-scripts/auto-cd.sh" \
-	/etc/profile.d/00-auto-cd.sh
+# link all common profile scripts into /etc/profile.d
+for script in "${ROOT_DIR}"/.common-scripts/*.sh; do
+	# skip if glob didn't match anything
+	[ -e "$script" ] || continue
+
+	base="$(basename "$script")"
+	ln -sf "$script" "/etc/profile.d/00-${base}"
+done
 
 : 'INIT PERMISSIONS'
 # create dante group if missing
