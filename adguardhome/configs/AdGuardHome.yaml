@@ -21,14 +21,13 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
-    - https://dns.quad9.net/dns-query
-    - https://dns9.quad9.net/dns-query
+    - https://cloudflare-dns.com/dns-query
+    - https://dns10.quad9.net/dns-query
   upstream_dns_file: ""
   bootstrap_dns:
     - 1.1.1.1
     - 9.9.9.9
-  fallback_dns:
-    - https://security.cloudflare-dns.com/dns-query
+  fallback_dns: []
   upstream_mode: load_balance
   fastest_timeout: 1s
   allowed_clients:
@@ -49,6 +48,8 @@ dns:
   cache_ttl_min: 0
   cache_ttl_max: 0
   cache_optimistic: true
+  cache_optimistic_answer_ttl: 30s
+  cache_optimistic_max_age: 12h
   bogus_nxdomain: []
   aaaa_disabled: false
   enable_dnssec: true
@@ -170,6 +171,9 @@ user_rules:
   - '@@||tvdb2.plex.tv^$important'
   - '@@||tvthemes.plexapp.com^$important'
   - '@@||nyaa.si^$important'
+  - '# allow Monero mining'
+  - '@@||gulf.moneroocean.stream^$important'
+  - ""
 dhcp:
   enabled: false
   interface_name: eth0
@@ -217,13 +221,16 @@ filtering:
     - domain: '*.samskeyti.net'
       answer: proxy
       enabled: true
+    - domain: plex.samskeyti.net
+      answer: app.plex.tv
+      enabled: true
   safe_fs_patterns:
     - /opt/AdGuardHome/data/userfilters/*
   safebrowsing_cache_size: 1048576
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
   cache_time: 30
-  filters_update_interval: 1
+  filters_update_interval: 12
   blocked_response_ttl: 10
   filtering_enabled: true
   rewrites_enabled: true
@@ -346,6 +353,7 @@ clients:
         ids: []
       name: Music VM
       ids:
+        - 100.100.30.102
         - 192.168.30.102
       tags:
         - device_other
@@ -376,6 +384,7 @@ clients:
         ids: []
       name: NVIDIA VM
       ids:
+        - 100.100.30.101
         - 192.168.30.101
       tags:
         - device_other
@@ -406,6 +415,7 @@ clients:
         ids: []
       name: Network VM
       ids:
+        - 100.100.30.100
         - 192.168.30.100
       tags:
         - device_other
@@ -436,6 +446,7 @@ clients:
         ids: []
       name: PBS VM
       ids:
+        - 100.100.30.110
         - 192.168.30.110
       tags: []
       upstreams: []
@@ -526,7 +537,6 @@ clients:
         ids: []
       name: SchnitzelNG
       ids:
-        - 10.10.10.7
         - 100.100.50.55
       tags:
         - device_other
@@ -564,6 +574,65 @@ clients:
         - os_linux
       upstreams: []
       uid: 0194683a-6202-7a51-952c-5beca92454de
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Tailscale Exit Node LXC
+      ids:
+        - 100.100.30.106
+        - 192.168.30.106
+      tags: []
+      upstreams: []
+      uid: 019c7403-9475-7d52-bc91-af909255b69d
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Valtari
+      ids:
+        - 100.100.50.50
+      tags:
+        - device_pc
+        - os_linux
+      upstreams: []
+      uid: 019b8f57-a055-716e-84e5-811ef5fb0dd3
       upstreams_cache_size: 0
       upstreams_cache_enabled: false
       use_global_settings: true
@@ -617,4 +686,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 0
-schema_version: 31
+schema_version: 32
