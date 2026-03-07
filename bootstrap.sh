@@ -45,7 +45,7 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 
 	git sparse-checkout init --cone
 	git sparse-checkout set \
-		.common-scripts \
+		.profile-scripts \
 		"${APP_NAME}"
 else
 	# repo already exists; just update
@@ -53,13 +53,13 @@ else
 	git pull --ff-only
 fi
 
-# include .common-scripts and this app's dir
+# include .profile-scripts and this app's dir
 git sparse-checkout set \
-	.common-scripts \
+	.profile-scripts \
 	"${APP_NAME}"
 
 # link all common profile scripts into /etc/profile.d
-for script in "${ROOT_DIR}"/.common-scripts/*.sh; do
+for script in "${ROOT_DIR}"/.profile-scripts/*.sh; do
 	# skip if glob didn't match anything
 	[ -e "$script" ] || continue
 
