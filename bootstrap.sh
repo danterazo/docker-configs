@@ -89,7 +89,7 @@ usermod -aG video,render root || true
 usermod -aG video,render dante || true
 
 # fix bind permissions
-chown -R dante:dante "${ROOT_DIR}/${APP_NAME}"
+chown -R dante:dante "${ROOT_DIR}/${APP_NAME}/*" "${ROOT_DIR}/${APP_NAME}/.*"
 
 
 : 'GIT CONFIG'
