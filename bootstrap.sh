@@ -100,6 +100,24 @@ git config --global user.email "github.d2brf@simplelogin.fr"
 git config pull.rebase false
 git config --global --add safe.directory /docker
 
+: 'SOURCE PROFILE SCRIPTS FROM BASHRC FOR PCT'
+PROFILE_DIR="${ROOT_DIR}/.profile-scripts"
+BASHRC="/root/.bashrc"
+
+if [ -d "$PROFILE_DIR" ]; then
+	# append only if not already present
+	if ! grep -q 'profile-scripts' "$BASHRC" 2>/dev/null; then
+		cat << 'EOF' >> "$BASHRC"
+			# load common profile scripts
+			if [ -d /docker/.profile-scripts ]; then
+				for f in /docker/.profile-scripts/*.sh; do
+					[ -r "$f" ] && . "$f"
+				done
+			fi
+		EOF
+	fi
+fi
+
 
 : 'NOTICES TO USER'
 echo -e "\nDouble-check IP in PVE UI before proceeding! \n\n"
