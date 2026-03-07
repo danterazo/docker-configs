@@ -1,4 +1,5 @@
 #!/bin/bash
+## Bootstrap PVE Docker LXCs
 
 : 'GLOBAL CONFIG'
 APP_NAME="$(hostname)"
