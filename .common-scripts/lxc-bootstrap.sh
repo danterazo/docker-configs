@@ -6,7 +6,7 @@ ROOT_DIR="/docker"
 
 : 'INSTALL HELPFUL PACKAGES'
 apt update
-apt install -y tree ca-certificates curl
+apt install -y tree ca-certificates curl git
 
 : 'INSTALL DOCKER'
 # add docker's official GPG key
