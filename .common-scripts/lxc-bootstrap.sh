@@ -5,19 +5,18 @@ APP_NAME="$(hostname)"
 ROOT_DIR="/docker"
 
 : 'INSTALL HELPFUL PACKAGES'
-sudo apt install tree
-
+apt update
+apt install -y tree ca-certificates curl
 
 : 'INSTALL DOCKER'
-# add docker's official GPG key:
-sudo apt update
-sudo apt install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
+# add docker's official GPG key
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+	-o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
 
-# add the repository to apt sources:
-sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+# add the repository to apt sources
+cat >/etc/apt/sources.list.d/docker.sources <<EOF
 Types: deb
 URIs: https://download.docker.com/linux/ubuntu
 Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
@@ -25,31 +24,27 @@ Components: stable
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-sudo apt update
-
-# install docker packages
-sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
+apt update
+apt install -y docker-ce docker-ce-cli containerd.io \
+	docker-buildx-plugin docker-compose-plugin
 
 : 'INIT CONFIG REPOSITORY'
 git clone --filter=blob:none --sparse \
-  https://github.com/danterazo/docker-configs.git \
-  ${ROOT_DIR}
+	https://github.com/danterazo/docker-configs.git \
+	"${ROOT_DIR}"
 
-# enter new directory
-cd ${ROOT_DIR}
+cd "${ROOT_DIR}"
 
-# enable sparse checkout
 git sparse-checkout init --cone
 
-# sparse checkout relevant directories
-git sparse-checkout set .common-scripts \
-  ${APP_NAME}
+# include .common-scripts and this app's dir
+git sparse-checkout set \
+	.common-scripts \
+	"${APP_NAME}"
 
 # enable automatic cd
-ln -sf ${ROOT_DIR}/.common-scripts/auto-cd.sh \
+ln -sf "${ROOT_DIR}/.common-scripts/auto-cd.sh" \
 	/etc/profile.d/00-auto-cd.sh
-
 
 : 'INIT PERMISSIONS'
 # create dante group if missing
@@ -68,7 +63,5 @@ groupadd -f render
 usermod -aG video,render root || true
 usermod -aG video,render dante || true
 
-
 : 'NOTICES TO USER'
-# reminders
 echo -e "\nDouble-check IP in PVE UI before proceeding!"
