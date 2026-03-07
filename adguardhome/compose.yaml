@@ -10,7 +10,7 @@ services:
     ports:
       - "53:53/tcp"      # DNS
       - "53:53/udp"      # DNS
-      - "3000:3000/tcp"  # web
+      - "3000:3000/tcp"  # web UI
     logging:
       driver: "json-file"
       options:
