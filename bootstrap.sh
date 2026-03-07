@@ -1,5 +1,5 @@
 #!/bin/bash
-## Bootstrap PVE Docker LXCs
+## bootstrap PVE Docker LXCs
 
 : 'GLOBAL CONFIG'
 APP_NAME="$(hostname)"
@@ -101,22 +101,18 @@ git config --global user.email "github.d2brf@simplelogin.fr"
 git config pull.rebase false
 git config --global --add safe.directory /docker
 
-: 'SOURCE COMMON SCRIPTS FROM BASHRC ONLY'
-COMMON_DIR="/docker/.common-scripts"
+
+: 'SOURCE ALIASES FROM BASHRC'
 BASHRC="/root/.bashrc"
 
-if [ -d "$COMMON_DIR" ]; then
-	if ! grep -q '/docker/.common-scripts' "$BASHRC" 2>/dev/null; then
-		cat << 'EOF' >> "$BASHRC"
+if ! grep -q 'docker-aliases.sh' "$BASHRC" 2>/dev/null; then
+	cat << 'EOF' >> "$BASHRC"
 
-# load common scripts
-if [ -d /docker/.common-scripts ]; then
-	for f in /docker/.common-scripts/*.sh; do
-		[ -r "$f" ] && . "$f"
-	done
+# load docker aliases
+if [ -r /docker/.common-scripts/docker-aliases.sh ]; then
+	. /docker/.common-scripts/docker-aliases.sh
 fi
 EOF
-	fi
 fi
 
 
