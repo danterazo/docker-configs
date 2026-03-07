@@ -29,13 +29,23 @@ apt install -y docker-ce docker-ce-cli containerd.io \
 	docker-buildx-plugin docker-compose-plugin
 
 : 'INIT CONFIG REPOSITORY'
-git clone --filter=blob:none --sparse \
-	git@github.com:danterazo/docker-configs.git \
-	"${ROOT_DIR}"
+if [ ! -d "${ROOT_DIR}/.git" ]; then
+	# first-time setup; clone and init sparse-checkout
+	git clone --filter=blob:none --sparse \
+		https://github.com/danterazo/docker-configs.git \
+		"${ROOT_DIR}"
 
-cd "${ROOT_DIR}"
+	cd "${ROOT_DIR}"
 
-git sparse-checkout init --cone
+	git sparse-checkout init --cone
+	git sparse-checkout set \
+		.common-scripts \
+		"${APP_NAME}"
+else
+	# repo already exists; just update
+	cd "${ROOT_DIR}"
+	git pull --ff-only
+fi
 
 # include .common-scripts and this app's dir
 git sparse-checkout set \
