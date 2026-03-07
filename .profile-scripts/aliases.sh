@@ -10,8 +10,9 @@ esac
 alias dcp="docker compose pull"
 alias dcd="docker compose down -v"
 alias dcu="docker compose up -d"
-alias dcl="docker compose logs -f"
 alias dcr="docker compose restart"
+alias dcl="docker compose logs -f"
+alias logs="docker compose logs -f"
 
 # list commands
 alias dimg="docker image ls"
