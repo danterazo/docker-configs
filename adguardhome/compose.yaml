@@ -7,7 +7,6 @@ services:
     volumes:
       - work:/opt/adguardhome/work:rw
       - ./configs/:/opt/adguardhome/conf/:rw
-    user: 1000:1000
     network_mode: host
     logging:
       driver: "json-file"
