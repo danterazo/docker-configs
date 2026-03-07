@@ -101,20 +101,23 @@ git config --global user.email "github.d2brf@simplelogin.fr"
 git config pull.rebase false
 git config --global --add safe.directory /docker
 
-: 'SOURCE /ETC/PROFILE FROM BASHRC FOR PCT'
+: 'SOURCE COMMON SCRIPTS FROM BASHRC ONLY'
+COMMON_DIR="/docker/.common-scripts"
 BASHRC="/root/.bashrc"
 
-if ! grep -q 'source /etc/profile' "$BASHRC" 2>/dev/null; then
-	cat << 'EOF' >> "$BASHRC"
+if [ -d "$COMMON_DIR" ]; then
+	if ! grep -q '/docker/.common-scripts' "$BASHRC" 2>/dev/null; then
+		cat << 'EOF' >> "$BASHRC"
 
-# load system profile (so /etc/profile.d works in non-login shells)
-if [ -r /etc/profile ]; then
-	. /etc/profile
+# load common scripts
+if [ -d /docker/.common-scripts ]; then
+	for f in /docker/.common-scripts/*.sh; do
+		[ -r "$f" ] && . "$f"
+	done
 fi
 EOF
+	fi
 fi
-
-
 
 
 : 'NOTICES TO USER'
