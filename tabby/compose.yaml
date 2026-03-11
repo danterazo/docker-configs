@@ -1,7 +1,7 @@
 services:
   tabby:
-    image: ghcr.io/tabbyml/tabby-rocm:latest
-    container_name: tabby-rocm
+    image: ghcr.io/tabbyml/tabby:latest
+    container_name: tabby
     command: >
       serve
       --device rocm
