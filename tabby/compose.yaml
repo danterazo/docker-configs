@@ -10,7 +10,7 @@ services:
       --device rocm
 #      --model qwen3-coder-next:q4_K_M
     ports:
-      - "8080:8080/tcp"
+      - 8080:8080/tcp
     volumes:
       - /models/:/data/:rw
       - ./config:/root/.tabby/:rw
