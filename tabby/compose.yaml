@@ -1,16 +1,18 @@
 services:
   tabby:
-    image: ghcr.io/tabbyml/tabby:latest
+    image: ghcr.io/tabbyml/tabby-rocm:latest
     container_name: tabby
-    entrypoint: ["/opt/tabby/bin/tabby-cpu"]
     command: >
       serve
-      --device cpu
+      --device rocm
     ports:
       - "8080:8080/tcp"
     volumes:
-      - data:/data/:rw
-      - ./config/:/root/.tabby/:rw
+      - data:/data:rw
+      - ./config:/root/.tabby:rw
+    devices:
+      - /dev/kfd
+      - /dev/dri
     env_file: .env
     restart: unless-stopped
 
