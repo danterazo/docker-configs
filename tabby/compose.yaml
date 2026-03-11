@@ -4,7 +4,7 @@ services:
     container_name: tabby-rocm
     command: >
       serve
-      --model TabbyML/StarCoder-1B
+      --model Qwen2.5-Coder-14B
       --device rocm
     ports:
       - "8080:8080/tcp"
