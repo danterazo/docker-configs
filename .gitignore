@@ -26,6 +26,7 @@ oauth2-proxy.cfg
 
 # ignore internal repos
 *.git/
+*source/
 
 # ignore data backed up elsewhere (TODO: remove and migrate)
 */data/
