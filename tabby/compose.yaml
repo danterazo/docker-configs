@@ -13,13 +13,10 @@ services:
     ports:
       - 8080:8080/tcp
     volumes:
-      - /models/:/data/:rw
-      - ./config:/root/.tabby/:rw
+      - ./config/:/data/.tabby/:rw
+      - /models/:/models/:rw
     devices:
       - /dev/kfd
       - /dev/dri
     env_file: .env
     restart: unless-stopped
-
-volumes:
-  data:
