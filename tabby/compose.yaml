@@ -1,6 +1,9 @@
 services:
   tabby:
-    image: ghcr.io/tabbyml/tabby-rocm:latest
+    # image: ghcr.io/tabbyml/tabby-rocm:latest
+    build:
+      context: ./source
+      dockerfile: docker/Dockerfile.rocm
     container_name: tabby
     command: >
       serve
