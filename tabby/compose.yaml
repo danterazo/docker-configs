@@ -9,7 +9,7 @@ services:
       - "8080:8080/tcp"
     volumes:
       - data:/data/:rw
-      - /docker/tabby/config/:/root/.tabby/:rw
+      - ./config/:/root/.tabby/:rw
     env_file: .env
     restart: unless-stopped
 
