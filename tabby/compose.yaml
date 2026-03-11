@@ -4,6 +4,7 @@ services:
     build:
       context: ./source
       dockerfile: docker/Dockerfile.rocm
+    image: tabby-rocm:local
     container_name: tabby
     command: >
       serve
