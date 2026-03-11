@@ -8,7 +8,8 @@ services:
     ports:
       - "8080:8080/tcp"
     volumes:
-      - data:/data
+      - tabby_data:/data/:rw
+      - /docker/tabby/config/:/root/.tabby/:rw
     devices:
       - /dev/kfd
       - /dev/dri
