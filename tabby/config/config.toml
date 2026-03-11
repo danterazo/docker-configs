@@ -12,3 +12,6 @@
     kind = "openai/embedding"
     model_name = "nomic-embed-text-v2-moe:latest"
     api_endpoint = "https://ai.samskeyti.net/"
+
+[model.embedding.local]
+enabled = false
