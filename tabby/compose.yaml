@@ -1,0 +1,20 @@
+services:
+  tabby:
+    image: ghcr.io/tabbyml/tabby-rocm:latest
+    container_name: tabby-rocm
+    command: >
+      serve
+      --model TabbyML/StarCoder-1B
+      --device rocm
+    ports:
+      - "8080:8080/tcp"
+    volumes:
+      - data:/data
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    env_file: .env
+    restart: unless-stopped
+
+volumes:
+  data:
