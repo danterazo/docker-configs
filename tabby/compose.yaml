@@ -4,7 +4,7 @@ services:
     container_name: tabby
     command: >
       serve
-      --device rocm
+      --device cpu
     ports:
       - "8080:8080/tcp"
     volumes:
