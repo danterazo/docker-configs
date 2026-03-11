@@ -2,7 +2,7 @@
 
 # docker-compose-v2 syntax
 alias dcp="docker compose pull"
-alias dcd="docker compose down -v"
+alias dcd="docker compose down"
 alias dcu="docker compose up -d"
 alias dcr="docker compose restart"
 alias dcl="docker compose logs -f"
