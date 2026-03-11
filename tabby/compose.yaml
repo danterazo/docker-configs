@@ -10,9 +10,6 @@ services:
     volumes:
       - data:/data/:rw
       - /docker/tabby/config/:/root/.tabby/:rw
-    devices:
-      - /dev/kfd
-      - /dev/dri
     env_file: .env
     restart: unless-stopped
 
