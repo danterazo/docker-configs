@@ -1,14 +1,14 @@
 [model.chat.http]
     kind = "openai/chat"
     model_name = "qwen3-coder-next:q4_K_M"
-    api_endpoint = "https://ai.samskeyti.net/v1"
+    api_endpoint = "https://ai.samskeyti.net/"
 
 [model.completion.http]
     kind = "openai/completion"
     model_name = "qwen3-coder-next:q4_K_M"
-    api_endpoint = "https://ai.samskeyti.net/v1"
+    api_endpoint = "https://ai.samskeyti.net/"
 
 [model.embedding.http]
     kind = "openai/embedding"
     model_name = "nomic-embed-text-v2-moe:latest"
-    api_endpoint = "https://ai.samskeyti.net/v1"
+    api_endpoint = "https://ai.samskeyti.net/"
