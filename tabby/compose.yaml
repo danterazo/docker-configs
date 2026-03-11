@@ -5,8 +5,7 @@ services:
     command: >
       serve
       --device rocm
-      --chat-model qwen3-coder-next:q4_K_M
-      --completion-model qwen3-coder-next:q4_K_M
+      --model qwen3-coder-next:q4_K_M
     ports:
       - "8080:8080/tcp"
     volumes:
