@@ -1,0 +1,13 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    restart: unless-stopped
+    ports:
+      - 6333:6333/tcp
+    volumes:
+      - data:/qdrant/storage
+    env_file: .env
+
+volumes:
+  data:
