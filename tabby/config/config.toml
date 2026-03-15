@@ -1,0 +1,14 @@
+[model.chat]
+kind = "openai/chat"
+model_name = "qwen3-coder-next:q4_K_M"
+api_endpoint = "https://ai.samskeyti.net"
+
+[model.completion]
+kind = "ollama/completion"
+model_name = "qwen3-coder-next:q4_K_M"
+api_endpoint = "https://ai.samskeyti.net"
+
+[model.embedding]
+kind = "ollama/embedding"
+model_name = "nomic-embed-text-v2-moe:latest"
+api_endpoint = "https://ai.samskeyti.net"

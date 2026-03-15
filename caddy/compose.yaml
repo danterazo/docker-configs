@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: caddy:local
     cpus: 1.0
     ports:
       - 80:80/tcp # HTTP
@@ -13,10 +14,6 @@ services:
     networks:
       - caddy-net
     restart: always
-    dns:
-      - 192.168.30.100
-      - 1.1.1.1
-      - 1.0.0.1
     volumes:
       - caddy_data:/data/caddy/:rw
       - ./configs/:/etc/caddy/:rw
