@@ -26,12 +26,13 @@ dns:
   upstream_dns_file: ""
   bootstrap_dns:
     - 1.1.1.1
+    - 8.8.8.8
     - 9.9.9.9
   fallback_dns: []
   upstream_mode: load_balance
   fastest_timeout: 1s
   allowed_clients:
-    - 10.10.10.0/16
+    - 10.10.0.0/16
     - 100.100.0.0/16
     - 192.168.0.0/16
     - 172.16.0.0/16
@@ -64,7 +65,7 @@ dns:
   bootstrap_prefer_ipv6: false
   upstream_timeout: 10s
   private_networks: []
-  use_private_ptr_resolvers: true
+  use_private_ptr_resolvers: false
   local_ptr_upstreams: []
   use_dns64: false
   dns64_prefixes: []
@@ -218,7 +219,7 @@ filtering:
       answer: 192.168.10.1
       enabled: true
     - domain: proxy
-      answer: 192.168.30.100
+      answer: 192.168.30.203
       enabled: true
     - domain: '*.samskeyti.net'
       answer: proxy
@@ -539,7 +540,7 @@ clients:
         ids: []
       name: SchnitzelNG
       ids:
-        - 100.100.50.55
+        - 100.100.50.50
       tags:
         - device_other
         - os_linux
@@ -605,36 +606,6 @@ clients:
       tags: []
       upstreams: []
       uid: 019c7403-9475-7d52-bc91-af909255b69d
-      upstreams_cache_size: 0
-      upstreams_cache_enabled: false
-      use_global_settings: true
-      filtering_enabled: false
-      parental_enabled: false
-      safebrowsing_enabled: false
-      use_global_blocked_services: true
-      ignore_querylog: false
-      ignore_statistics: false
-    - safe_search:
-        enabled: false
-        bing: true
-        duckduckgo: true
-        ecosia: true
-        google: true
-        pixabay: true
-        yandex: true
-        youtube: true
-      blocked_services:
-        schedule:
-          time_zone: UTC
-        ids: []
-      name: Valtari
-      ids:
-        - 100.100.50.50
-      tags:
-        - device_pc
-        - os_linux
-      upstreams: []
-      uid: 019b8f57-a055-716e-84e5-811ef5fb0dd3
       upstreams_cache_size: 0
       upstreams_cache_enabled: false
       use_global_settings: true
