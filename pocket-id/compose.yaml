@@ -4,7 +4,9 @@ services:
     image: ghcr.io/pocket-id/pocket-id:latest
     restart: always
     cpus: 1.0
-    env_file: .env
+    env_file:
+      - .env
+      - .secrets
     ports:
       - 1411:1411/tcp
     user: 1000:1000
