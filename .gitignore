@@ -10,6 +10,7 @@ oauth2-proxy.cfg
 */cloudflare-ddns/config.json
 */caddy/configs/snippets/common.conf
 */hivenet/machine-config/machine-id
+*/gluetun/oauth2/
 
 # ignore temporary files
 *.swp

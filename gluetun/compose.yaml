@@ -45,7 +45,7 @@ services:
       - 8091
     env_file: .env
     volumes:
-      - ./qb-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+      - ./oauth2/qb-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
     networks:
       - gluetun-net
     depends_on:
@@ -65,7 +65,7 @@ services:
       - 5031
     env_file: .env
     volumes:
-      - ./ss-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+      - ./oauth2/ss-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
     networks:
       - gluetun-net
     depends_on:
