@@ -8,9 +8,7 @@ services:
     volumes:
       - ./config/:/config/qBittorrent/:rw
       - ./ui/:/ui/:rw
-      - qbittorrent-queue_nfs:/work/queue/:rw
-      - qbittorrent-active_nfs:/work/active/:rw
-      - qbittorrent-complete_nfs:/work/complete/:rw
+      - qbittorrent_nfs:/downloads/:rw
     network_mode: container:gluetun # use VPN
     # depends_on:
     #   gluetun:
@@ -26,24 +24,13 @@ services:
 
 
 volumes:
-  qbittorrent-queue_nfs:
+  qbittorrent_nfs:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/tank/downloads/qbittorrent/00-queued/"
-  qbittorrent-active_nfs:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/tank/downloads/qbittorrent/01-active/"
-  qbittorrent-complete_nfs:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/tank/downloads/qbittorrent/02-complete/"
+      device: ":/tank/downloads/qbittorrent/"
+
 
 x-dockge:
   urls:
