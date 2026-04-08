@@ -13,7 +13,7 @@ services:
     volumes:
       - ./data/:/app/data/:rw
     healthcheck:
-      test: "curl -f http://localhost:1411/healthz"
+      test: [ "CMD", "/app/pocket-id", "healthcheck" ]
       interval: 1m30s
       timeout: 5s
       retries: 2
