@@ -9,7 +9,7 @@ services:
       - ./config/:/config/qBittorrent/:rw
       - ./ui/:/ui/:rw
       - qbittorrent-queue_nfs:/work/queue/:rw
-      - qbittorrent-active_nfs:/work/downloading/:rw
+      - qbittorrent-active_nfs:/work/active/:rw
       - qbittorrent-complete_nfs:/work/complete/:rw
     network_mode: container:gluetun # use VPN
     # depends_on:
