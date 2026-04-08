@@ -10,10 +10,11 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
-    expose:
-      - 8090
-      - 50300
-      - 80
+    ports:
+      - 8090:8090/tcp   # qbittorrent web UI
+      - 5030:5030/tcp   # soulseek web UI
+      - 50300:50300/tcp # soulseek service port
+      - 9823:9823/tcp   # VPN speedtest port
     env_file:
       - .env
       - .secrets
