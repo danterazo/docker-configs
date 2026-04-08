@@ -11,9 +11,9 @@ services:
       - ./slskd.yml:/app/slskd.yml:rw
     restart: unless-stopped
     network_mode: container:gluetun # use VPN
-    depends_on:
-      gluetun:
-        condition: service_healthy
+    # depends_on:
+    #   gluetun:
+    #     condition: service_healthy
     security_opt:
       - no-new-privileges:true
     logging:

@@ -12,9 +12,9 @@ services:
       - qbittorrent-active_nfs:/work/downloading/:rw
       - qbittorrent-complete_nfs:/work/complete/:rw
     network_mode: container:gluetun # use VPN
-    depends_on:
-      gluetun:
-        condition: service_healthy
+    # depends_on:
+    #   gluetun:
+    #     condition: service_healthy
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
