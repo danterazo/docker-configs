@@ -3,7 +3,7 @@ services:
     image: slskd/slskd:latest
     container_name: soulseek
     env_file: .env
-    user: ${PUID}:${PGID}
+    user: 1000:1000
     volumes:
       - ./db/:/app/data/:rw
       - soulseek-active_nfs:/app/incomplete/:rw
