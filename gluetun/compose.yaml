@@ -1,3 +1,7 @@
+include:
+  - qbittorrent/compose.yaml
+  - soulseek/compose.yaml
+
 services:
   gluetun:
     image: qmcgaw/gluetun:latest
@@ -14,7 +18,7 @@ services:
       - .env
       - .secrets
     volumes:
-      - gluetun_data:/gluetun/:rw
+      - ./data/:/gluetun/:rw
     networks:
       - gluetun-net
     security_opt:
@@ -36,48 +40,46 @@ services:
         max-size: "20m"
         max-file: "1"
 
-  qbittorrent-oauth:
-    container_name: qbittorrent-oauth
-    image: quay.io/oauth2-proxy/oauth2-proxy:latest
-    command: --config /oauth2-proxy.cfg
-    restart: always
-    expose:
-      - 8091
-    env_file: .env
-    volumes:
-      - ./oauth2/qb-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
-    networks:
-      - gluetun-net
-    depends_on:
-      - gluetun
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
+  # qbittorrent-oauth:
+  #   container_name: qbittorrent-oauth
+  #   image: quay.io/oauth2-proxy/oauth2-proxy:latest
+  #   command: --config /oauth2-proxy.cfg
+  #   restart: always
+  #   expose:
+  #     - 8091
+  #   env_file: .env
+  #   volumes:
+  #     - ./oauth2/qb-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+  #   networks:
+  #     - gluetun-net
+  #   depends_on:
+  #     - gluetun
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "20m"
+  #       max-file: "1"
 
-  soulseek-oauth:
-    container_name: soulseek-oauth
-    image: quay.io/oauth2-proxy/oauth2-proxy:latest
-    command: --config /oauth2-proxy.cfg
-    restart: always
-    expose:
-      - 5031
-    env_file: .env
-    volumes:
-      - ./oauth2/ss-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
-    networks:
-      - gluetun-net
-    depends_on:
-      - gluetun
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
+  # soulseek-oauth:
+  #   container_name: soulseek-oauth
+  #   image: quay.io/oauth2-proxy/oauth2-proxy:latest
+  #   command: --config /oauth2-proxy.cfg
+  #   restart: always
+  #   expose:
+  #     - 5031
+  #   env_file: .env
+  #   volumes:
+  #     - ./oauth2/ss-oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
+  #   networks:
+  #     - gluetun-net
+  #   depends_on:
+  #     - gluetun
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "20m"
+  #       max-file: "1"
+
 networks:
   gluetun-net:
     name: gluetun-net
-volumes:
-  gluetun_data:
-    external: true

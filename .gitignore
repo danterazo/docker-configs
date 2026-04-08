@@ -1,6 +1,6 @@
 # ignore sensitive files
-.secrets
-oauth2-proxy.cfg
+*.secrets
+*oauth2-proxy.cfg
 *.credential*
 
 # ignore sensitive files (TODO: remove)
