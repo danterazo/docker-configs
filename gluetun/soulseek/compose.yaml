@@ -28,13 +28,13 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/tank/downloads/soulseek/01-downloading/"
+      device: ":/tank/downloads/soulseek/00-downloading/"
   soulseek-complete_nfs:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/tank/downloads/soulseek/02-complete/"
+      device: ":/tank/downloads/soulseek/01-complete/"
 
 x-dockge:
   urls:
