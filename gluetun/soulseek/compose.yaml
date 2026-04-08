@@ -27,7 +27,7 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/tank/downloads/soulseek/00-downloading/"
+      device: ":/tank/downloads/soulseek/"
 
 x-dockge:
   urls:
