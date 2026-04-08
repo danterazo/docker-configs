@@ -7,10 +7,7 @@ services:
     volumes:
       - work:/opt/adguardhome/work/:rw
       - ./configs/:/opt/adguardhome/conf/:rw
-    ports:
-      - "53:53/tcp"      # DNS
-      - "53:53/udp"      # DNS
-      - "3000:3000/tcp"  # web UI
+    network_mode: host
     logging:
       driver: "json-file"
       options:
