@@ -6,9 +6,8 @@ services:
     user: 1000:1000
     volumes:
       - ./db/:/app/data/:rw
-      - soulseek-active_nfs:/app/incomplete/:rw
-      - soulseek-complete_nfs:/app/downloads/:rw
       - ./slskd.yml:/app/slskd.yml:rw
+      - soulseek_nfs:/app/:rw
     restart: unless-stopped
     network_mode: container:gluetun # use VPN
     # depends_on:
@@ -23,18 +22,12 @@ services:
         max-file: "1"
 
 volumes:
-  soulseek-active_nfs:
+  soulseek_nfs:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
       device: ":/tank/downloads/soulseek/00-downloading/"
-  soulseek-complete_nfs:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/tank/downloads/soulseek/01-complete/"
 
 x-dockge:
   urls:
