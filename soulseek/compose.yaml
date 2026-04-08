@@ -5,10 +5,10 @@ services:
     env_file: .env
     user: ${PUID}:${PGID}
     volumes:
-      - soulseek_db:/app/data/:rw
-      - /mnt/cold-pool/downloads/soulseek/downloads/:/app/downloads/:rw
-      - /mnt/cold-pool/downloads/soulseek/incomplete/:/app/incomplete/:rw
-      -./slskd.yml:/app/slskd.yml:rw
+      - ./db/:/app/data/:rw
+      - soulseek-active_nfs:/app/incomplete/:rw
+      - soulseek-complete_nfs:/app/downloads/:rw
+      - ./slskd.yml:/app/slskd.yml:rw
     restart: unless-stopped
     network_mode: container:gluetun # use VPN
     security_opt:
@@ -20,9 +20,18 @@ services:
         max-file: "1"
 
 volumes:
-  soulseek_db:
-    name: soulseek_db
-    external: true
+  soulseek-active_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/tank/downloads/soulseek/01-downloading/"
+  soulseek-complete_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/tank/downloads/soulseek/02-complete/"
 
 x-dockge:
   urls:

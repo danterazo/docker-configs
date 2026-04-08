@@ -6,10 +6,11 @@ services:
       - .env
       - .secrets
     volumes:
-      - qbittorrent_config:/config/qBittorrent/:rw
-      - qbittorrent_ui:/ui/:rw
-      - qbittorrent-working_nfs:/hot/:rw
-      - qbittorrent-complete_nfs:/cold/:rw
+      - ./config/:/config/qBittorrent/:rw
+      - ./ui/:/ui/:rw
+      - qbittorrent-queue_nfs:/work/queue/:rw
+      - qbittorrent-active_nfs:/work/downloading/:rw
+      - qbittorrent-complete_nfs:/work/complete/:rw
     network_mode: container:gluetun # use VPN
     security_opt:
       - no-new-privileges:true
@@ -21,24 +22,24 @@ services:
         max-file: "1"
 
 volumes:
-  qbittorrent_config:
-    name: qbittorrent_config
-    external: true
-  qbittorrent_ui:
-    name: qbittorrent_ui
-    external: true
-  qbittorrent-working_nfs:
+  qbittorrent-queue_nfs:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/tank/downloads/qbittorrent/"
+      device: ":/tank/downloads/qbittorrent/00-queued/"
+  qbittorrent-active_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      device: ":/tank/downloads/qbittorrent/01-downloading/"
   qbittorrent-complete_nfs:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/mnt/zfs/cold-pool/downloads/qbittorrent/"
+      device: ":/tank/downloads/qbittorrent/02-complete/"
 
 x-dockge:
   urls:
