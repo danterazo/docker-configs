@@ -63,7 +63,7 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
-      device: ":/tank/backups/virtual-machines/plex-video/"
+      device: ":/tank/backups/apps/plex-video/"
 
 x-dockge:
   urls:
