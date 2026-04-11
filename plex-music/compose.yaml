@@ -8,7 +8,7 @@ services:
     env_file: .env
     cpus: "4.0"
     volumes:
-      - plex-music_data:/config/:rw
+      - ./data/plex/:/config/:rw
       - backups_nfs:/backups/:rw
       - music_nfs:/media/music/:rw
       - audiobooks_nfs:/media/audiobooks/:rw
@@ -27,8 +27,8 @@ services:
     cpus: "1.0"
     env_file: .env
     volumes:
-      - plex-music_data:/plex-data/:ro
-      - tautulli-music_data:/config/:rw
+      - ./data/plex/:/plex-data/:ro
+      - ./data/tautulli/:/config/:rw
 #    user: ${PUID}:${PGID}
     ports:
       - 8181:8181/tcp
@@ -48,29 +48,28 @@ networks:
     name: plex-music-net
 
 volumes:
-  plex-music_data:
-    external: true
-  tautulli-music_data:
-    external: true
   music_nfs:
     driver: local
     driver_opts:
-      type: "nfs"
-      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      type: "nfs4"
+      o: "addr=192.168.20.42,proto=tcp,rw,noatime,nfsvers=4,rsize=1048576,wsize=1048576,soft"
       device: ":/tank/media/music/"
+
   audiobooks_nfs:
     driver: local
     driver_opts:
-      type: "nfs"
-      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      type: "nfs4"
+      o: "addr=192.168.20.42,proto=tcp,rw,noatime,nfsvers=4,rsize=1048576,wsize=1048576,soft"
       device: ":/tank/media/audiobooks/"
+
   backups_nfs:
     driver: local
     driver_opts:
-      type: "nfs"
-      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      type: "nfs4"
+      o: "addr=192.168.20.42,proto=tcp,rw,noatime,nfsvers=4,rsize=1048576,wsize=1048576,soft"
       device: ":/tank/backups/apps/plex-music/"
 
 x-dockge:
   urls:
     - https://plexm.samskeyti.net/
+root@plex-music:/docker/plex-music# 
