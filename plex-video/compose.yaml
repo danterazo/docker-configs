@@ -4,7 +4,6 @@ services:
     image: plexinc/pms-docker:latest
     restart: unless-stopped
     runtime: "nvidia"
-    cpus: 4.0
     ports:
       - 32400:32400/tcp
     env_file: .env
