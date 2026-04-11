@@ -72,4 +72,3 @@ volumes:
 x-dockge:
   urls:
     - https://plexm.samskeyti.net/
-root@plex-music:/docker/plex-music# 
