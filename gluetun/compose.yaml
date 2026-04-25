@@ -13,8 +13,8 @@ services:
     ports:
       - 0.0.0.0:8090:8090       # qbittorrent web UI
       - 0.0.0.0:5030:5030/tcp   # soulseek web UI
-      - 0.0.0.0:50300:50300/tcp # soulseek service port
-      - 0.0.0.0:9823:9823/tcp   # VPN speedtest port
+      - 0.0.0.0:50300:50300     # soulseek service port
+#      - 0.0.0.0:9823:9823/tcp   # VPN speedtest port
     env_file:
       - .env
       - .secrets
