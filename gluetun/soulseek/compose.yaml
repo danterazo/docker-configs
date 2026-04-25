@@ -1,5 +1,5 @@
 services:
-  slskd:
+  soulseek:
     image: slskd/slskd:latest
     container_name: soulseek
     env_file: .env
