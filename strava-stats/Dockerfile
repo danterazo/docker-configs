@@ -1,4 +1,4 @@
-FROM robiningelbrecht/strava-statistics:latest AS Base
+FROM robiningelbrecht/strava-statistics:latest AS base
 
 # Setup document root
 WORKDIR /var/www
