@@ -35,6 +35,26 @@ apt update
 apt install -y docker-ce docker-ce-cli containerd.io \
 	docker-buildx-plugin docker-compose-plugin
 
+
+: 'CONFIGURE DOCKER'
+if [ ! -f /etc/docker/daemon.json ]; then
+	install -m 0755 -d /etc/docker
+	cat >/etc/docker/daemon.json <<'EOF'
+{
+	"log-driver": "json-file",
+	"log-opts": {
+		"max-size": "20m",
+		"max-file": "5"
+	}
+}
+EOF
+
+	# reload if systemd is available
+	if command -v systemctl >/dev/null 2>&1; then
+		systemctl restart docker || true
+	fi
+fi
+
 # TODO: set up SSH key sharing
 
 : 'INIT CONFIG REPOSITORY'
