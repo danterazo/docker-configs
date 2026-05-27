@@ -28,3 +28,7 @@ tabby/source/
 **/tautulli/
 **/github-runner/
 **/*ephemeral*
+
+# app configs (formatted by app)
+adguardhome/configs/AdGuardHome.yaml
+gluetun/soulseek/reference/slskd-default-config.yml
