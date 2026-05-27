@@ -8,7 +8,7 @@ services:
       - 32400:32400/tcp
     env_file: .env
     volumes:
-      - plex-video_data:/config/:rw
+      - ./data/plex/:/config/:rw
       - backups_nfs:/backups/:rw
       - videos_nfs:/media/videos/:rw
       - /dev/shm/plex-transcode/:/transcode/:rw
@@ -26,8 +26,8 @@ services:
     cpus: 1.0
     env_file: .env
     volumes:
-      - plex-video_data:/plex-data/:ro
-      - tautulli-video_data:/config/:rw
+      - ./data/plex/:/plex-data/:ro
+      - ./data/tautulli/:/config/:rw
     ports:
       - 8181:8181/tcp
     restart: unless-stopped
@@ -47,10 +47,6 @@ networks:
     name: plex-video-net
 
 volumes:
-  plex-video_data:
-    external: true
-  tautulli-video_data:
-    external: true
   videos_nfs:
     driver: local
     driver_opts:
