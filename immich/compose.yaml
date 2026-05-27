@@ -126,7 +126,7 @@ services:
       - immich-net
     volumes:
       - ./data/selfie-timelapse/config/:/app/config:rw
-      - ./data/selfie-timelapse/output/:/app/output:rw
+      - selfies_nfs:/app/output:rw
 
 networks:
   immich-net:
@@ -145,6 +145,12 @@ volumes:
       type: "nfs"
       o: "addr=192.168.20.42,hard,rw,noatime,nfsvers=4"
       device: ":/tank/media/photos/photography/"
+  selfies_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,hard,rw,noatime,nfsvers=4"
+      device: ":/tank/media/photos/related/immich-selfie-timelapse/"
 
 x-dockge:
   urls:
