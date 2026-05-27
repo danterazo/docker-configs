@@ -4,7 +4,7 @@ services:
     container_name: immich-server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     extends:
-      file: hwaccel.transcoding.yml
+      file: hwaccel.transcoding.yaml
       service: nvenc
     runtime: nvidia
     # cpus: 8
@@ -38,7 +38,7 @@ services:
     container_name: immich-ml
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-cuda
     extends:
-      file: hwaccel.ml.yml
+      file: hwaccel.ml.yaml
       service: cuda
     runtime: nvidia
     # cpus: 8
