@@ -37,6 +37,8 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io \
 # TODO: set up SSH key sharing
 
 : 'INIT CONFIG REPOSITORY'
+sudo mkdir -p "${ROOT_DIR}"
+
 if [ ! -d "${ROOT_DIR}/.git" ]; then
     # first-time setup; clone and init sparse-checkout
     sudo git clone --filter=blob:none --sparse \
