@@ -1,0 +1,30 @@
+# prettier enforces blank lines after markdown headings; skip markdown
+# **/*.md
+
+# tools + envs
+.git/
+.venv/
+venv/
+node_modules/
+.vscode/
+.wip/
+tabby/source/
+
+# large or sensitive dirs from .gitignore
+**/data/
+**/backups/
+**/*.bak*
+**/*.dump
+**/*.swp
+**/*.secrets
+**/*oauth2-proxy.cfg
+**/*.credential*
+**/gluetun/data/
+**/gluetun/oauth2/
+**/radicale/configs/users
+**/soulseek/slskd.yml
+**/cloudflare-ddns/config.json
+**/hivenet/machine-config/machine-id
+**/tautulli/
+**/github-runner/
+**/*ephemeral*
