@@ -41,7 +41,7 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=192.168.20.42,soft,rw,noatime,nfsvers=4"
-      device: ":/tank/media/videos/plex/"
+      device: ":/tank/media/videos/"
   backups_nfs:
     driver: local
     driver_opts:
