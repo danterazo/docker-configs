@@ -147,11 +147,6 @@ services:
     volumes:
       - ./data/selfie-timelapse/config/:/app/config:rw
       - ./data/selfie-timelapse/output/:/app/output:rw
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
 
 networks:
   immich-net:
