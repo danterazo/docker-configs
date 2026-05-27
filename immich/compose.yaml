@@ -133,6 +133,26 @@ services:
     networks:
       - immich-net
 
+  immich-selfie-timelapse:
+    container_name: immich-selfie-timelapse
+    image: arnaudcayrol/immich-selfie-timelapse:latest
+    restart: always
+    env_file:
+      - .env
+      - .secrets
+    ports:
+      - 5000:5000/tcp
+    networks:
+      - immich-net
+    volumes:
+      - ./data/selfie-timelapse/config/:/app/config:rw
+      - ./data/selfie-timelapse/output/:/app/output:rw
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "1"
+
 networks:
   immich-net:
     name: immich-net
