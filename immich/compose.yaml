@@ -177,13 +177,13 @@ volumes:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      o: "addr=192.168.20.42,hard,rw,nfsvers=4"
       device: ":/tank/media/photos/immich/"
   photography_nfs:
     driver: local
     driver_opts:
       type: "nfs"
-      o: "addr=192.168.20.42,nolock,soft,rw,nfsvers=4"
+      o: "addr=192.168.20.42,hard,rw,nfsvers=4"
       device: ":/tank/media/photos/photography/"
 
 x-dockge:
