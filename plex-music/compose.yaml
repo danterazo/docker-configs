@@ -50,22 +50,22 @@ volumes:
   music_nfs:
     driver: local
     driver_opts:
-      type: "nfs4"
+      type: "nfs"
       o: "addr=192.168.20.42,proto=tcp,rw,noatime,nfsvers=4,rsize=1048576,wsize=1048576,soft"
       device: ":/tank/media/music/"
 
   audiobooks_nfs:
     driver: local
     driver_opts:
-      type: "nfs4"
+      type: "nfs"
       o: "addr=192.168.20.42,proto=tcp,rw,noatime,nfsvers=4,rsize=1048576,wsize=1048576,soft"
       device: ":/tank/media/audiobooks/"
 
   backups_nfs:
     driver: local
     driver_opts:
-      type: "nfs4"
-      o: "addr=192.168.20.42,proto=tcp,rw,noatime,nfsvers=4,rsize=1048576,wsize=1048576,soft"
+      type: "nfs"
+      o: "addr=192.168.20.42,proto=tcp,rw,noatime,nfsvers=4,rsize=1048576,wsize=1048576,hard"
       device: ":/tank/backups/apps/plex-music/"
 
 x-dockge:
