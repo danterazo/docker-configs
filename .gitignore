@@ -30,7 +30,7 @@
 *.git/
 *source/
 
-# ignore data backed up elsewhere (TODO: remove and migrate)
+# ignore data backed up elsewhere
 */data/
 
 # ignore ephemeral folders/files
