@@ -9,7 +9,7 @@ format: fix-text fix-docker fix-caddy
 fix: format
 
 fix-text:
-	prettier --write .prettierrc.json
+	prettier --write .prettierrc.yaml
 	prettier --write --parser gitignore .prettierignore
 	prettier --write .
 
