@@ -10,7 +10,6 @@ fix: format
 
 fix-text:
 	prettier --write .prettierrc.yaml
-	prettier --write --parser gitignore .prettierignore
 	prettier --write .
 
 fix-docker:
