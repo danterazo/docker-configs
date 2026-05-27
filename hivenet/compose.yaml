@@ -10,7 +10,7 @@ services:
       - 4001:4001     # data plane (udp/tcp)
       - 4443:4443     # control plane (udp/tcp)
     env_file: .env
-    cpus: 2.0
+    cpus: 2
     #command: hive-agent contribute 6000 # 6TB contribution
     command: hive-agent daemon
     networks:

@@ -3,7 +3,7 @@ services:
     container_name: dockge-master
     image: louislam/dockge:latest
     restart: unless-stopped
-    cpus: 1.0
+    cpus: 1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
       - dockge-master_db:/app/data/:rw

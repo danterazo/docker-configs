@@ -23,7 +23,7 @@ services:
   tautulli-music:
     container_name: tautulli
     image: lscr.io/linuxserver/tautulli:latest
-    cpus: 1.0
+    cpus: 1
     env_file: .env
     volumes:
       - ./data/plex/:/plex-data/:ro
