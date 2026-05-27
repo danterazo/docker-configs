@@ -16,11 +16,6 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
 
 volumes:
   qbittorrent_nfs:

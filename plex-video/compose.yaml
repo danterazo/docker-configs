@@ -14,11 +14,6 @@ services:
       - /dev/shm/plex-transcode/:/transcode/:rw
     networks:
       - plex-video-net
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
   # TODO: add oauth2
   tautulli-video:
     container_name: tautulli
@@ -35,11 +30,6 @@ services:
       - plex-video
     networks:
       - plex-video-net
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
 
 networks:
   plex-video-net:

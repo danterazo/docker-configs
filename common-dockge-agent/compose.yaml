@@ -12,11 +12,6 @@ services:
       - 5001:5001/tcp
     networks:
       - dockge-agent-net
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
 
 networks:
   dockge-agent-net:

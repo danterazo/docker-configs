@@ -24,11 +24,6 @@ services:
       timeout: 10s
     networks:
       - proxy-net
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
 
   # vpntest:
   #   image: lscr.io/linuxserver/speedtest-tracker:latest
@@ -49,11 +44,6 @@ services:
   #     retries: 3
   #     start_period: 30s
   #     timeout: 10s
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "20m"
-  #       max-file: "1"
 
 networks:
   proxy-net:

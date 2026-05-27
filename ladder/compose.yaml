@@ -14,11 +14,6 @@ services:
     restart: unless-stopped
     networks:
       - ladder-net
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
   ladder-oauth:
     container_name: ladder-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
@@ -34,11 +29,6 @@ services:
       - proxy-net
     depends_on:
       - ladder
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
 networks:
   ladder-net:
     name: ladder-net

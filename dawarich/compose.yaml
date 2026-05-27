@@ -22,11 +22,6 @@ services:
       - "::"
     restart: unless-stopped
     env_file: .env
-    logging:
-      driver: json-file
-      options:
-        max-size: "100m"
-        max-file: "1"
     depends_on:
       dawarich-db:
         condition: service_healthy
@@ -94,11 +89,6 @@ services:
       - 2322
     user: ${PUID}:${PGID}
     env_file: .env
-    logging:
-      driver: json-file
-      options:
-        max-size: "20m"
-        max-file: "1"
     volumes:
       - dawarich_photon:/photon/:rw
       - /self-hosted/dawarich/photon-db/:/photon/photon_data/:rw
@@ -124,11 +114,6 @@ services:
       - sidekiq
     restart: on-failure
     env_file: .env
-    logging:
-      driver: json-file
-      options:
-        max-size: "100m"
-        max-file: "5"
     depends_on:
       dawarich-db:
         condition: service_healthy

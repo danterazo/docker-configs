@@ -14,11 +14,6 @@ services:
     user: ${PUID}:${PGID}
     networks:
       - planka-net
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
 
   planka-db:
     image: postgres:16-alpine
@@ -37,11 +32,6 @@ services:
       retries: 5
     networks:
       - planka-net
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
 
   planka-oauth:
     container_name: planka-oauth
@@ -60,11 +50,6 @@ services:
       - proxy-net
     depends_on:
       - planka-app
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
-        max-file: "1"
 
 networks:
   planka-net:
