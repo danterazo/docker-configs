@@ -7,7 +7,7 @@ ROOT_DIR="/docker"
 
 : 'INSTALL HELPFUL PACKAGES'
 apt update
-apt install -y tree ca-certificates curl git software-properties-common nfs-common
+apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop
 
 # install fastfetch
 add-apt-repository -y ppa:zhangsongcui3371/fastfetch
