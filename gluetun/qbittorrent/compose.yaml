@@ -22,7 +22,6 @@ services:
         max-size: "20m"
         max-file: "1"
 
-
 volumes:
   qbittorrent_nfs:
     driver: local
@@ -30,7 +29,6 @@ volumes:
       type: "nfs"
       o: "addr=192.168.20.42,hard,rw,noatime,nfsvers=4,timeo=600,retrans=2"
       device: ":/tank/downloads/qbittorrent/"
-
 
 x-dockge:
   urls:

@@ -38,7 +38,6 @@ volumes:
     name: strava-stats_logs
     external: true
 
-
 x-dockge:
   urls:
     - https://bike.samskeyti.net/

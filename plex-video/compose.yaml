@@ -41,7 +41,6 @@ services:
         max-size: "20m"
         max-file: "1"
 
-
 networks:
   plex-video-net:
     name: plex-video-net

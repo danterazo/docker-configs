@@ -55,8 +55,6 @@ services:
   #       max-size: "20m"
   #       max-file: "1"
 
-
-
 networks:
   proxy-net:
     external: true

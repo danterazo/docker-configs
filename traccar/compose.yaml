@@ -5,9 +5,9 @@ services:
     container_name: traccar
     restart: unless-stopped
     env_file: .env
-#    expose:
-#      - 8082
-#      - 5002
+    #    expose:
+    #      - 8082
+    #      - 5002
     ports:
       - 8082:8082/tcp # UI
       - 5002:5002 # service

@@ -65,7 +65,7 @@ services:
       options:
         max-size: "20m"
         max-file: "1"
-        
+
 networks:
   planka-net:
     name: planka-net
@@ -84,7 +84,6 @@ volumes:
   planka_db:
     name: planka_db
     external: true
-
 
 x-dockge:
   urls:

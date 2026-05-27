@@ -12,7 +12,7 @@ services:
       - urbackup_appdata:/backups/urbackup/:rw
       #- /self-hosted/urbackup/temp/:/backups/urbackup_tmp_files/:rw
       - /mnt/mega-pool/app-data/urbackup/:/backups/:rw
-    network_mode: host  # TODO: do I really need host mode?
+    network_mode: host # TODO: do I really need host mode?
     # Uncomment the following two lines if you're using BTRFS support
     #cap_add:
     #  - SYS_ADMIN
@@ -38,7 +38,6 @@ volumes:
   urbackup_clients:
     name: urbackup_clients
     external: true
-
 
 x-dockge:
   urls:
