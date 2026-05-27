@@ -98,7 +98,7 @@ services:
       - .env
       - .secrets
     volumes:
-      - ./data:/var/lib/postgresql/data/:rw
+      - ./data/immich/:/var/lib/postgresql/data/:rw
     healthcheck:
       test:
         pg_isready --dbname='${DB_DATABASE_NAME}' --username='${DB_USERNAME}' ||
