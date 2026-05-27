@@ -11,6 +11,7 @@
 */caddy/configs/snippets/common.conf
 */hivenet/machine-config/machine-id
 */gluetun/oauth2/
+**/tautulli
 
 # ignore temporary files
 *.swp
