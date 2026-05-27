@@ -7,10 +7,9 @@ services:
       file: hwaccel.transcoding.yml
       service: nvenc
     runtime: nvidia
-    user: 1000:1000
     # cpus: 8
+    user: 1000:1000
     volumes:
-      # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - data_nfs:/data/:rw
       - photography_nfs:/external/photography/:rw
       - /etc/localtime:/etc/localtime:ro
@@ -32,10 +31,8 @@ services:
     networks:
       - immich-net
     security_opt:
-      # Prevent escalation of privileges after the container is started
       - no-new-privileges:true
     cap_drop:
-      # Prevent access to raw network traffic
       - NET_RAW
     logging:
       driver: "json-file"
@@ -47,7 +44,6 @@ services:
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-cuda
     extends:
       file: hwaccel.ml.yml
-      # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
       service: cuda
     runtime: nvidia
     # cpus: 8
@@ -65,10 +61,8 @@ services:
     networks:
       - immich-net
     security_opt:
-      # Prevent escalation of privileges after the container is started
       - no-new-privileges:true
     cap_drop:
-      # Prevent access to raw network traffic
       - NET_RAW
     logging:
       driver: "json-file"
@@ -88,7 +82,6 @@ services:
       - .env
       - .secrets
     security_opt:
-      # Prevent escalation of privileges after the container is started
       - no-new-privileges:true
     logging:
       driver: "json-file"
@@ -96,7 +89,6 @@ services:
         max-size: "20m"
         max-file: "1"
     cap_drop:
-      # Prevent access to raw network traffic
       - NET_RAW
   immich-db:
     container_name: immich-db
@@ -106,7 +98,6 @@ services:
       - .env
       - .secrets
     volumes:
-      # Do not edit the next line. If you want to change the database storage location on your system, edit the value of DB_DATA_LOCATION in the .env file
       - ./data:/var/lib/postgresql/data/:rw
     healthcheck:
       test:
@@ -141,30 +132,6 @@ services:
     restart: always
     networks:
       - immich-net
-  # TODO: immich-backup:
-  #   container_name: immich-backup
-  #   image: prodrigestivill/postgres-backup-local:14
-  #   restart: always
-  #   env_file:
-  #    - .env
-  #    - .secrets
-  #   environment:
-  #     POSTGRES_HOST: immich-postgres
-  #     POSTGRES_CLUSTER: "TRUE"
-  #     POSTGRES_USER: ${DB_USERNAME}
-  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
-  #     POSTGRES_DB: ${DB_DATABASE_NAME}
-  #     SCHEDULE: "@daily"
-  #     POSTGRES_EXTRA_OPTS: --clean --if-exists
-  #     BACKUP_DIR: /db_dumps
-  #   volumes:
-  #     - /self-hosted/immich/db-dumps/:/db_dumps/:rw
-  #   networks:
-  #     - immich-net
-  #   depends_on:
-  #     immich-db:
-  #       condition: service_healthy
-  #       restart: true
 
 networks:
   immich-net:
