@@ -46,6 +46,8 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 
 	cd "${ROOT_DIR}"
 
+	# include .profile-scripts and this app's dir
+	# (sparse-checkout already set during initial clone)
 	git sparse-checkout init --cone
 	git sparse-checkout set \
 		.profile-scripts \
@@ -55,11 +57,6 @@ else
 	cd "${ROOT_DIR}"
 	git pull --ff-only
 fi
-
-# include .profile-scripts and this app's dir
-git sparse-checkout set \
-	.profile-scripts \
-	"${APP_NAME}"
 
 # link all common profile scripts into /etc/profile.d
 for script in "${ROOT_DIR}"/.profile-scripts/*.sh; do
