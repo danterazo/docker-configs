@@ -28,7 +28,6 @@ services:
     volumes:
       - ./data/plex/:/plex-data/:ro
       - ./data/tautulli/:/config/:rw
-#    user: ${PUID}:${PGID}
     ports:
       - 8181:8181/tcp
     restart: unless-stopped
