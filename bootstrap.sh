@@ -119,6 +119,8 @@ if [ ! -f /docker/.common/bashrc.sh ]; then
 	exit 1
 fi
 
+# create symlinks
+mkdir -p /home/dante
 ln -sf /docker/.common/bashrc.sh /root/.bashrc
 ln -sf /docker/.common/bashrc.sh /home/dante/.bashrc
 
