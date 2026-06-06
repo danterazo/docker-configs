@@ -123,7 +123,7 @@ git config --global --add safe.directory /docker
 
 : 'BASH CONFIG'
 BASHRC="$HOME/.bashrc"
-LINE='# common profile scripts'
+LINE='.profile-scripts'
 
 if ! grep -qF "$LINE" "$BASHRC"; then
 	cat << 'EOF' >> "$BASHRC"
