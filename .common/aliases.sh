@@ -27,3 +27,6 @@ dpull() {
 
 # package management
 alias upgrade='sudo apt update && sudo apt dist-upgrade -y && sudo apt clean && sudo apt autoremove -y --purge'
+
+# system state
+alias bootstrap="source /docker/bootstrap.sh"
