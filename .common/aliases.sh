@@ -24,3 +24,6 @@ dpull() {
     docker compose pull
 	docker compose up -d --remove-orphans
 }
+
+# package management
+alias upgrade='sudo apt update && sudo apt dist-upgrade -y && sudo apt clean && sudo apt autoremove -y --purge'

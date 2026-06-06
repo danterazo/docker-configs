@@ -68,11 +68,11 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 
 	cd "${ROOT_DIR}"
 
-	# include .profile-scripts and this app's dir
+	# include .common and this app's dir
 	# (sparse-checkout already set during initial clone)
 	git sparse-checkout init --cone
 	git sparse-checkout set \
-		.profile-scripts \
+		.common \
 		"${APP_NAME}"
 else
 	# repo already exists; just update
@@ -80,17 +80,23 @@ else
 	git pull --ff-only
 fi
 
-# link all common profile scripts into /etc/profile.d
-for script in "${ROOT_DIR}"/.profile-scripts/*.sh; do
+# link common login-shell scripts into /etc/profile.d
+for script in "${ROOT_DIR}"/.common/*.sh; do
 	# skip if glob didn't match anything
 	[ -e "$script" ] || continue
 
 	base="$(basename "$script")"
+	[ "$base" = "bashrc.sh" ] && continue
 	ln -sf "$script" "/etc/profile.d/00-${base}"
 done
 
 # remove community-scripts details loader
 rm -f /etc/profile.d/00_lxc-details.sh || true
+
+# share one bashrc entrypoint for interactive shells
+for shell_home in /root /home/dante; do
+	ln -sf /docker/.common/bashrc.sh "${shell_home}/.bashrc"
+done
 
 
 : 'INIT PERMISSIONS'
@@ -101,7 +107,7 @@ fi
 
 # create dante user if missing
 if ! id -u dante >/dev/null 2>&1; then
-	useradd -u 1000 -g 1000 -M -s /bin/bash dante
+	useradd -u 1000 -g 1000 -m -d /home/dante -s /bin/bash dante
 fi
 
 # enable GPU access
@@ -114,29 +120,19 @@ usermod -aG video,render dante || true
 chown -R dante:dante "${ROOT_DIR}"
 
 
+# share one bashrc entrypoint for interactive shells
+for shell_home in /root /home/dante; do
+	ln -sf /docker/.common/bashrc.sh "${shell_home}/.bashrc"
+done
+
+# make sure the shared login-shell hook exists too
+ln -sf /docker/.common/bashrc.sh /etc/profile.d/00-bashrc.sh
+
 : 'GIT CONFIG'
 git config --global user.name "Dante Razo"
 git config --global user.email "github.d2brf@simplelogin.fr"
 git config pull.rebase false
 git config --global --add safe.directory /docker
-
-
-: 'BASH CONFIG'
-BASHRC="$HOME/.bashrc"
-LINE='.profile-scripts'
-
-if ! grep -qF "$LINE" "$BASHRC"; then
-	cat << 'EOF' >> "$BASHRC"
-
-# common profile scripts
-if [ -d /docker/.profile-scripts ]; then
-	for script in /docker/.profile-scripts/*.sh; do
-		[ -r "$script" ] && . "$script"
-	done
-	unset script
-fi
-EOF
-fi
 
 
 : 'NOTICES TO USER'
