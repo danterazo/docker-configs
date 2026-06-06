@@ -69,22 +69,32 @@ mkdir -p "${ROOT_DIR}"
 
 if [ ! -d "${ROOT_DIR}/.git" ]; then
 	# first-time setup; clone and init sparse-checkout
-	git clone --filter=blob:none --sparse \
+	if ! git clone --filter=blob:none --sparse \
 		git@github.com:danterazo/docker-configs.git \
-		"${ROOT_DIR}"
+		"${ROOT_DIR}"; then
+		echo "ERROR: Failed to clone repository" >&2
+		exit 1
+	fi
 
 	cd "${ROOT_DIR}"
 
 	# include .common and this app's dir
 	# (sparse-checkout already set during initial clone)
-	git sparse-checkout init --cone
-	git sparse-checkout set \
-		.common \
-		"${APP_NAME}"
+	if ! git sparse-checkout init --cone; then
+		echo "ERROR: Failed to initialize sparse-checkout" >&2
+		exit 1
+	fi
+	
+	if ! git sparse-checkout set .common "${APP_NAME}"; then
+		echo "ERROR: Failed to set sparse-checkout paths" >&2
+		exit 1
+	fi
 else
 	# repo already exists; just update
 	cd "${ROOT_DIR}"
-	git pull --ff-only
+	if ! git pull --ff-only; then
+		echo "WARNING: Failed to pull updates (continuing anyway)" >&2
+	fi
 fi
 
 # remove community-scripts details loader
@@ -114,6 +124,11 @@ chown -R dante:dante "${ROOT_DIR}"
 
 : 'BASH CONFIG'
 # share one bashrc entrypoint across accounts
+if [ ! -f /docker/.common/bashrc.sh ]; then
+	echo "ERROR: /docker/.common/bashrc.sh not found. Sparse-checkout may have failed." >&2
+	exit 1
+fi
+
 ln -sf /docker/.common/bashrc.sh /root/.bashrc
 ln -sf /docker/.common/bashrc.sh /home/dante/.bashrc
 
