@@ -7,7 +7,7 @@ ROOT_DIR="/docker"
 
 : 'INSTALL HELPFUL PACKAGES'
 apt update
-apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop
+apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion
 
 # install fastfetch
 add-apt-repository -y ppa:zhangsongcui3371/fastfetch
@@ -119,6 +119,26 @@ git config --global user.name "Dante Razo"
 git config --global user.email "github.d2brf@simplelogin.fr"
 git config pull.rebase false
 git config --global --add safe.directory /docker
+
+
+: 'BASH CONFIG'
+cat << 'EOF' >> "$HOME/.bashrc"
+
+# enable bash completion in interactive shells
+if ! shopt -oq posix; then
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+		. /usr/share/bash-completion/bash_completion
+	elif [ -f /etc/bash_completion ]; then
+		. /etc/bash_completion
+	fi
+fi
+EOF
+
+cat << 'EOF' >> "$HOME/.bashrc"
+
+# dante's additions
+alias upgrade='sudo apt update && sudo apt dist-upgrade -y && sudo apt clean && sudo apt autoremove -y --purge'
+EOF
 
 
 : 'NOTICES TO USER'
