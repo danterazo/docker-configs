@@ -68,34 +68,24 @@ git config --global --add safe.directory /docker
 mkdir -p "${ROOT_DIR}"
 
 if [ ! -d "${ROOT_DIR}/.git" ]; then
-	# first-time setup; clone and init sparse-checkout
+	# first-time setup; clone repository
 	if ! git clone --filter=blob:none --sparse \
 		git@github.com:danterazo/docker-configs.git \
 		"${ROOT_DIR}"; then
 		echo "ERROR: Failed to clone repository" >&2
 		exit 1
 	fi
-
-	cd "${ROOT_DIR}"
-
-	# include .common and this app's dir
-	# (sparse-checkout already set during initial clone)
-	if ! git sparse-checkout init --cone; then
-		echo "ERROR: Failed to initialize sparse-checkout" >&2
-		exit 1
-	fi
-	
-	if ! git sparse-checkout set .common "${APP_NAME}"; then
-		echo "ERROR: Failed to set sparse-checkout paths" >&2
-		exit 1
-	fi
 else
 	# repo already exists; just update
 	cd "${ROOT_DIR}"
-	if ! git pull --ff-only; then
-		echo "WARNING: Failed to pull updates (continuing anyway)" >&2
-	fi
+	git pull --ff-only 2>/dev/null || true
 fi
+
+cd "${ROOT_DIR}"
+
+# configure sparse-checkout
+git sparse-checkout init --cone 2>/dev/null || true
+git sparse-checkout set .common "${APP_NAME}" 2>/dev/null || true
 
 # remove community-scripts details loader
 rm -f /etc/profile.d/00_lxc-details.sh || true
