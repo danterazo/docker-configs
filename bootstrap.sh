@@ -122,23 +122,21 @@ git config --global --add safe.directory /docker
 
 
 : 'BASH CONFIG'
-cat << 'EOF' >> "$HOME/.bashrc"
+BASHRC="$HOME/.bashrc"
+LINE='# common profile scripts'
 
-# enable bash completion in interactive shells
-if ! shopt -oq posix; then
-	if [ -f /usr/share/bash-completion/bash_completion ]; then
-		. /usr/share/bash-completion/bash_completion
-	elif [ -f /etc/bash_completion ]; then
-		. /etc/bash_completion
-	fi
+if ! grep -qF "$LINE" "$BASHRC"; then
+	cat << 'EOF' >> "$BASHRC"
+
+# common profile scripts
+if [ -d /docker/.profile-scripts ]; then
+	for script in /docker/.profile-scripts/*.sh; do
+		[ -r "$script" ] && . "$script"
+	done
+	unset script
 fi
 EOF
-
-cat << 'EOF' >> "$HOME/.bashrc"
-
-# dante's additions
-alias upgrade='sudo apt update && sudo apt dist-upgrade -y && sudo apt clean && sudo apt autoremove -y --purge'
-EOF
+fi
 
 
 : 'NOTICES TO USER'
