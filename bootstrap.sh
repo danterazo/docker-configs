@@ -57,6 +57,13 @@ fi
 
 # TODO: set up SSH key sharing
 
+: 'GIT CONFIG'
+git config --global user.name "Dante Razo"
+git config --global user.email "github.d2brf@simplelogin.fr"
+git config --global pull.rebase false
+git config --global --add safe.directory /docker
+
+
 : 'INIT CONFIG REPOSITORY'
 mkdir -p "${ROOT_DIR}"
 
@@ -80,23 +87,8 @@ else
 	git pull --ff-only
 fi
 
-# link common login-shell scripts into /etc/profile.d
-for script in "${ROOT_DIR}"/.common/*.sh; do
-	# skip if glob didn't match anything
-	[ -e "$script" ] || continue
-
-	base="$(basename "$script")"
-	[ "$base" = "bashrc.sh" ] && continue
-	ln -sf "$script" "/etc/profile.d/00-${base}"
-done
-
 # remove community-scripts details loader
 rm -f /etc/profile.d/00_lxc-details.sh || true
-
-# share one bashrc entrypoint for interactive shells
-for shell_home in /root /home/dante; do
-	ln -sf /docker/.common/bashrc.sh "${shell_home}/.bashrc"
-done
 
 
 : 'INIT PERMISSIONS'
@@ -120,19 +112,10 @@ usermod -aG video,render dante || true
 chown -R dante:dante "${ROOT_DIR}"
 
 
-# share one bashrc entrypoint for interactive shells
-for shell_home in /root /home/dante; do
-	ln -sf /docker/.common/bashrc.sh "${shell_home}/.bashrc"
-done
-
-# make sure the shared login-shell hook exists too
-ln -sf /docker/.common/bashrc.sh /etc/profile.d/00-bashrc.sh
-
-: 'GIT CONFIG'
-git config --global user.name "Dante Razo"
-git config --global user.email "github.d2brf@simplelogin.fr"
-git config pull.rebase false
-git config --global --add safe.directory /docker
+: 'BASH CONFIG'
+# share one bashrc entrypoint across accounts
+ln -sf /docker/.common/bashrc.sh /root/.bashrc
+ln -sf /docker/.common/bashrc.sh /home/dante/.bashrc
 
 
 : 'NOTICES TO USER'
