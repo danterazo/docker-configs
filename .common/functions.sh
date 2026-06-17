@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # versioning
 dpull() {
 	cd "/docker/$(hostname)"
