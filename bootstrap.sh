@@ -10,15 +10,8 @@ UBUNTU_CODENAME="resolute"
 apt update
 apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion
 
-# install fastfetch
-add-apt-repository -y ppa:zhangsongcui3371/fastfetch
-
-# rewrite the PPA suite to use manual codename instead of the reported codename
-sed -i "s/stonking/${THIRDPARTY_CODENAME}/g" /etc/apt/sources.list.d/zhangsongcui3371-ubuntu-fastfetch-*.list 2>/dev/null || true
-sed -i "s/stonking/${THIRDPARTY_CODENAME}/g" /etc/apt/sources.list.d/zhangsongcui3371-ubuntu-fastfetch-*.sources 2>/dev/null || true
-
-apt update
-apt install -y fastfetch
+# install fastfetch if the OS provides it
+apt install -y fastfetch || true
 
 
 : 'INSTALL DOCKER'
