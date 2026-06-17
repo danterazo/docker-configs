@@ -17,14 +17,6 @@ alias dvol="docker volume ls"
 alias dcuu="docker compose up -d --remove-orphans"
 alias dcpb="docker compose build --pull"
 
-# functions
-dpull() {
-	cd "/docker/$(hostname)"
-	git pull
-    docker compose pull
-	docker compose up -d --remove-orphans
-}
-
 # package management
 alias upgrade='sudo apt update && sudo apt dist-upgrade -y && sudo apt clean && sudo apt autoremove -y --purge'
 
