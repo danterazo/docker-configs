@@ -11,7 +11,19 @@ apt update
 apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion
 
 # install fastfetch
-add-apt-repository -y ppa:zhangsongcui3371/fastfetch
+cat >/etc/apt/sources.list.d/fastfetch.sources <<EOF
+Types: deb
+URIs: https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu
+Suites: ${UBUNTU_CODENAME}
+Components: main
+Signed-By: /etc/apt/keyrings/fastfetch.asc
+EOF
+
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x6419D6CDB5A4A1F45A6F0A97925A1B18A2F1B4D8" \
+	-o /etc/apt/keyrings/fastfetch.asc
+chmod a+r /etc/apt/keyrings/fastfetch.asc
+
 apt update
 apt install -y fastfetch
 
