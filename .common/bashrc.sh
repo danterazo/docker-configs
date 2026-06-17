@@ -110,14 +110,5 @@ if ! shopt -oq posix; then
         fi
 fi
 
-: 'COMMON PROFILE SCRIPTS'
-# source common profile scripts from .common
-for script in /docker/.common/*.sh; do
-	base="$(basename "$script")"
-	[ "$base" = "bashrc.sh" ] && continue
-	[ -r "$script" ] && . "$script"
-done
-unset script
-
 : 'CUSTOM ALIASES'
 alias upgrade='sudo apt update && sudo apt dist-upgrade -y && sudo apt clean && sudo apt autoremove -y --purge'
