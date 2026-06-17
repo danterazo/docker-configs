@@ -4,7 +4,7 @@
 : 'GLOBAL CONFIG'
 APP_NAME="$(hostname)"
 ROOT_DIR="/docker"
-OVERRIDE_CODENAME="resolute"	# OPTIONAL
+UBUNTU_CODENAME="resolute"
 
 : 'INSTALL HELPFUL PACKAGES'
 apt update
@@ -27,7 +27,7 @@ chmod a+r /etc/apt/keyrings/docker.asc
 cat >/etc/apt/sources.list.d/docker.sources <<EOF
 Types: deb
 URIs: https://download.docker.com/linux/ubuntu
-Suites: ${OVERRIDE_CODENAME:-$(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")}
+Suites: ${UBUNTU_CODENAME}
 Components: stable
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
