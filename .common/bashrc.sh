@@ -109,6 +109,3 @@ if ! shopt -oq posix; then
                 . /etc/bash_completion
         fi
 fi
-
-: 'CUSTOM ALIASES'
-alias upgrade='sudo apt update && sudo apt dist-upgrade -y && sudo apt clean && sudo apt autoremove -y --purge'
