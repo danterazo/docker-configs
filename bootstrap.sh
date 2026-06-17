@@ -92,17 +92,6 @@ find /etc/profile.d -maxdepth 1 -type l -name "00-*.sh" -delete 2>/dev/null || t
 # remove community-scripts details loader
 rm -f /etc/profile.d/00_lxc-details.sh || true
 
-# link common login-shell scripts into /etc/profile.d
-for script in "${ROOT_DIR}"/.common/*.sh; do
-	# skip if glob didn't match anything
-	[ -e "$script" ] || continue
-
-	base="$(basename "$script")"
-	# don't link bashrc.sh (it's handled separately via .bashrc)
-	[ "$base" = "bashrc.sh" ] && continue
-	ln -sf "$script" "/etc/profile.d/00-${base}"
-done
-
 
 : 'INIT PERMISSIONS'
 # create dante group if missing
