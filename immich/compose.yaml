@@ -59,6 +59,20 @@ services:
       - no-new-privileges:true
     cap_drop:
       - NET_RAW
+    command: >
+      python -m gunicorn immich_ml.main:app
+      -k immich_ml.config.CustomUvicornWorker
+      -c immich_ml/gunicorn_conf.py
+      -b 0.0.0.0:3003
+      --log-config-json immich_ml/log_conf.json
+      --workers 1
+      --timeout 300
+      --keep-alive 2
+      --graceful-timeout 10
+      --max-requests 100
+      --max-requests-jitter 10
+
+
   immich-redis:
     container_name: immich-redis
     image: docker.io/redis:6.2-alpine@sha256:eaba718fecd1196d88533de7ba49bf903ad33664a92debb24660a922ecd9cac8
