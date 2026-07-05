@@ -59,6 +59,7 @@ services:
       - no-new-privileges:true
     cap_drop:
       - NET_RAW
+    # https://github.com/immich-app/immich/issues/23462#issuecomment-4430239688
     command: >
       python -m gunicorn immich_ml.main:app
       -k immich_ml.config.CustomUvicornWorker
