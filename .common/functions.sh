@@ -13,3 +13,10 @@ drpull() {
 	dpull
 	reboot
 }
+
+# pull, upgrade packages, then restart
+durpull() {
+	upgrade
+	dpull
+	reboot
+}
