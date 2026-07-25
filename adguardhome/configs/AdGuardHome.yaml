@@ -229,7 +229,7 @@ filtering:
       answer: 192.168.10.1
       enabled: true
     - domain: proxy
-      answer: 192.168.30.203
+      answer: 192.168.40.203
       enabled: true
     - domain: '*.samskeyti.net'
       answer: proxy
