@@ -5,10 +5,6 @@ services:
     restart: always
     cpus: 1
     volumes:
-      - work:/opt/adguardhome/work/:rw
+      - ./work/:/opt/adguardhome/work/:rw
       - ./configs/:/opt/adguardhome/conf/:rw
     network_mode: host
-
-# named volumes
-volumes:
-  work: {}
