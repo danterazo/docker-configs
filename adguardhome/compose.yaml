@@ -33,7 +33,7 @@ services:
     command: run
     profiles: ["sync"]
     ports:
-      - "8070:8080"
+      - "8070:8080/tcp"
     env_file:
       - common.env
       - keepalived.env
