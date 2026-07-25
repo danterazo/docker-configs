@@ -8,7 +8,7 @@ services:
       - common.env      # common for all instances
       - keepalived.env  # unique to each LXC
     volumes:
-      - ./work/:/opt/adguardhome/work/:rw
+      - ./state/:/opt/adguardhome/work/:rw
       - ./configs/:/opt/adguardhome/conf/:rw
     network_mode: host
 

@@ -36,8 +36,12 @@
 # ignore ephemeral folders/files
 *ephemeral
 
+# ignore state (semi-ephemeral) files
+adguardhome/state/
+
 # ignore actions
 *github-runner/
 
 # ignore unique files
+adguardhome/.env
 adguardhome/keepalived.env
