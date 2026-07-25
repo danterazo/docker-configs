@@ -45,3 +45,4 @@ adguardhome/state/
 # ignore unique files
 adguardhome/.env
 adguardhome/keepalived.env
+caddy/keepalived.env

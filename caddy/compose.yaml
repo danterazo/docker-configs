@@ -17,9 +17,24 @@ services:
     volumes:
       - caddy_data:/data/caddy/:rw
       - ./configs/:/etc/caddy/:rw
+
+  keepalived:
+    image: osixia/keepalived:latest
+    container_name: keepalived
+    restart: always
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_BROADCAST
+      - NET_RAW
+    env_file:
+      - keepalived.env
+      - keepalived.env
+
 networks:
   caddy-net:
     name: caddy-net
+    
 volumes:
   caddy_data:
     external: true
