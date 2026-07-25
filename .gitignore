@@ -38,3 +38,6 @@
 
 # ignore actions
 *github-runner/
+
+# ignore unique files
+adguardhome/keepalived.env

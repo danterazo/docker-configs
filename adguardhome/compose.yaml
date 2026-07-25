@@ -4,7 +4,35 @@ services:
     container_name: adguardhome
     restart: always
     cpus: 1
+    env_file:
+      - common.env
+      - node.env
     volumes:
       - ./work/:/opt/adguardhome/work/:rw
       - ./configs/:/opt/adguardhome/conf/:rw
     network_mode: host
+
+  keepalived:
+    image: osixia/keepalived:latest
+    container_name: keepalived
+    restart: always
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_BROADCAST
+      - NET_RAW
+    env_file:
+      - common.env
+      - node.env
+
+  adguardhome-sync:
+    image: ghcr.io/bakito/adguardhome-sync:latest
+    container_name: adguardhome-sync
+    restart: unless-stopped
+    command: run
+    profiles: ["sync"]
+    ports:
+      - "8080:8080"
+    env_file:
+      - common.env
+      - node.env
