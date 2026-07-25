@@ -10,7 +10,9 @@ services:
       - 80:80/tcp # HTTP
       - 443:443 # HTTPS
       - 443:443/udp # HTTP/3
-    env_file: .env
+    env_file:
+      - .env
+      - secrets.env
     networks:
       - caddy-net
     restart: always
@@ -28,7 +30,7 @@ services:
       - NET_BROADCAST
       - NET_RAW
     env_file:
-      - keepalived.env
+      - .env
       - keepalived.env
 
 networks:
