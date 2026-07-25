@@ -15,7 +15,7 @@ services:
       - caddy-net
     restart: always
     volumes:
-      - caddy_data:/data/caddy/:rw
+      - ./data/:/data/caddy/:rw
       - ./configs/:/etc/caddy/:rw
 
   keepalived:
@@ -34,7 +34,3 @@ services:
 networks:
   caddy-net:
     name: caddy-net
-    
-volumes:
-  caddy_data:
-    external: true
