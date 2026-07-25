@@ -8,7 +8,7 @@ UBUNTU_CODENAME="resolute"
 
 : 'INSTALL HELPFUL PACKAGES'
 apt update
-apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion
+apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release
 
 # install fastfetch if the OS provides it
 apt install -y fastfetch || true
