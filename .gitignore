@@ -8,7 +8,7 @@
 */radicale/configs/users
 */soulseek/slskd.yml
 */cloudflare-ddns/config.json
-*/caddy/configs/snippets/common.conf
+*/caddy/secrets.env
 */hivenet/machine-config/machine-id
 */gluetun/oauth2/
 **/tautulli
@@ -36,8 +36,13 @@
 # ignore ephemeral folders/files
 *ephemeral
 
+# ignore state (semi-ephemeral) files
+adguardhome/state/
+
 # ignore actions
 *github-runner/
 
 # ignore unique files
+adguardhome/.env
 adguardhome/keepalived.env
+caddy/keepalived.env

@@ -59,7 +59,7 @@ dns:
   cache_size: 4194304
   cache_ttl_min: 0
   cache_ttl_max: 0
-  cache_optimistic: false
+  cache_optimistic: true
   cache_optimistic_answer_ttl: 30s
   cache_optimistic_max_age: 12h
   bogus_nxdomain: []
@@ -229,7 +229,7 @@ filtering:
       answer: 192.168.10.1
       enabled: true
     - domain: proxy
-      answer: 192.168.30.203
+      answer: 192.168.40.203
       enabled: true
     - domain: '*.samskeyti.net'
       answer: proxy

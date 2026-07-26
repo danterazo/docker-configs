@@ -10,16 +10,29 @@ services:
       - 80:80/tcp # HTTP
       - 443:443 # HTTPS
       - 443:443/udp # HTTP/3
-    env_file: .env
+    env_file:
+      - .env
+      - secrets.env
     networks:
       - caddy-net
     restart: always
     volumes:
-      - caddy_data:/data/caddy/:rw
+      - ./data/:/data/caddy/:rw
       - ./configs/:/etc/caddy/:rw
+
+  keepalived:
+    image: osixia/keepalived:latest
+    container_name: keepalived
+    restart: always
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_BROADCAST
+      - NET_RAW
+    env_file:
+      - .env
+      - keepalived.env
+
 networks:
   caddy-net:
     name: caddy-net
-volumes:
-  caddy_data:
-    external: true

@@ -4,11 +4,9 @@ services:
     container_name: adguardhome
     restart: always
     cpus: 1
-    env_file:
-      - common.env      # common for all instances
-      - keepalived.env  # unique to each LXC
+    env_file: common.env      # common for all instances
     volumes:
-      - ./work/:/opt/adguardhome/work/:rw
+      - ./state/:/opt/adguardhome/work/:rw
       - ./configs/:/opt/adguardhome/conf/:rw
     network_mode: host
 
@@ -34,6 +32,4 @@ services:
     profiles: ["sync"]
     ports:
       - "8070:8080/tcp"
-    env_file:
-      - common.env
-      - keepalived.env
+    env_file: common.env
