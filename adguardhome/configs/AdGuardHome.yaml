@@ -228,17 +228,20 @@ filtering:
     - domain: plex.direct
       answer: 192.168.10.1
       enabled: true
-    - domain: proxy
-      answer: 192.168.40.203
-      enabled: true
     - domain: '*.samskeyti.net'
-      answer: proxy
+      answer: 192.168.40.203
       enabled: true
     - domain: plex.samskeyti.net
       answer: app.plex.tv
       enabled: true
     - domain: cas-bridge.xethub.hf.co
       answer: 3.165.160.110
+      enabled: true
+    - domain: btc.samskeyti.net
+      answer: 192.168.30.112
+      enabled: true
+    - domain: bch.samskeyti.net
+      answer: 192.168.30.113
       enabled: true
   safe_fs_patterns:
     - /opt/AdGuardHome/data/userfilters/*
@@ -315,6 +318,66 @@ clients:
         - os_other
       upstreams: []
       uid: 019816cb-d690-7bed-ac07-7814ecc5ddf0
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: America/Chicago
+        ids: []
+      name: Inni BB
+      ids:
+        - 100.100.30.170
+        - 192.168.30.170
+      tags:
+        - os_windows
+      upstreams: []
+      uid: 019fac35-bac8-7249-8659-37df10b8057e
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: America/Chicago
+        ids: []
+      name: Inni HN
+      ids:
+        - 100.100.30.171
+        - 192.168.30.171
+      tags:
+        - os_windows
+      upstreams: []
+      uid: 019fac36-2be5-7661-abd1-141514e27982
       upstreams_cache_size: 0
       upstreams_cache_enabled: false
       use_global_settings: true
@@ -461,7 +524,7 @@ clients:
         schedule:
           time_zone: UTC
         ids: []
-      name: PBS VM
+      name: PBS LXC
       ids:
         - 100.100.30.110
         - 192.168.30.110
