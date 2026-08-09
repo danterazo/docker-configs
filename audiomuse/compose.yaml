@@ -1,18 +1,14 @@
-version: '3.8'
 services:
-  # PostgreSQL database service
   postgres:
     image: postgres:15-alpine
     container_name: audiomuse-postgres
-    environment:
-      TZ: "${TZ:-UTC}"
-      POSTGRES_USER: ${POSTGRES_USER:-audiomuse}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-audiomusepassword}
-      POSTGRES_DB: "audiomusedb"
+    env_file:
+      - .env
+      - .secrets
     ports:
-      - "${POSTGRES_PORT:-5432}:5432" # Expose PostgreSQL port to the host
+      - 5432:5432/tcp
     volumes:
-      - postgres-data:/var/lib/postgresql/data # Persistent storage for PostgreSQL data
+      - ./db/:/var/lib/postgresql/data
     restart: unless-stopped
 
   # AudioMuse-AI Flask application service
@@ -20,20 +16,13 @@ services:
     image: ghcr.io/neptunehub/audiomuse-ai:latest-nvidia
     container_name: audiomuse-ai-flask-app
     ports:
-      - "${FRONTEND_PORT:-8000}:8000" # Map host port 8000 to container port 8000
-    environment:
-      SERVICE_TYPE: "flask" # Tells the container to run the Flask app
-      TZ: "${TZ:-UTC}"
-      # DATABASE_URL is now constructed by config.py from the following:
-      POSTGRES_USER: ${POSTGRES_USER:-audiomuse}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-audiomusepassword}
-      POSTGRES_DB: "audiomusedb"
-      POSTGRES_HOST: "postgres" # Service name of the postgres container
-      POSTGRES_PORT: "5432" # Internal port - always 5432 inside the Docker network
-      TEMP_DIR: "/app/temp_audio"
+      - 8000:8000/tcp
+    env_file:
+      - .env
+      - .secrets
     volumes:
-      - temp-audio-flask:/app/temp_audio # Volume for temporary audio files
-      - plugins-flask:/app/plugin/installed # This container's own plugins cache (code + pip deps)
+      - flask-audio:/app/temp_audio # Volume for temporary audio files
+      - flask-plugins:/app/plugin/installed # This container's own plugins cache (code + pip deps)
     depends_on:
       - postgres
     restart: unless-stopped
@@ -49,22 +38,12 @@ services:
   audiomuse-ai-worker:
     image: ghcr.io/neptunehub/audiomuse-ai:latest-nvidia
     container_name: audiomuse-ai-worker-instance
-    environment:
-      SERVICE_TYPE: "worker" # Tells the container to run the queue workers
-      TZ: "${TZ:-UTC}"
-      # DATABASE_URL is now constructed by config.py from the following:
-      POSTGRES_USER: ${POSTGRES_USER:-audiomuse}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-audiomusepassword}
-      POSTGRES_DB: "audiomusedb"
-      POSTGRES_HOST: "postgres" # Service name of the postgres container
-      POSTGRES_PORT: "5432" # Internal port - always 5432 inside the Docker network
-      NVIDIA_VISIBLE_DEVICES: "0"
-      NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
-      USE_GPU_CLUSTERING: "${USE_GPU_CLUSTERING:-true}"
-      TEMP_DIR: "/app/temp_audio"
+    env_file:
+      - .env
+      - .secrets
     volumes:
-      - temp-audio-worker:/app/temp_audio # Volume for temporary audio files
-      - plugins-worker:/app/plugin/installed # This container's own plugins cache (code + pip deps)
+      - worker-audio:/app/temp_audio # Volume for temporary audio files
+      - worker-plugins:/app/plugin/installed # This container's own plugins cache (code + pip deps)
     depends_on:
       - postgres
     restart: unless-stopped
@@ -76,12 +55,13 @@ services:
               device_ids: ["0"]
               capabilities: [gpu]
 
-# Define volumes for persistent data and temporary files
+# caches
 volumes:
-  postgres-data:
-  temp-audio-flask: # Volume for Flask app's temporary audio
-  temp-audio-worker: # Volume for Worker's temporary audio
-  # Installed plugins live here (not in the database). Flask and worker each keep
-  # their own copy and install into it, so plugins are reused across restarts.
-  plugins-flask:
-  plugins-worker:
+  flask-audio:
+    name: flask-audio
+  flask-plugins:
+    name: flask-plugins
+  worker-audio:
+    name: worker-audio
+  worker-plugins:
+    name: worker-plugins
