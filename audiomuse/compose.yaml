@@ -22,6 +22,8 @@ services:
     env_file:
       - .env
       - .secrets
+    environment:
+      - SERVICE_TYPE=worker
     volumes:
       - flask-audio:/app/temp_audio # Volume for temporary audio files
       - flask-plugins:/app/plugin/installed # This container's own plugins cache (code + pip deps)
