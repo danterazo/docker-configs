@@ -6,6 +6,7 @@ APP_NAME="$(hostname)"
 ROOT_DIR="/docker"
 UBUNTU_CODENAME="resolute"
 
+
 : 'INSTALL HELPFUL PACKAGES'
 apt update
 apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release
@@ -62,6 +63,12 @@ git config --global user.name "Dante Razo"
 git config --global user.email "github.d2brf@simplelogin.fr"
 git config --global pull.rebase false
 git config --global --add safe.directory /docker
+
+# fix SSH permissions
+chmod 700 /root/.ssh
+chmod 600 /root/.ssh/id_ed25519
+chmod 644 /root/.ssh/id_ed25519.pub
+chown -R root:root /root/.ssh
 
 
 : 'INIT CONFIG REPOSITORY'
@@ -127,12 +134,6 @@ usermod -aG video,render dante || true
 
 # fix bind permissions
 chown -R dante:dante "${ROOT_DIR}"
-
-# fix SSH permissions
-chmod 700 /root/.ssh
-chmod 600 /root/.ssh/id_ed25519
-chmod 644 /root/.ssh/id_ed25519.pub
-chown -R root:root /root/.ssh
 
 : 'BASH CONFIG'
 # share one bashrc entrypoint across accounts
