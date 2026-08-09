@@ -14,9 +14,9 @@ services:
       - audiomuse-net
 
   # AudioMuse-AI Flask application service
-  audiomuse-ai-flask:
+  flask:
     image: ghcr.io/neptunehub/audiomuse-ai:pr-846-nvidia
-    container_name: audiomuse-ai-flask-app
+    container_name: audiomuse-flask
     ports:
       - 8000:8000
     env_file:
@@ -41,9 +41,9 @@ services:
               capabilities: [gpu]
 
   # AudioMuse-AI Queue Worker service
-  audiomuse-ai-worker:
+  audiomuse-worker:
     image: ghcr.io/neptunehub/audiomuse-ai:pr-846-nvidia
-    container_name: audiomuse-ai-worker-instance
+    container_name: audiomuse-worker
     env_file:
       - .env
       - .secrets
