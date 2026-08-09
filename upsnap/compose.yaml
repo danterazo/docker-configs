@@ -1,0 +1,15 @@
+services:
+  upsnap:
+    image: ghcr.io/seriousm4x/upsnap:5 # images are also available on docker hub: seriousm4x/upsnap:5
+    container_name: upsnap
+    network_mode: host # host is required for WOL magic packets
+    cap_add:
+      - NET_RAW
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/pb_data
+    user: 1000:1000
+    security_opt:
+      - no-new-privileges=true
