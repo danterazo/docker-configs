@@ -61,6 +61,10 @@ services:
               device_ids: ["0"]
               capabilities: [gpu]
 
+networks:
+  audiomuse-net:
+    name: audiomuse-net
+
 # caches
 volumes:
   flask-audio:
@@ -71,3 +75,4 @@ volumes:
     name: worker-audio
   worker-plugins:
     name: worker-plugins
+
