@@ -10,7 +10,8 @@ UBUNTU_CODENAME="resolute"
 apt update
 apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release
 
-# install fastfetch if the OS provides it
+# install fastfetch & PPA
+sudo add-apt-repository ppa:zhangsongcui3371/fastfetch -y
 apt install -y fastfetch || true
 
 
