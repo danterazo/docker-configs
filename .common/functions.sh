@@ -4,7 +4,8 @@
 dpull() {
 	cd "/docker/$(hostname)"
 	git pull
-	docker compose pull
+	docker compose pull --ignore-buildable
+	docker compose build --pull --no-cache
 	docker compose up --build -d --remove-orphans
 }
 
