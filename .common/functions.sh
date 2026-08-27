@@ -8,10 +8,10 @@ dpull() {
 	docker compose up --build -d --remove-orphans
 }
 
-# pull, then restart
-drpull() {
+# upgrade packages, then pull
+dupull() {
+	upgrade
 	dpull
-	reboot
 }
 
 # pull, upgrade packages, then restart
