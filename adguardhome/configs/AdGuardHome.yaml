@@ -46,7 +46,7 @@ dns:
     - 10.10.0.0/16
     - 100.100.0.0/16
     - 192.168.0.0/16
-    - 172.16.0.0/16
+    - 172.0.0.0/8
   disallowed_clients: []
   blocked_hosts:
     - version.bind
@@ -234,9 +234,6 @@ filtering:
     - domain: plex.samskeyti.net
       answer: app.plex.tv
       enabled: true
-    - domain: cas-bridge.xethub.hf.co
-      answer: 3.165.160.110
-      enabled: true
     - domain: btc.samskeyti.net
       answer: 192.168.30.112
       enabled: true
@@ -276,17 +273,50 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: UTC
+          time_zone: America/Chicago
         ids: []
       name: Cerulean
       ids:
         - 100.100.20.43
         - 192.168.20.43
       tags:
-        - device_other
+        - device_nas
         - os_linux
       upstreams: []
       uid: 01945de5-1a39-7aa6-b821-5ae1243b6eb4
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: false
+        duckduckgo: false
+        ecosia: false
+        google: false
+        pixabay: false
+        yandex: false
+        youtube: false
+      blocked_services:
+        schedule:
+          time_zone: America/Chicago
+        ids: []
+      name: Flint2
+      ids:
+        - 100.100.10.1
+        - 192.168.10.1
+        - 192.168.20.1
+        - 192.168.30.1
+      tags:
+        - device_nas
+        - os_linux
+      upstreams: []
+      uid: 019fcdaa-6910-724e-b7fb-b68bd2bb530c
       upstreams_cache_size: 0
       upstreams_cache_enabled: false
       use_global_settings: true
@@ -307,12 +337,12 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: UTC
+          time_zone: America/Chicago
         ids: []
       name: Ichigo
       ids:
         - 100.100.99.2
-        - 172.16.99.2
+        - 192.168.99.2
       tags:
         - device_tv
         - os_other
@@ -345,6 +375,7 @@ clients:
         - 100.100.30.170
         - 192.168.30.170
       tags:
+        - device_nas
         - os_windows
       upstreams: []
       uid: 019fac35-bac8-7249-8659-37df10b8057e
@@ -375,6 +406,7 @@ clients:
         - 100.100.30.171
         - 192.168.30.171
       tags:
+        - device_nas
         - os_windows
       upstreams: []
       uid: 019fac36-2be5-7661-abd1-141514e27982
@@ -429,45 +461,14 @@ clients:
         youtube: false
       blocked_services:
         schedule:
-          time_zone: UTC
-        ids: []
-      name: Music VM
-      ids:
-        - 100.100.30.102
-        - 192.168.30.102
-      tags:
-        - device_other
-        - os_linux
-      upstreams: []
-      uid: 0198522d-fc90-7570-804e-fd033a0786db
-      upstreams_cache_size: 0
-      upstreams_cache_enabled: false
-      use_global_settings: true
-      filtering_enabled: false
-      parental_enabled: false
-      safebrowsing_enabled: false
-      use_global_blocked_services: true
-      ignore_querylog: false
-      ignore_statistics: false
-    - safe_search:
-        enabled: false
-        bing: false
-        duckduckgo: false
-        ecosia: false
-        google: false
-        pixabay: false
-        yandex: false
-        youtube: false
-      blocked_services:
-        schedule:
-          time_zone: UTC
+          time_zone: America/Chicago
         ids: []
       name: NVIDIA VM
       ids:
         - 100.100.30.101
         - 192.168.30.101
       tags:
-        - device_other
+        - device_nas
         - os_linux
       upstreams: []
       uid: 0198522e-3fdd-7ec5-a3b2-d45cea5f40df
@@ -491,44 +492,15 @@ clients:
         youtube: false
       blocked_services:
         schedule:
-          time_zone: UTC
-        ids: []
-      name: Network VM
-      ids:
-        - 100.100.30.100
-        - 192.168.30.100
-      tags:
-        - device_other
-        - os_linux
-      upstreams: []
-      uid: 0198522e-8908-7c5e-a482-780387365e2d
-      upstreams_cache_size: 0
-      upstreams_cache_enabled: false
-      use_global_settings: true
-      filtering_enabled: false
-      parental_enabled: false
-      safebrowsing_enabled: false
-      use_global_blocked_services: true
-      ignore_querylog: false
-      ignore_statistics: false
-    - safe_search:
-        enabled: false
-        bing: false
-        duckduckgo: false
-        ecosia: false
-        google: false
-        pixabay: false
-        yandex: false
-        youtube: false
-      blocked_services:
-        schedule:
-          time_zone: UTC
+          time_zone: America/Chicago
         ids: []
       name: PBS LXC
       ids:
         - 100.100.30.110
         - 192.168.30.110
-      tags: []
+      tags:
+        - device_nas
+        - os_linux
       upstreams: []
       uid: 01987d9b-61be-7cc6-9a0b-ab327e2daa6f
       upstreams_cache_size: 0
@@ -582,12 +554,14 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: UTC
+          time_zone: America/Chicago
         ids: []
-      name: RingoM1
+      name: RingoM4
       ids:
-        - 192.168.20.101
-        - 192.168.90.1
+        - 172.16.20.3
+        - 172.16.20.4
+        - 00:1c:c2:49:b6:71
+        - 84:2f:57:ab:bd:18
       tags:
         - device_laptop
         - os_macos
@@ -613,16 +587,45 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: UTC
+          time_zone: America/Chicago
         ids: []
       name: SchnitzelNG
       ids:
         - 100.100.50.50
       tags:
-        - device_other
+        - device_nas
         - os_linux
       upstreams: []
       uid: 01945de4-e700-7e95-8fcd-8833d4770ec6
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: false
+        duckduckgo: false
+        ecosia: false
+        google: false
+        pixabay: false
+        yandex: false
+        youtube: false
+      blocked_services:
+        schedule:
+          time_zone: America/Chicago
+        ids: []
+      name: Smart Home
+      ids:
+        - 172.168.0.0/16
+      tags:
+        - device_other
+      upstreams: []
+      uid: 019fcda8-742e-7e92-a9c7-637969c7f7be
       upstreams_cache_size: 0
       upstreams_cache_enabled: false
       use_global_settings: true
@@ -674,13 +677,15 @@ clients:
         youtube: true
       blocked_services:
         schedule:
-          time_zone: UTC
+          time_zone: America/Chicago
         ids: []
       name: Tailscale Exit Node LXC
       ids:
         - 100.100.30.106
         - 192.168.30.106
-      tags: []
+      tags:
+        - device_nas
+        - os_linux
       upstreams: []
       uid: 019c7403-9475-7d52-bc91-af909255b69d
       upstreams_cache_size: 0
@@ -694,26 +699,24 @@ clients:
       ignore_statistics: false
     - safe_search:
         enabled: false
-        bing: true
-        duckduckgo: true
-        ecosia: true
-        google: true
-        pixabay: true
-        yandex: true
-        youtube: true
+        bing: false
+        duckduckgo: false
+        ecosia: false
+        google: false
+        pixabay: false
+        yandex: false
+        youtube: false
       blocked_services:
         schedule:
-          time_zone: UTC
+          time_zone: America/Chicago
         ids: []
-      name: Valtari
+      name: Virtual
       ids:
-        - 100.100.20.46
-        - 192.168.20.46
+        - 192.168.30.0/24
       tags:
-        - device_other
-        - os_linux
+        - device_nas
       upstreams: []
-      uid: 019cef9b-42cf-7bf9-8a01-26f5fe683735
+      uid: 019fcda7-d1aa-7d24-bbbc-e82152ff244f
       upstreams_cache_size: 0
       upstreams_cache_enabled: false
       use_global_settings: true
