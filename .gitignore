@@ -42,6 +42,9 @@ adguardhome/state/
 # ignore caches
 *__pycache__/
 
+# ignore venvs
+*.venv/
+
 # ignore actions
 *github-runner/
 
