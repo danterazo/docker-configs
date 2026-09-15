@@ -1,16 +1,25 @@
-[project]
-name = "docker"
-version = "0.1.0"
-description = ""
-authors = [
-    {name = "Dante Razo",email = "github.d2brf@simplelogin.fr"}
-]
-requires-python = ">=3.14"
-
-
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.poetry]
+    name = "docker"
+    version = "0.1.0"
+    description = "Homelab Containers"
+    authors = ["Dante Razo <github.d2brf@simplelogin.fr>"]
+    readme = "README.md"
+    package-mode = false
 
 [tool.poetry.dependencies]
-ruff = "^0.16.7"
+    python = ">=3.14"
+
+    # common
+    ruff = "*"
+
+[[tool.poetry.source]]
+    name = "pypi"
+    priority = "primary"
+
+[build-system]
+    requires = ["poetry-core"]
+    build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+    line-length = 150
+    exclude = [".git", ".venv"]
