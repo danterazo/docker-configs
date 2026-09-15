@@ -7,7 +7,7 @@ services:
       - 7912:8000/tcp
     env_file: .env
     volumes:
-      - ./spoolman/data/:/home/app/.local/share/spoolman/:rw
+      - ./data/:/home/app/.local/share/spoolman:rw
     networks:
       - creality-net
 
