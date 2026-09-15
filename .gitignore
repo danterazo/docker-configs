@@ -8,7 +8,6 @@
 */radicale/configs/users
 */soulseek/slskd.yml
 */cloudflare-ddns/config.json
-*/caddy/secrets.env
 */hivenet/machine-config/machine-id
 */gluetun/oauth2/
 **/tautulli
