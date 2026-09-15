@@ -8,7 +8,7 @@ services:
     ports:
       - "4408:80"
     volumes:
-      - ./config/:/usr/share/nginx/html/config/:rw
+      - ./fluid/config/:/usr/share/nginx/html/config/:rw
     read_only: true
     tmpfs:
       - /tmp
@@ -30,9 +30,9 @@ services:
     environment:
       TZ: America/Chicago
     volumes:
-      - ./data/incoming/:/data/incoming/:ro
-      - ./data/rendered/:/data/rendered/:rw
-      - ./data/state/:/state/:rw
+      - ./timelapse/frames/:/data/incoming/:ro
+      - ./timelapse/rendered/:/data/rendered/:rw
+      - ./timelapse/state/:/state/:rw
     security_opt:
       - no-new-privileges:true
     read_only: true
