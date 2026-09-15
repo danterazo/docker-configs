@@ -9,11 +9,6 @@ services:
       - "4408:80"
     volumes:
       - ./fluid/config/:/usr/share/nginx/html/config/:rw
-    read_only: true
-    tmpfs:
-      - /tmp
-      - /var/cache/nginx
-      - /var/run
     security_opt:
       - no-new-privileges:true
 
