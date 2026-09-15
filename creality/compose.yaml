@@ -8,7 +8,9 @@ services:
     env_file: .env
     volumes:
       - ./spoolman/data/:/home/app/.local/share/spoolman/:rw
-  
+    networks:
+      - creality-net
+
   timelapse:
     image: jrottenberg/ffmpeg:7.1-alpine
     container_name: timelapse
@@ -26,6 +28,12 @@ services:
       - ./timelapse/state/:/state/:rw
     security_opt:
       - no-new-privileges:true
+    networks:
+      - creality-net
+
+networks:
+  creality-net:
+    name: creality-net
 
 volumes:
   frames_smb:
