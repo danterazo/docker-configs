@@ -33,7 +33,7 @@ volumes:
     driver_opts:
       type: cifs
       o: "addr=172.16.10.170,username=root,password=${K1C_SMB_PASSWORD},vers=3.0,ro,file_mode=0444,dir_mode=0555"
-      device: "//172.16.10.170/printer_data"
+      device: "//172.16.10.170/data/printer_data/frames"
   rendered_nfs:
     driver: local
     driver_opts:
