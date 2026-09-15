@@ -1,0 +1,40 @@
+name: creality
+
+services:
+  fluidd:
+    image: ghcr.io/fluidd-core/fluidd:latest
+    container_name: fluidd
+    restart: unless-stopped
+    ports:
+      - "4408:80"
+    volumes:
+      - ./config/:/usr/share/nginx/html/config/:rw
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    security_opt:
+      - no-new-privileges:true
+
+  timelapse:
+    image: jrottenberg/ffmpeg:7.1-alpine
+    container_name: timelapse
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      apk add --no-cache inotify-tools &&
+      while true; do
+        sleep 3600;
+      done
+    environment:
+      TZ: America/Chicago
+    volumes:
+      - ./data/incoming/:/data/incoming/:ro
+      - ./data/rendered/:/data/rendered/:rw
+      - ./data/state/:/state/:rw
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=1g
