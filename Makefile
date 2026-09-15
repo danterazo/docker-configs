@@ -1,9 +1,10 @@
+SHELL := /bin/bash
 EXCLUDES := \( -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './.vscode' -o -path './.wip' -o -path './tabby/source' \) -prune -o
 
-.PHONY: fix format fix-text fix-docker fix-caddy
+.PHONY: fix format fix-text fix-docker fix-caddy deps
 
 # format everything
-format: fix-text fix-docker fix-caddy
+format: fix-text fix-docker fix-caddy fix-python
 
 # alias
 fix: format
@@ -18,3 +19,12 @@ fix-docker:
 fix-caddy:
 	find caddy/configs -type f \( -name 'Caddyfile*' -o -name '*.conf' \) -print0 \
 		| xargs -0 -I {} docker exec caddy caddy fmt --overwrite {}
+
+fix-python:
+	ruff check --fix .
+	ruff format .
+
+deps:
+	poetry lock
+	poetry update
+	poetry install
