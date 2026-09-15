@@ -27,8 +27,7 @@ services:
       - .env
       - .secrets
     volumes:
-      - frames_smb:/data/incoming/:ro
-      - rendered_nfs:/data/rendered/:rw
+      - timelapse_nfs:/data/:rw
       - ./timelapse/state/:/state/:rw
     security_opt:
       - no-new-privileges:true
@@ -40,16 +39,9 @@ networks:
     name: creality-net
 
 volumes:
-  frames_smb:
-    driver: local
-    driver_opts:
-      type: cifs
-      o: "addr=172.16.10.170,username=root,password=${K1C_SMB_PASSWORD},vers=3.0,ro,file_mode=0444,dir_mode=0555,noserverino"
-      device: "//172.16.10.170/frames"
-
-  rendered_nfs:
+  timelapse_nfs:
     driver: local
     driver_opts:
       type: nfs
       o: "addr=192.168.20.42,rw,noatime,nfsvers=4,soft"
-      device: ":/tank/printing/timelapse/rendered/"
+      device: ":/tank/printing/timelapse/"
