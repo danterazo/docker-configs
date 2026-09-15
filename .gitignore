@@ -39,6 +39,9 @@
 # ignore state (semi-ephemeral) files
 adguardhome/state/
 
+# ignore caches
+*__pycache__/
+
 # ignore actions
 *github-runner/
 
@@ -46,3 +49,4 @@ adguardhome/state/
 adguardhome/.env
 adguardhome/keepalived.env
 caddy/keepalived.env
+
