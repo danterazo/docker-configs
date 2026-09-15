@@ -28,7 +28,6 @@ services:
       - .secrets
     volumes:
       - timelapse_nfs:/data/:rw
-      - ./timelapse/state/:/state/:rw
     security_opt:
       - no-new-privileges:true
     networks:
