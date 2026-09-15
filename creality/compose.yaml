@@ -45,6 +45,6 @@ volumes:
   rendered_nfs:
     driver: local
     driver_opts:
-      type: "nfs"
+      type: nfs
       o: "addr=192.168.20.42,rw,noatime,nfsvers=4,soft"
       device: ":/tank/printing/timelapse/rendered/"
