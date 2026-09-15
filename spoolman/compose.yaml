@@ -9,8 +9,8 @@ services:
     volumes:
       - ./data/:/home/app/.local/share/spoolman:rw
     networks:
-      - creality-net
+      - spoolman-net
 
 networks:
-  creality-net:
-    name: creality-net
+  spoolman-net:
+    name: spoolman-net
