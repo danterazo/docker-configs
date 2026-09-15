@@ -11,7 +11,6 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
-
 ROOT: Path = Path(os.environ.get("TIMELAPSE_ROOT", default="/data"))
 FRAMES: Path = ROOT / "frames"
 RENDERED: Path = ROOT / "rendered"
@@ -44,10 +43,7 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
 
 
 def frame_files() -> list[Path]:
-    return sorted(
-        p for p in FRAMES.glob(pattern="frame*.jpg")
-        if p.is_file()
-    )
+    return sorted(p for p in FRAMES.glob(pattern="frame*.jpg") if p.is_file())
 
 
 def stable_frames() -> list[Path]:
@@ -55,15 +51,11 @@ def stable_frames() -> list[Path]:
     if not first:
         return []
 
-    first_state: list[tuple[str, int, int]] = [
-        (p.name, p.stat().st_size, p.stat().st_mtime_ns) for p in first
-    ]
+    first_state: list[tuple[str, int, int]] = [(p.name, p.stat().st_size, p.stat().st_mtime_ns) for p in first]
     time.sleep(STABILITY_SECONDS)
 
     second: list[Path] = frame_files()
-    second_state: list[tuple[str, int, int]] = [
-        (p.name, p.stat().st_size, p.stat().st_mtime_ns) for p in second
-    ]
+    second_state: list[tuple[str, int, int]] = [(p.name, p.stat().st_size, p.stat().st_mtime_ns) for p in second]
 
     return second if first_state == second_state else []
 
@@ -109,15 +101,26 @@ def render_job(job_id: str) -> None:
         final: Path = RENDERED / f"{job_id}.mp4"
 
         command: list[str] = [
-            "ffmpeg", "-hide_banner", "-nostdin", "-y",
-            "-framerate", FPS,
-            "-start_number", "1",
-            "-i", str(object=snapshot_dir / "frame%06d.jpg"),
-            "-vf", f"scale='min({MAX_WIDTH},iw)':-2:flags=lanczos,format=yuv420p",
-            "-c:v", "libx264",
-            "-preset", PRESET,
-            "-crf", CRF,
-            "-movflags", "+faststart",
+            "ffmpeg",
+            "-hide_banner",
+            "-nostdin",
+            "-y",
+            "-framerate",
+            FPS,
+            "-start_number",
+            "1",
+            "-i",
+            str(object=snapshot_dir / "frame%06d.jpg"),
+            "-vf",
+            f"scale='min({MAX_WIDTH},iw)':-2:flags=lanczos,format=yuv420p",
+            "-c:v",
+            "libx264",
+            "-preset",
+            PRESET,
+            "-crf",
+            CRF,
+            "-movflags",
+            "+faststart",
             str(object=temporary),
         ]
 
@@ -148,7 +151,7 @@ def render_job(job_id: str) -> None:
         job["updated_at"] = now()
         write_json(path=job_file, value=job)
 
-    except Exception as exc:
+    except (OSError, TypeError, ValueError) as exc:
         if job_file.exists():
             job = json.loads(job_file.read_text())
             job["status"] = "failed"
@@ -195,11 +198,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(status=400, body={"error": "JSON body must be an object"})
             return
 
-        printer: str = "".join(
-            c if c.isalnum() or c in "-_" else "_"
-            for c in str(object=incoming.get("printer", "k1c"))
-        )
-        job_id: str = f"{printer}-{datetime.now().strftime(format='%Y%m%dT%H%M%S')}"
+        printer: str = "".join(c if c.isalnum() or c in "-_" else "_" for c in str(object=incoming.get("printer", "k1c")))
+        job_id: str = f"{printer}-{datetime.now(tz=timezone.utc).strftime(format='%Y%m%dT%H%M%S')}"
         job_file: Path = JOBS / f"{job_id}.json"
 
         job: dict[str, Any] = {
