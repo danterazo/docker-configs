@@ -73,7 +73,6 @@ services:
       --max-requests 200
       --max-requests-jitter 20
 
-
   immich-redis:
     container_name: immich-redis
     image: docker.io/redis:6.2-alpine@sha256:eaba718fecd1196d88533de7ba49bf903ad33664a92debb24660a922ecd9cac8
@@ -100,7 +99,6 @@ services:
     volumes:
       - ./data/immich/:/var/lib/postgresql/data/:rw
     shm_size: 128mb
-    
 
     restart: always
     networks:

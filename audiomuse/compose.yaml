@@ -78,4 +78,3 @@ volumes:
     name: worker-audio
   worker-plugins:
     name: worker-plugins
-

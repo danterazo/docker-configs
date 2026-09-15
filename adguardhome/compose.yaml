@@ -4,7 +4,7 @@ services:
     container_name: adguardhome
     restart: always
     cpus: 1
-    env_file: common.env      # common for all instances
+    env_file: common.env # common for all instances
     volumes:
       - ./state/:/opt/adguardhome/work/:rw
       - ./configs/:/opt/adguardhome/conf/:rw
@@ -23,7 +23,7 @@ services:
       - common.env
       - keepalived.env
 
-# only runs in one LXC
+  # only runs in one LXC
   adguardhome-sync:
     image: ghcr.io/bakito/adguardhome-sync:latest
     container_name: adguardhome-sync
