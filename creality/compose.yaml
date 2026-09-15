@@ -21,8 +21,22 @@ services:
       done
     env_file: .env
     volumes:
-      - ./timelapse/frames/:/data/incoming/:ro
-      - ./timelapse/rendered/:/data/rendered/:rw
+      - frames_smb:/data/incoming/:ro
+      - rendered_smb:/data/rendered/:rw
       - ./timelapse/state/:/state/:rw
     security_opt:
       - no-new-privileges:true
+
+volumes:
+  frames_smb:
+    driver: local
+    driver_opts:
+      type: cifs
+      o: "addr=172.16.10.170,username=root,password=${K1C_SMB_PASSWORD},vers=3.0,ro,file_mode=0444,dir_mode=0555"
+      device: "//172.16.10.170/printer_data"
+  rendered_nfs:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.20.42,rw,noatime,nfsvers=4,soft"
+      device: ":/tank/printing/timelapse/rendered/"
