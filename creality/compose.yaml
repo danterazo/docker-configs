@@ -22,7 +22,7 @@ services:
     env_file: .env
     volumes:
       - frames_smb:/data/incoming/:ro
-      - rendered_smb:/data/rendered/:rw
+      - rendered_nfs:/data/rendered/:rw
       - ./timelapse/state/:/state/:rw
     security_opt:
       - no-new-privileges:true
