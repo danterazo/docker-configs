@@ -20,7 +20,7 @@ volumes:
   soulseek_nfs:
     driver: local
     driver_opts:
-      type: "nfs"
+      type: nfs
       o: "addr=192.168.20.42,hard,rw,noatime,nfsvers=4"
       device: ":/tank/downloads/soulseek/"
 
