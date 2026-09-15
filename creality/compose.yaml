@@ -4,26 +4,25 @@ services:
     container_name: spoolman
     restart: unless-stopped
     ports:
-      - "7912:8000"
+      - 7912:8000/tcp
     env_file: .env
     volumes:
       - ./spoolman/data/:/home/app/.local/share/spoolman/:rw
     networks:
       - creality-net
 
-  timelapse:
-    image: jrottenberg/ffmpeg:7.1-alpine
-    container_name: timelapse
+  timelapse-render:
+    build:
+      context: ./timelapse/
+      dockerfile: Dockerfile
+    image: timelapse-render:local
+    container_name: timelapse-render
     restart: unless-stopped
-    entrypoint: ["/bin/sh", "-c"]
-    command: >
-      apk add --no-cache inotify-tools &&
-      while true; do
-        sleep 3600;
-      done
+    ports:
+      - 8095:8095/tcp
     env_file: .env
     volumes:
-      - timelapse_nfs:/data/:rw
+      - timelapse_nfs:/data:rw
     security_opt:
       - no-new-privileges:true
     networks:
