@@ -50,8 +50,8 @@ flowchart LR
 flowchart LR
     rpool --> rpool_data["data vdev"]
     rpool_data --> rpool_mirror["mirror-0"]
-    rpool_mirror --> rpool_nvme1["2TB NVMe 3.0 x4 WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
-    rpool_mirror --> rpool_nvme2["2TB NVMe 3.0 x4 WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
+    rpool_mirror --> rpool_nvme1["2TB NVMe 3.0 x4<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
+    rpool_mirror --> rpool_nvme2["2TB NVMe 3.0 x4<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
 
     classDef pool fill:#f5d0fe,color:#166534,stroke:#e879f9
     classDef vdev fill:#bae6fd,color:#9a3412,stroke:#38bdf8
@@ -69,8 +69,8 @@ flowchart LR
 flowchart LR
     rpool --> rpool_data["data vdev"]
     rpool_data --> rpool_mirror["mirror-0"]
-    rpool_mirror --> rpool_nvme1["2TB NVMe 3.0 x4 WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
-    rpool_mirror --> rpool_nvme2["2TB NVMe 3.0 x1 WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
+    rpool_mirror --> rpool_nvme1["2TB NVMe 3.0 x4<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
+    rpool_mirror --> rpool_nvme2["2TB NVMe 3.0 x1<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
 
     classDef pool fill:#f5d0fe,color:#166534,stroke:#e879f9
     classDef vdev fill:#bae6fd,color:#9a3412,stroke:#38bdf8
