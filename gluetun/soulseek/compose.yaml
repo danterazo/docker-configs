@@ -10,9 +10,9 @@ services:
       - soulseek_nfs:/app/:rw
     restart: unless-stopped
     network_mode: container:gluetun # use VPN
-    # depends_on:
-    #   gluetun:
-    #     condition: service_healthy
+    depends_on:
+      gluetun:
+        condition: service_started
     security_opt:
       - no-new-privileges:true
 

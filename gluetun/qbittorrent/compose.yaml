@@ -10,9 +10,9 @@ services:
       - ./ui/:/ui/:rw
       - qbittorrent_nfs:/downloads/:rw
     network_mode: container:gluetun # use VPN
-    # depends_on:
-    #   gluetun:
-    #     condition: service_healthy
+    depends_on:
+      gluetun:
+        condition: service_started
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
