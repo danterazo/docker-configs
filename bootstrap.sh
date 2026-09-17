@@ -93,11 +93,12 @@ else
 	git clean -fd
 fi
 
-cd "${ROOT_DIR}/${APP_NAME}"
+cd "${ROOT_DIR}"
 
 # configure sparse-checkout
 git sparse-checkout init --cone 2>/dev/null || true
 git sparse-checkout set .common "${APP_NAME}" 2>/dev/null || true
+cd "${ROOT_DIR}/${APP_NAME}"
 
 # clean up old profile.d symlinks
 find /etc/profile.d -maxdepth 1 -type l -name "00-*.sh" -delete 2>/dev/null || true
