@@ -28,9 +28,8 @@ services:
     healthcheck:
       test:
         - CMD
-        - curl
-        - -f
-        - http://localhost
+        - /gluetun-entrypoint
+        - healthcheck
       interval: 1m30s
       timeout: 10s
       retries: 3
