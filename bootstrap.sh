@@ -86,8 +86,8 @@ else
 	# repo already exists; just update
 	cd "${ROOT_DIR}"
 	git fetch origin --prune
-	git pull --ff-only
 	git reset --hard origin/main
+	git clean -fd
 fi
 
 cd "${ROOT_DIR}"
