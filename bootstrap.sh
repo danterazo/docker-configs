@@ -93,6 +93,7 @@ else
 	git clean -fd
 fi
 
+# move to root-level repo directory
 cd "${ROOT_DIR}"
 
 # configure sparse-checkout
