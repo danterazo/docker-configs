@@ -6,16 +6,7 @@ dpull() {
 	git pull
 	docker compose pull --ignore-buildable
 	docker compose build --pull --no-cache
-	if docker compose up --build -d --remove-orphans; then
-		return 0
-	fi
-
-	if [[ "$(basename "$PWD")" == gluetun ]]; then
-		docker compose up --build -d --force-recreate --remove-orphans
-		return $?
-	fi
-
-	return 1
+	docker compose up --build -d --remove-orphans
 }
 
 # upgrade packages, then pull
