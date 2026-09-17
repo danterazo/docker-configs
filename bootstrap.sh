@@ -87,6 +87,7 @@ else
 	cd "${ROOT_DIR}/${APP_NAME}"
 	git fetch origin --prune
 	git reset --hard origin/main
+	git clean -fd
 	git pull
 fi
 
