@@ -1,26 +1,26 @@
 # Dante's Docker Stacks
 ## Machines
 
-|                          Machine                          |            Model             |                  Specs                  |     OS     | Notes                                                                           |
-| :-------------------------------------------------------: | :--------------------------: | :-------------------------------------: | :--------: | :------------------------------------------------------------------------------ |
-|                            Kex                            |   Lenovo ThinkStation P510   | Xeon E5-1650 v4, 256GB DDR4 RDIMM (ECC) | Proxmox VE | "Biscuit" in Icelandic, since it has many pieces (containers)                   |
-| [Hoppípolla](https://www.youtube.com/watch?v=JAYb8ZyjzD0) | Lenovo ThinkStation P340 SFF |   Xeon W-1250, 64GB DDR4 UDIMM (ECC)    | Proxmox VE | Named after the [Sigur Rós](https://en.wikipedia.org/wiki/Sigur_R%C3%B3s) song  |
-|  [Marigold](https://www.youtube.com/watch?v=CdqQzIDBd_Y)  |         Beelink EQ14         |   Intel N150, 32GB DDR4 SODIMM (ECC)    | Proxmox VE | Named after the [Ocean Blue](https://en.wikipedia.org/wiki/The_Ocean_Blue) song |
+|                          Machine                          |            Model             |                   CPU                   | RAM |   OS    | Filesystem | Notes                                                                           |
+| :-------------------------------------------------------: | :--------------------------: | :-------------------------------------: | :-: | :-----: | :--------: | :------------------------------------------------------------------------------ |
+|                            Kex                            |   Lenovo ThinkStation P510   | Xeon E5-1650 v4, 256GB DDR4 RDIMM (ECC) |     | Proxmox |    ZFS     | "Biscuit" in Icelandic, since it has many pieces (containers)                   |
+| [Hoppípolla](https://www.youtube.com/watch?v=JAYb8ZyjzD0) | Lenovo ThinkStation P340 SFF |   Xeon W-1250, 64GB DDR4 UDIMM (ECC)    |     | Proxmox |    ZFS     | Named after the [Sigur Rós](https://en.wikipedia.org/wiki/Sigur_R%C3%B3s) song  |
+|  [Marigold](https://www.youtube.com/watch?v=CdqQzIDBd_Y)  |         Beelink EQ14         |   Intel N150, 32GB DDR4 SODIMM (ECC)    |     | Proxmox |    ZFS     | Named after the [Ocean Blue](https://en.wikipedia.org/wiki/The_Ocean_Blue) song |
 
 ## Storage
 ### ZFS Pools
 #### Kex
 ```mermaid
-flowchart TB
+flowchart LR
     rpool["rpool"] --> rpool_data["data vdev"]
     rpool_data --> rpool_mirror["mirror-0"]
     rpool_mirror --> rpool_ssd1["2TB T-FORCE TM8FP8002T"]
     rpool_mirror --> rpool_ssd2["2TB XPG GAMMIX S11 Pro"]
 
-    classDef pool fill:#7c3aed,color:#fff
-    classDef vdev fill:#2563eb,color:#fff
-    classDef mirror fill:#059669,color:#fff
-    classDef disk fill:#d97706,color:#fff
+    classDef pool fill:#d8b4fe,color:#2e1065,stroke:#8b5cf6
+    classDef vdev fill:#bae6fd,color:#0c4a6e,stroke:#38bdf8
+    classDef mirror fill:#bbf7d0,color:#14532d,stroke:#4ade80
+    classDef disk fill:#fed7aa,color:#7c2d12,stroke:#fb923c
 
     class rpool pool
     class rpool_data vdev
@@ -28,7 +28,7 @@ flowchart TB
     class rpool_ssd1,rpool_ssd2 disk
 ```
 ```mermaid
-flowchart TB
+flowchart LR
     tank["tank"]
 
     tank --> special["special vdev"]
@@ -48,10 +48,10 @@ flowchart TB
     data_mirror1 --> data_hdd3["26TB SATA Seagate HDD<br/>7200rpm CMR<br/>(ST26000DM000-3Y8)"]
     data_mirror1 --> data_hdd4["26TB SATA Seagate HDD<br/>7200rpm CMR<br/>(ST26000DM000-3Y8)"]
 
-    classDef pool fill:#7c3aed,color:#fff
-    classDef vdev fill:#2563eb,color:#fff
-    classDef mirror fill:#059669,color:#fff
-    classDef disk fill:#d97706,color:#fff
+    classDef pool fill:#d8b4fe,color:#2e1065,stroke:#8b5cf6
+    classDef vdev fill:#bae6fd,color:#0c4a6e,stroke:#38bdf8
+    classDef mirror fill:#bbf7d0,color:#14532d,stroke:#4ade80
+    classDef disk fill:#fed7aa,color:#7c2d12,stroke:#fb923c
 
     class tank pool
     class special,data vdev
@@ -61,16 +61,16 @@ flowchart TB
 
 #### Hoppípolla
 ```mermaid
-flowchart TB
+flowchart LR
     rpool["rpool"] --> rpool_data["data vdev"]
     rpool_data --> rpool_mirror["mirror-0"]
     rpool_mirror --> rpool_nvme1["2TB NVMe WD SSD (IX SN350<br/>SDBPNPZ-2T00-XI)"]
     rpool_mirror --> rpool_nvme2["2TB NVMe WD SSD (IX SN350<br/>SDBPNPZ-2T00-XI)"]
 
-    classDef pool fill:#7c3aed,color:#fff
-    classDef vdev fill:#2563eb,color:#fff
-    classDef mirror fill:#059669,color:#fff
-    classDef disk fill:#d97706,color:#fff
+    classDef pool fill:#d8b4fe,color:#2e1065,stroke:#8b5cf6
+    classDef vdev fill:#bae6fd,color:#0c4a6e,stroke:#38bdf8
+    classDef mirror fill:#bbf7d0,color:#14532d,stroke:#4ade80
+    classDef disk fill:#fed7aa,color:#7c2d12,stroke:#fb923c
 
     class rpool pool
     class rpool_data vdev
@@ -80,16 +80,16 @@ flowchart TB
 
 #### Marigold
 ```mermaid
-flowchart TB
+flowchart LR
     rpool["rpool"] --> rpool_data["data vdev"]
     rpool_data --> rpool_mirror["mirror-0"]
     rpool_mirror --> rpool_nvme1["2TB NVMe WD SSD (IX SN350<br/>SDBPNPZ-2T00-XI)"]
     rpool_mirror --> rpool_nvme2["2TB NVMe WD SSD (IX SN350<br/>SDBPNPZ-2T00-XI)"]
 
-    classDef pool fill:#7c3aed,color:#fff
-    classDef vdev fill:#2563eb,color:#fff
-    classDef mirror fill:#059669,color:#fff
-    classDef disk fill:#d97706,color:#fff
+    classDef pool fill:#d8b4fe,color:#2e1065,stroke:#8b5cf6
+    classDef vdev fill:#bae6fd,color:#0c4a6e,stroke:#38bdf8
+    classDef mirror fill:#bbf7d0,color:#14532d,stroke:#4ade80
+    classDef disk fill:#fed7aa,color:#7c2d12,stroke:#fb923c
 
     class rpool pool
     class rpool_data vdev
