@@ -79,13 +79,15 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 	if ! git clone --filter=blob:none --sparse \
 		git@github.com:danterazo/docker-configs.git \
 		"${ROOT_DIR}"; then
-		echo "ERROR: Failed to clone repository" >&2
+		echo "ERROR: Failed to clone repository"
 		exit 1
 	fi
 else
 	# repo already exists; just update
 	cd "${ROOT_DIR}"
-	git pull --ff-only 2>/dev/null || true
+	git fetch origin --prune
+	git pull --ff-only
+	git reset --hard origin/main
 fi
 
 cd "${ROOT_DIR}"
@@ -138,7 +140,7 @@ chown -R dante:dante "${ROOT_DIR}"
 : 'BASH CONFIG'
 # share one bashrc entrypoint across accounts
 if [ ! -f /docker/.common/bashrc.sh ]; then
-	echo "ERROR: /docker/.common/bashrc.sh not found. Sparse-checkout may have failed." >&2
+	echo "ERROR: /docker/.common/bashrc.sh not found. Sparse-checkout may have failed."
 	exit 1
 fi
 
