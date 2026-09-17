@@ -12,23 +12,23 @@
 #### Kex
 ```mermaid
 flowchart LR
-    rpool --> rpool_data["data vdev"]
-    rpool_data --> rpool_mirror["mirror-0"]
+    rpool["rpool<br>(2TB Usable)"] --> rpool_data["data vdev<br>(2TB Usable)"]
+    rpool_data --> rpool_mirror["mirror-0<br>(2TB Usable)"]
     rpool_mirror --> rpool_ssd1["2TB NVMe 3.0 x4 T-FORCE TM8FP8002T"]
     rpool_mirror --> rpool_ssd2["2TB NVMe 3.0 x4 XPG GAMMIX S11 Pro"]
 
-    tank --> special["special vdev"]
-    tank --> data["data vdev"]
+    tank["tank<br>(52TB Usable)"] --> special["special vdev<br>(1.6TB Usable)"]
+    tank --> data["data vdev<br>(52TB Usable)"]
 
-    special --> special_mirror0["mirror-2"]
-    special --> special_mirror1["mirror-10"]
+    special --> special_mirror0["mirror-2<br>(800GB Usable)"]
+    special --> special_mirror1["mirror-10<br>(800GB Usable)"]
     special_mirror0 --> special_ssd1["800GB SAS3 Toshiba SSD<br>(PX02SMF080)"]
     special_mirror0 --> special_ssd2["800GB SAS3 Toshiba SSD<br>(PX02SMF080)"]
     special_mirror1 --> special_ssd3["800GB SAS3 Toshiba SSD<br>(PX02SMF080)"]
     special_mirror1 --> special_ssd4["800GB SAS3 Toshiba SSD<br>(PX02SMF080)"]
 
-    data --> data_mirror0["mirror-6"]
-    data --> data_mirror1["mirror-7"]
+    data --> data_mirror0["mirror-6<br>(26TB Usable)"]
+    data --> data_mirror1["mirror-7<br>(26TB Usable)"]
     data_mirror0 --> data_hdd1["26TB SATA Seagate HDD<br>CMR @ 7200RPM<br>(ST26000DM000-3Y8)"]
     data_mirror0 --> data_hdd2["26TB SATA Seagate HDD<br>CMR @ 7200RPM<br>(ST26000DM000-3Y8)"]
     data_mirror1 --> data_hdd3["26TB SATA Seagate HDD<br>CMR @ 7200RPM<br>(ST26000DM000-3Y8)"]
@@ -48,8 +48,8 @@ flowchart LR
 #### Hoppípolla
 ```mermaid
 flowchart LR
-    rpool --> rpool_data["data vdev"]
-    rpool_data --> rpool_mirror["mirror-0"]
+    rpool["rpool<br>(2TB Usable)"] --> rpool_data["data vdev<br>(2TB Usable)"]
+    rpool_data --> rpool_mirror["mirror-0<br>(2TB Usable)"]
     rpool_mirror --> rpool_nvme1["2TB NVMe 3.0 x4<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
     rpool_mirror --> rpool_nvme2["2TB NVMe 3.0 x4<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
 
@@ -67,8 +67,8 @@ flowchart LR
 #### Marigold
 ```mermaid
 flowchart LR
-    rpool --> rpool_data["data vdev"]
-    rpool_data --> rpool_mirror["mirror-0"]
+    rpool["rpool<br>(2TB Usable)"] --> rpool_data["data vdev<br>(2TB Usable)"]
+    rpool_data --> rpool_mirror["mirror-0<br>(2TB Usable)"]
     rpool_mirror --> rpool_nvme1["2TB NVMe 3.0 x4<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
     rpool_mirror --> rpool_nvme2["2TB NVMe 3.0 x1<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
 
