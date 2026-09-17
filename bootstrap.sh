@@ -87,7 +87,6 @@ else
 	cd "${ROOT_DIR}"
 	git fetch origin --prune
 	git reset --hard origin/main
-	git clean -fd
 fi
 
 cd "${ROOT_DIR}"
