@@ -14,8 +14,8 @@
 flowchart LR
     rpool --> rpool_data["data vdev"]
     rpool_data --> rpool_mirror["mirror-0"]
-    rpool_mirror --> rpool_ssd1["2TB T-FORCE TM8FP8002T"]
-    rpool_mirror --> rpool_ssd2["2TB XPG GAMMIX S11 Pro"]
+    rpool_mirror --> rpool_ssd1["2TB NVMe 3.0 x4 T-FORCE TM8FP8002T"]
+    rpool_mirror --> rpool_ssd2["2TB NVMe 3.0 x4 XPG GAMMIX S11 Pro"]
 
     tank --> special["special vdev"]
     tank --> data["data vdev"]
