@@ -12,7 +12,7 @@ services:
     network_mode: container:gluetun # use VPN
     depends_on:
       gluetun:
-        condition: service_started
+        condition: service_healthy
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
