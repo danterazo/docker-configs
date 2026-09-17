@@ -34,9 +34,9 @@ flowchart LR
     data_mirror1 --> data_hdd3["26TB SATA Seagate HDD<br>CMR @ 7200RPM<br>(ST26000DM000-3Y8)"]
     data_mirror1 --> data_hdd4["26TB SATA Seagate HDD<br>CMR @ 7200RPM<br>(ST26000DM000-3Y8)"]
 
-    classDef pool fill:#f5d0fe,color:#166534,stroke:#e879f9
-    classDef vdev fill:#bae6fd,color:#9a3412,stroke:#38bdf8
-    classDef mirror fill:#bbf7d0,color:#9a3412,stroke:#4ade80
+    classDef pool fill:#f5d0fe,color:#a21caf,stroke:#e879f9
+    classDef vdev fill:#bae6fd,color:#075985,stroke:#38bdf8
+    classDef mirror fill:#bbf7d0,color:#166534,stroke:#4ade80
     classDef disk fill:#fed7aa,color:#9a3412,stroke:#fb923c
 
     class rpool,tank pool
@@ -53,9 +53,9 @@ flowchart LR
     rpool_mirror --> rpool_nvme1["2TB NVMe 3.0 x4<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
     rpool_mirror --> rpool_nvme2["2TB NVMe 3.0 x4<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
 
-    classDef pool fill:#f5d0fe,color:#166534,stroke:#e879f9
-    classDef vdev fill:#bae6fd,color:#9a3412,stroke:#38bdf8
-    classDef mirror fill:#bbf7d0,color:#9a3412,stroke:#4ade80
+    classDef pool fill:#f5d0fe,color:#a21caf,stroke:#e879f9
+    classDef vdev fill:#bae6fd,color:#075985,stroke:#38bdf8
+    classDef mirror fill:#bbf7d0,color:#166534,stroke:#4ade80
     classDef disk fill:#fed7aa,color:#9a3412,stroke:#fb923c
 
     class rpool pool
@@ -72,9 +72,9 @@ flowchart LR
     rpool_mirror --> rpool_nvme1["2TB NVMe 3.0 x4<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
     rpool_mirror --> rpool_nvme2["2TB NVMe 3.0 x1<br>WD IX SN350<br>(SDBPNPZ-2T00-XI)"]
 
-    classDef pool fill:#f5d0fe,color:#166534,stroke:#e879f9
-    classDef vdev fill:#bae6fd,color:#9a3412,stroke:#38bdf8
-    classDef mirror fill:#bbf7d0,color:#9a3412,stroke:#4ade80
+    classDef pool fill:#f5d0fe,color:#a21caf,stroke:#e879f9
+    classDef vdev fill:#bae6fd,color:#075985,stroke:#38bdf8
+    classDef mirror fill:#bbf7d0,color:#166534,stroke:#4ade80
     classDef disk fill:#fed7aa,color:#9a3412,stroke:#fb923c
 
     class rpool pool
