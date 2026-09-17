@@ -84,11 +84,13 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 	fi
 else
 	# repo already exists; just update
-	cd "${ROOT_DIR}/${APP_NAME}"
-	git fetch origin --prune
-	git reset --hard origin/main
+	cd "${ROOT_DIR}"
+	if ! git fetch --filter=blob:none --refetch --prune origin main; then
+		echo "ERROR: Failed to fetch the latest repository state"
+		exit 1
+	fi
+	git reset --hard FETCH_HEAD
 	git clean -fd
-	git pull
 fi
 
 cd "${ROOT_DIR}/${APP_NAME}"
