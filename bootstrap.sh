@@ -84,13 +84,13 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 	fi
 else
 	# repo already exists; just update
-	cd "${ROOT_DIR}"
+	cd "${ROOT_DIR}/${APP_NAME}"
 	git fetch origin --prune
 	git reset --hard origin/main
 	git pull
 fi
 
-cd "${ROOT_DIR}"
+cd "${ROOT_DIR}/${APP_NAME}"
 
 # configure sparse-checkout
 git sparse-checkout init --cone 2>/dev/null || true
