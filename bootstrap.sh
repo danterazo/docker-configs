@@ -22,6 +22,7 @@ sed -i -E "s|^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"|GRUB_CMDLINE_LINUX_DEFAULT=\"${C
 # apply grub changes
 update-grub
 
+
 : 'INSTALL PACKAGES'
 sudo apt-get update
 sudo apt-get install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release fastfetch
