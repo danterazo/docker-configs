@@ -184,6 +184,7 @@ shopt -u extglob
 # disable SSH login message
 sudo sed -i 's/^#\?PrintLastLog.*/PrintLastLog no/' /etc/ssh/sshd_config
 
+
 : 'INIT PERMISSIONS'
 # enable GPU access
 sudo groupadd -f video
