@@ -156,6 +156,18 @@ for script in "${ROOT_DIR}"/.common/*.sh; do
 	sudo ln -sf "$script" "/etc/profile.d/00-${base}"
 done
 
+# link the shared fastfetch config to both root and dante users
+FASTFETCH_CONFIG="${ROOT_DIR}/.common/configs/fastfetch/config.jsonc"
+if [ -f "${FASTFETCH_CONFIG}" ]; then
+	for user_home in /home/dante /root; do
+		sudo install -d -o "$(basename "${user_home}")" -g "$(basename "${user_home}")" "${user_home}/.config/fastfetch"
+		sudo ln -sf "${FASTFETCH_CONFIG}" "${user_home}/.config/fastfetch/config.jsonc"
+	done
+else
+	echo "ERROR: ${FASTFETCH_CONFIG} not found. Sparse-checkout may have failed."
+	exit 1
+fi
+
 # use canonical's suggested marker files
 sudo touch /var/lib/update-notifier/hide-esm-in-motd
 sudo touch /var/lib/ubuntu-advantage/hide-esm-in-motd
