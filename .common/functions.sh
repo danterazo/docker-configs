@@ -9,7 +9,7 @@ dpull() {
 
 	# check git init status
 	if [ ! -d "$root_dir/.git" ]; then
-		echo "ERROR: .git directory missing from Docker configuration repository."
+		echo "ERROR: .git directory missing from Docker configuration repository!"
 		return 1
 	fi
 
