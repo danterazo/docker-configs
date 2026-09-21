@@ -44,7 +44,7 @@ services:
     # cpus: 8
     volumes:
       - /dev/bus/usb:/dev/bus/usb
-      - /mnt/ephemeral/model-cache/:/cache/:rw
+      - models_nfs:/cache/:rw
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
     env_file:
@@ -136,6 +136,12 @@ volumes:
       type: nfs
       o: "addr=192.168.20.42,hard,rw,noatime,nfsvers=4"
       device: ":/tank/media/photos/photography/"
+  models_nfs:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: "addr=192.168.20.42,hard,rw,noatime,nfsvers=4"
+      device: ":/tank/models/immich/"
   selfies_nfs:
     driver: local
     driver_opts:
