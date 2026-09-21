@@ -34,7 +34,7 @@ fi
 sudo apt-get update
 sudo apt-get install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release fastfetch
 
-# remove the obsolete fastfetch PPA when it is configured
+# remove the obsolete fastfetch PPA if present
 if grep -Rqs 'ppa:zhangsongcui3371/fastfetch' /etc/apt/sources.list /etc/apt/sources.list.d 2>/dev/null; then
 	sudo add-apt-repository --remove ppa:zhangsongcui3371/fastfetch -y || true
 fi
