@@ -103,6 +103,7 @@ if [ -n "${SSH_DIR}" ]; then
 	export GIT_SSH_COMMAND="ssh -i ${SSH_DIR}/id_ed25519 -o IdentitiesOnly=yes"
 fi
 
+repo_created=0
 if [ ! -d "${ROOT_DIR}/.git" ]; then
 	# first-time setup; clone repository
 	clone_args=()
@@ -116,20 +117,25 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 		echo "ERROR: Failed to clone repository"
 		exit 1
 	fi
+	repo_created=1
 else
-	# repo already exists; leave it unchanged
-	echo "WARNING: Repository already exists at ${ROOT_DIR}; skipping clone..."
+	# repo already exists; preserve its sparse-checkout configuration
+	echo "WARNING: Repository already exists at ${ROOT_DIR}; preserving checkout settings..."
 fi
 
 # move to root-level repo directory
 cd "${ROOT_DIR}"
-git pull
+if [ "${repo_created}" = "0" ]; then
+	git pull
+fi
 
-# configure sparse-checkout
-if [ "${GIT_SPARSE}" = "1" ]; then
-	git sparse-checkout set --cone .common "${APP_NAME}" 2>/dev/null || true
-else
-	git sparse-checkout disable 2>/dev/null || true
+# configure sparse-checkout only for a newly cloned repository
+if [ "${repo_created}" = "1" ]; then
+	if [ "${GIT_SPARSE}" = "1" ]; then
+		git sparse-checkout set --cone .common "${APP_NAME}" 2>/dev/null || true
+	else
+		git sparse-checkout disable 2>/dev/null || true
+	fi
 fi
 
 # move to app dir if the host contains only a single stack
