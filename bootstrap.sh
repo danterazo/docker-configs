@@ -134,6 +134,8 @@ else
 	cd "${ROOT_DIR}"
 fi
 
+
+: 'INIT PROFILE'
 # clean up old profile.d symlinks
 sudo find /etc/profile.d -maxdepth 1 -type l -name "00-*.sh" -delete 2>/dev/null || true
 
@@ -153,6 +155,15 @@ for script in "${ROOT_DIR}"/.common/*.sh; do
 	[ "$base" = "bashrc.sh" ] && continue
 	sudo ln -sf "$script" "/etc/profile.d/00-${base}"
 done
+
+# use canonical's suggested marker files
+sudo touch /var/lib/update-notifier/hide-esm-in-motd
+sudo touch /var/lib/ubuntu-advantage/hide-esm-in-motd
+sudo pro config set apt_news=false
+
+# delete every update-motd.d file except a few selected ones
+shopt -s extglob
+sudo rm -fv /etc/update-motd.d/!(00-header|10-help-text|50-motd-news|91-contract-ua-esm-status|91-release-upgrade|92-unattended-upgrades)
 
 
 : 'INIT PERMISSIONS'
