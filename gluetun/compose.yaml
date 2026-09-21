@@ -4,7 +4,7 @@ include:
 
 services:
   gluetun:
-    image: qmcgaw/gluetun:v3.41
+    image: qmcgaw/gluetun:v3.41.3
     container_name: gluetun
     cap_add:
       - NET_ADMIN
