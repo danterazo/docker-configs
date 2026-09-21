@@ -129,13 +129,15 @@ if [ "${REPO_CREATED}" = "0" ]; then
 	git pull
 fi
 
-# configure sparse-checkout only for a newly cloned repository
-if [ "${REPO_CREATED}" = "1" ]; then
-	if [ "${GIT_SPARSE}" = "1" ]; then
+# configure sparse-checkout for the host's layout
+if [ "${GIT_SPARSE}" = "1" ]; then
+	if [ -n "$(git ls-tree -d --name-only HEAD -- "${APP_NAME}")" ]; then
 		git sparse-checkout set --cone .common "${APP_NAME}" 2>/dev/null || true
 	else
 		git sparse-checkout disable 2>/dev/null || true
 	fi
+else
+	git sparse-checkout disable 2>/dev/null || true
 fi
 
 # move to app dir if the host contains only a single stack
