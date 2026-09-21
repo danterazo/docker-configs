@@ -8,9 +8,19 @@ ROOT_DIR="/docker"
 UBUNTU_CODENAME="resolute" # TODO: remove after Ubuntu 26.10 stable release
 GIT_SPARSE=1
 
+
+: 'SYSTEM CONFIG'
 # pin Ubuntu release to stable / normal
 sudo sed -i 's/^Prompt=.*/Prompt=normal/' /etc/update-manager/release-upgrades
 
+# remove "quiet" from GRUB_CMDLINE_LINUX_DEFAULT to show boot messages
+GRUB_FILE="/etc/default/grub"
+CURRENT_GRUB=$(grep -oP '(?<=^GRUB_CMDLINE_LINUX_DEFAULT=")[^"]*' "$GRUB_FILE")
+CLEANED_GRUB=$(echo "$CURRENT_GRUB" | sed -E 's/\bquiet\b//g' | xargs)
+sed -i -E "s|^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"|GRUB_CMDLINE_LINUX_DEFAULT=\"${CLEANED_GRUB}\"|" "$GRUB_FILE"
+
+# apply grub changes
+update-grub
 
 : 'INSTALL PACKAGES'
 sudo apt-get update
