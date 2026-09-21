@@ -220,7 +220,7 @@ sudo chown -R dante:dante "${ROOT_DIR}"
 
 # grant dante passwordless reboot/poweroff/shutdown/apt
 sudo tee /etc/sudoers.d/dante > /dev/null <<'EOF'
-dante ALL=(root) NOPASSWD: /usr/sbin/reboot, /usr/sbin/poweroff, /usr/sbin/shutdown, /usr/bin/apt-get update, /usr/bin/apt-get dist-upgrade, /usr/bin/apt-get clean, /usr/bin/apt-get autoremove
+dante ALL=(root) NOPASSWD: /usr/sbin/reboot, /usr/sbin/poweroff, /usr/sbin/shutdown, /usr/bin/apt-get update, /usr/bin/apt-get upgrade, /usr/bin/apt-get dist-upgrade, /usr/bin/apt-get clean, /usr/bin/apt-get autoremove
 EOF
 sudo chmod 0440 /etc/sudoers.d/dante
 sudo visudo -c	# validate sudoer file syntax
