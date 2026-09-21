@@ -64,11 +64,20 @@ git config --global user.email "github.d2brf@simplelogin.fr"
 git config --global pull.rebase false
 sudo git config --global --add safe.directory /docker
 
-# fix SSH permissions
-sudo chmod 700 /root/.ssh
-sudo chmod 600 /root/.ssh/id_ed25519
-sudo chmod 644 /root/.ssh/id_ed25519.pub
-sudo chown -R root:root /root/.ssh
+# fix SSH permissions, preferring dante's key over root's
+SSH_DIR=""
+for path in /home/dante/.ssh /root/.ssh; do
+	if [ -f "${candidate}/id_ed25519" ] && [ -f "${candidate}/id_ed25519.pub" ]; then
+		SSH_DIR="${candidate}"
+		break
+	fi
+done
+
+if [ -n "${SSH_DIR}" ]; then
+	sudo chmod 700 "${SSH_DIR}"
+	sudo chmod 600 "${SSH_DIR}/id_ed25519"
+	sudo chmod 644 "${SSH_DIR}/id_ed25519.pub"
+fi
 
 
 : 'INIT CONFIG REPOSITORY'
