@@ -141,6 +141,11 @@ sudo usermod -aG video,render,docker dante || true
 # fix bind permissions
 sudo chown -R dante:dante "${ROOT_DIR}"
 
+# grant dante passwordless reboot/poweroff/shutdown
+echo 'dante ALL=(root) NOPASSWD: /usr/sbin/reboot, /usr/sbin/poweroff, /usr/sbin/shutdown' | sudo tee /etc/sudoers.d/dante-reboot > /dev/null
+sudo chmod 0440 /etc/sudoers.d/dante-reboot
+sudo visudo -c	# validate sudoer file syntax
+
 : 'BASH CONFIG'
 # share one bashrc entrypoint across accounts
 if [ ! -f /docker/.common/bashrc.sh ]; then
@@ -152,7 +157,6 @@ fi
 sudo mkdir -p /home/dante
 sudo ln -sf /docker/.common/bashrc.sh /root/.bashrc
 sudo ln -sf /docker/.common/bashrc.sh /home/dante/.bashrc
-
 
 : 'NOTICES TO USER'
 echo -e "\nDouble-check IP in PVE UI before proceeding! \n\n"
