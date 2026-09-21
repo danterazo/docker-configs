@@ -142,8 +142,11 @@ sudo usermod -aG video,render,docker dante || true
 sudo chown -R dante:dante "${ROOT_DIR}"
 
 # grant dante passwordless reboot/poweroff/shutdown
-echo 'dante ALL=(root) NOPASSWD: /usr/sbin/reboot, /usr/sbin/poweroff, /usr/sbin/shutdown' | sudo tee /etc/sudoers.d/dante-reboot > /dev/null
-sudo chmod 0440 /etc/sudoers.d/dante-reboot
+# grant dante passwordless reboot/poweroff/shutdown/apt
+sudo tee /etc/sudoers.d/dante > /dev/null <<'EOF'
+dante ALL=(root) NOPASSWD: /usr/bin/apt update, /usr/bin/apt list --upgradable, /usr/bin/apt-get update
+EOF
+sudo chmod 0440 /etc/sudoers.d/dante
 sudo visudo -c	# validate sudoer file syntax
 
 : 'BASH CONFIG'
