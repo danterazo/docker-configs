@@ -67,16 +67,18 @@ sudo git config --global --add safe.directory /docker
 # fix SSH permissions, preferring dante's key over root's
 SSH_DIR=""
 for path in /home/dante/.ssh /root/.ssh; do
-	if [ -f "${candidate}/id_ed25519" ] && [ -f "${candidate}/id_ed25519.pub" ]; then
-		SSH_DIR="${candidate}"
+	if [ -f "${path}/id_ed25519" ] && [ -f "${path}/id_ed25519.pub" ]; then
+		SSH_DIR="${path}"
 		break
 	fi
 done
 
+git_sudo=(sudo)
 if [ -n "${SSH_DIR}" ]; then
 	sudo chmod 700 "${SSH_DIR}"
 	sudo chmod 600 "${SSH_DIR}/id_ed25519"
 	sudo chmod 644 "${SSH_DIR}/id_ed25519.pub"
+	git_sudo+=(env "GIT_SSH_COMMAND=ssh -i ${SSH_DIR}/id_ed25519 -o IdentitiesOnly=yes")
 fi
 
 
@@ -90,7 +92,7 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 		clone_args+=(--filter=blob:none --sparse)
 	fi
 
-	if ! sudo git clone "${clone_args[@]}" \
+	if ! "${git_sudo[@]}" git clone "${clone_args[@]}" \
 		git@github.com:danterazo/docker-configs.git \
 		"${ROOT_DIR}"; then
 		echo "ERROR: Failed to clone repository"
@@ -104,12 +106,12 @@ else
 		fetch_args=(--filter=blob:none --refetch --prune)
 	fi
 
-	if ! sudo git fetch "${fetch_args[@]}" origin main; then
+	if ! "${git_sudo[@]}" git fetch "${fetch_args[@]}" origin main; then
 		echo "ERROR: Failed to fetch the latest repository state"
 		exit 1
 	fi
-	sudo git reset --hard FETCH_HEAD
-	sudo git clean -fd
+	"${git_sudo[@]}" git reset --hard FETCH_HEAD
+	"${git_sudo[@]}" git clean -fd
 fi
 
 # move to root-level repo directory
@@ -117,9 +119,9 @@ cd "${ROOT_DIR}"
 
 # configure sparse-checkout
 if [ "${GIT_SPARSE}" = "1" ]; then
-	sudo git sparse-checkout set --cone .common "${APP_NAME}" 2>/dev/null || true
+	"${git_sudo[@]}" git sparse-checkout set --cone .common "${APP_NAME}" 2>/dev/null || true
 else
-	sudo git sparse-checkout disable 2>/dev/null || true
+	"${git_sudo[@]}" git sparse-checkout disable 2>/dev/null || true
 fi
 cd "${ROOT_DIR}/${APP_NAME}"
 
