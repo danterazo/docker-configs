@@ -135,8 +135,8 @@ fi
 # enable GPU access
 sudo groupadd -f video
 sudo groupadd -f render
-sudo usermod -aG video,render root || true
-sudo usermod -aG video,render dante || true
+sudo usermod -aG video,render,docker root || true
+sudo usermod -aG video,render,docker dante || true
 
 # fix bind permissions
 sudo chown -R dante:dante "${ROOT_DIR}"
