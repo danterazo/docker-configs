@@ -58,9 +58,6 @@ EOF
 	fi
 fi
 
-# TODO: set up SSH key sharing
-
-
 : 'INIT USER'
 # create dante group if missing
 if ! getent group dante >/dev/null; then
@@ -83,6 +80,7 @@ git config --global pull.rebase false
 sudo mkdir -p "${ROOT_DIR}"
 sudo chown -R dante:dante "${ROOT_DIR}"
 
+# TODO: set up SSH key sharing
 # fix SSH permissions, preferring dante's key over root's
 SSH_DIR=""
 for path in /home/dante/.ssh /root/.ssh; do
