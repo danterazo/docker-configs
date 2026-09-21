@@ -161,9 +161,9 @@ sudo touch /var/lib/update-notifier/hide-esm-in-motd
 sudo touch /var/lib/ubuntu-advantage/hide-esm-in-motd
 sudo pro config set apt_news=false
 
-# delete every update-motd.d file, except a few selected ones
+# delete most update-motd.d files
 shopt -s extglob
-sudo rm -fv /etc/update-motd.d/!(00-header|10-help-text|50-motd-news|91-contract-ua-esm-status|91-release-upgrade|92-unattended-upgrades)
+sudo rm -fv /etc/update-motd.d/!(92-unattended-upgrades)
 shopt -u extglob
 
 : 'INIT PERMISSIONS'
