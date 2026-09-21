@@ -11,7 +11,7 @@ sudo apt update
 sudo apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release
 
 # install fastfetch & PPA
-sudo add-apt-repository ppa:zhangsongcui3371/fastfetch -y
+# sudo add-apt-repository ppa:zhangsongcui3371/fastfetch -y
 sudo apt install -y fastfetch || true
 
 
