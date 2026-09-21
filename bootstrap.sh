@@ -135,7 +135,13 @@ if [ "${GIT_SPARSE}" = "1" ]; then
 else
 	git sparse-checkout disable 2>/dev/null || true
 fi
-cd "${ROOT_DIR}/${APP_NAME}"
+
+# conditional cd (supports LXCs and VMs)
+if [ -d "${ROOT_DIR}/${APP_NAME}" ]; then
+	cd "${ROOT_DIR}/${APP_NAME}"
+else
+	cd "${ROOT_DIR}"
+fi
 
 # clean up old profile.d symlinks
 sudo find /etc/profile.d -maxdepth 1 -type l -name "00-*.sh" -delete 2>/dev/null || true
