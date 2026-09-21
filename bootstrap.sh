@@ -12,7 +12,7 @@ GIT_SPARSE=1
 sudo sed -i 's/^Prompt=.*/Prompt=normal/' /etc/update-manager/release-upgrades
 
 
-: 'INSTALL HELPFUL PACKAGES'
+: 'INSTALL PACKAGES'
 sudo apt-get update
 sudo apt-get install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release
 
