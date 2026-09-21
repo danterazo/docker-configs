@@ -14,11 +14,12 @@ sudo sed -i 's/^Prompt=.*/Prompt=normal/' /etc/update-manager/release-upgrades
 
 : 'INSTALL PACKAGES'
 sudo apt-get update
-sudo apt-get install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release
+sudo apt-get install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release fastfetch
 
-# install fastfetch & PPA
-# sudo add-apt-repository ppa:zhangsongcui3371/fastfetch -y
-sudo apt-get install -y fastfetch || true
+# remove the obsolete fastfetch PPA when it is configured
+if grep -Rqs 'ppa:zhangsongcui3371/fastfetch' /etc/apt/sources.list /etc/apt/sources.list.d 2>/dev/null; then
+	sudo add-apt-repository --remove ppa:zhangsongcui3371/fastfetch -y || true
+fi
 
 
 : 'INSTALL DOCKER'
