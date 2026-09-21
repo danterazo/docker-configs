@@ -13,10 +13,10 @@ GIT_SPARSE=1
 # pin Ubuntu release to stable / normal
 sudo sed -i 's/^Prompt=.*/Prompt=normal/' /etc/update-manager/release-upgrades
 
-# remove "quiet" from GRUB_CMDLINE_LINUX_DEFAULT to show boot messages
+# modify GRUB_CMDLINE_LINUX_DEFAULT
 GRUB_FILE="/etc/default/grub"
 CURRENT_GRUB=$(grep -oP '(?<=^GRUB_CMDLINE_LINUX_DEFAULT=")[^"]*' "$GRUB_FILE")
-CLEANED_GRUB=$(echo "$CURRENT_GRUB" | sed -E 's/\bquiet\b//g' | xargs)
+CLEANED_GRUB=$(echo "$CURRENT_GRUB" | sed -E 's/\bquiet\b//g' | xargs)	# remove "quiet"
 sudo sed -i -E "s|^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"|GRUB_CMDLINE_LINUX_DEFAULT=\"${CLEANED_GRUB}\"|" "$GRUB_FILE"
 
 # apply grub changes
