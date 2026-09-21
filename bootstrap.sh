@@ -118,11 +118,12 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 	fi
 else
 	# repo already exists; leave it unchanged
-	echo "WARNING: Repository already exists at ${ROOT_DIR}; skipping clone / update..."
+	echo "WARNING: Repository already exists at ${ROOT_DIR}; skipping clone..."
 fi
 
 # move to root-level repo directory
 cd "${ROOT_DIR}"
+git pull
 
 # configure sparse-checkout
 if [ "${GIT_SPARSE}" = "1" ]; then
