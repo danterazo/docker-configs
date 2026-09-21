@@ -4,11 +4,11 @@
 ROOT_DIR="/docker"
 APP_DIR="${ROOT_DIR}/$(hostname)"
 
-# move to app dir, if it exists
+# move to app dir if the host contains only a single stack
 if [ -d "$APP_DIR" ]; then
-    # should exist in LXCs
+    # should exist in single-stack hosts
 	cd "$APP_DIR"
-else
-    # should exist in both LXCs and VMs
+elif [ -d "$ROOT_DIR" ]; then
+    # should exist in both single-stack and multi-stack hosts
 	cd "$ROOT_DIR"
 fi
