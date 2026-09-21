@@ -3,10 +3,15 @@
 
 
 : 'GLOBAL CONFIG'
-APP_NAME="$(hostname)"
+HOST_NAME="$(hostname)"
 ROOT_DIR="/docker"
 UBUNTU_CODENAME="resolute" # TODO: remove after Ubuntu 26.10 stable release
-GIT_SPARSE=1
+
+
+: 'MULTI-TENANT HOSTS'
+declare -A HOST_APPS=(
+	[nvidia-vm]='immich plex-video'
+)
 
 
 : 'SYSTEM CONFIG'
@@ -119,12 +124,7 @@ fi
 REPO_CREATED=0
 if [ ! -d "${ROOT_DIR}/.git" ]; then
 	# first-time setup; clone repository
-	clone_args=()
-	if [ "${GIT_SPARSE}" = "1" ]; then
-		clone_args+=(--filter=blob:none --sparse)
-	fi
-
-	if ! git clone "${clone_args[@]}" \
+	if ! git clone \
 		git@github.com:danterazo/docker-configs.git \
 		"${ROOT_DIR}"; then
 		echo "ERROR: Failed to clone repository"
@@ -142,21 +142,20 @@ if [ "${REPO_CREATED}" = "0" ]; then
 	git pull
 fi
 
-# configure sparse-checkout for the host's layout
-if [ "${GIT_SPARSE}" = "1" ]; then
-	if [ -n "$(git ls-tree -d --name-only HEAD -- "${APP_NAME}")" ]; then
-		git sparse-checkout set --cone .common "${APP_NAME}" 2>/dev/null || true
-	else
-		git sparse-checkout disable 2>/dev/null || true
-	fi
-else
-	git sparse-checkout disable 2>/dev/null || true
+# host-specific sparse profiles for fresh clones
+if [ "${REPO_CREATED}" = "1" ]; then
+	read -r -a host_apps <<< "${HOST_APPS[${HOST_NAME}]:-${HOST_NAME}}"
+	sparse_paths=('/.common/' '/bootstrap.sh')
+	for app in "${host_apps[@]}"; do
+		sparse_paths+=("/${app}/")
+	done
+	git sparse-checkout set --no-cone "${sparse_paths[@]}" 2>/dev/null || true
 fi
 
 # move to app dir if the host contains only a single stack
-if [ -d "${ROOT_DIR}/${APP_NAME}" ]; then
+if [ -d "${ROOT_DIR}/${HOST_NAME}" ]; then
     # should exist in single-stack hosts
-	cd "${ROOT_DIR}/${APP_NAME}"
+	cd "${ROOT_DIR}/${HOST_NAME}"
 else
     # should exist in both single-stack and multi-stack hosts
 	cd "${ROOT_DIR}"
