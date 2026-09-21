@@ -7,12 +7,12 @@ ROOT_DIR="/docker"
 UBUNTU_CODENAME="resolute"
 
 : 'INSTALL HELPFUL PACKAGES'
-sudo apt update
-sudo apt install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release
+sudo apt-get update
+sudo apt-get install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release
 
 # install fastfetch & PPA
 # sudo add-apt-repository ppa:zhangsongcui3371/fastfetch -y
-sudo apt install -y fastfetch || true
+sudo apt-get install -y fastfetch || true
 
 
 : 'INSTALL DOCKER'
@@ -31,8 +31,8 @@ Components: stable
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-sudo apt update
-sudo apt install -y docker-ce docker-ce-cli containerd.io \
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io \
 	docker-buildx-plugin docker-compose-plugin
 
 

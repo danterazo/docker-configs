@@ -18,7 +18,7 @@ alias dcuu="docker compose up -d --remove-orphans"
 alias dcpb="docker compose build --pull"
 
 # package management
-alias upgrade='sudo apt update && sudo apt dist-upgrade -y && sudo apt clean && sudo apt autoremove -y --purge'
+alias upgrade='sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean && sudo apt-get autoremove -y --purge'
 
 # system state
 alias bootstrap="source /docker/bootstrap.sh"
