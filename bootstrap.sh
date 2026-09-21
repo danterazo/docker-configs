@@ -125,7 +125,14 @@ else
 	git sparse-checkout disable 2>/dev/null || true
 fi
 
-cd "${ROOT_DIR}/${APP_NAME}"
+# move to app dir if the host contains only a single stack
+if [ -d "${ROOT_DIR}/${APP_NAME}" ]; then
+    # should exist in single-stack hosts
+	cd "${ROOT_DIR}/${APP_NAME}"
+else
+    # should exist in both single-stack and multi-stack hosts
+	cd "${ROOT_DIR}"
+fi
 
 # clean up old profile.d symlinks
 sudo find /etc/profile.d -maxdepth 1 -type l -name "00-*.sh" -delete 2>/dev/null || true
