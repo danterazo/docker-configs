@@ -1,11 +1,13 @@
 #!/bin/bash
 ## bootstrap PVE Docker LXCs
 
+
 : 'GLOBAL CONFIG'
 APP_NAME="$(hostname)"
 ROOT_DIR="/docker"
 UBUNTU_CODENAME="resolute"
 GIT_SPARSE=1
+
 
 : 'INSTALL HELPFUL PACKAGES'
 sudo apt-get update
@@ -58,6 +60,7 @@ fi
 
 # TODO: set up SSH key sharing
 
+
 : 'INIT USER'
 # create dante group if missing
 if ! getent group dante >/dev/null; then
@@ -69,10 +72,12 @@ if ! id -u dante >/dev/null 2>&1; then
 	sudo useradd -u 1000 -g 1000 -m -d /home/dante -s /bin/bash dante
 fi
 
+
 : 'GIT CONFIG'
 git config --global user.name "Dante Razo"
 git config --global user.email "github.d2brf@simplelogin.fr"
 git config --global pull.rebase false
+
 
 : 'INIT CONFIG REPOSITORY'
 sudo mkdir -p "${ROOT_DIR}"
@@ -172,6 +177,7 @@ EOF
 sudo chmod 0440 /etc/sudoers.d/dante
 sudo visudo -c	# validate sudoer file syntax
 
+
 : 'BASH CONFIG'
 # share one bashrc entrypoint across accounts
 if [ ! -f /docker/.common/bashrc.sh ]; then
@@ -183,6 +189,7 @@ fi
 sudo mkdir -p /home/dante
 sudo ln -sf /docker/.common/bashrc.sh /root/.bashrc
 sudo ln -sf /docker/.common/bashrc.sh /home/dante/.bashrc
+
 
 : 'NOTICES TO USER'
 echo -e "\nDouble-check IP in PVE UI before proceeding! \n\n"
