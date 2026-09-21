@@ -5,7 +5,7 @@
 : 'GLOBAL CONFIG'
 APP_NAME="$(hostname)"
 ROOT_DIR="/docker"
-UBUNTU_CODENAME="resolute"
+UBUNTU_CODENAME="resolute" # TODO: remove after Ubuntu 26.10 stable release
 GIT_SPARSE=1
 
 # pin Ubuntu release to stable / normal
