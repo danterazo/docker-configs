@@ -58,11 +58,25 @@ fi
 
 # TODO: set up SSH key sharing
 
+: 'INIT USER'
+# create dante group if missing
+if ! getent group dante >/dev/null; then
+	sudo groupadd -g 1000 dante
+fi
+
+# create dante user if missing
+if ! id -u dante >/dev/null 2>&1; then
+	sudo useradd -u 1000 -g 1000 -m -d /home/dante -s /bin/bash dante
+fi
+
 : 'GIT CONFIG'
 git config --global user.name "Dante Razo"
 git config --global user.email "github.d2brf@simplelogin.fr"
 git config --global pull.rebase false
-sudo git config --global --add safe.directory /docker
+
+: 'INIT CONFIG REPOSITORY'
+sudo mkdir -p "${ROOT_DIR}"
+sudo chown -R dante:dante "${ROOT_DIR}"
 
 # fix SSH permissions, preferring dante's key over root's
 SSH_DIR=""
@@ -73,17 +87,12 @@ for path in /home/dante/.ssh /root/.ssh; do
 	fi
 done
 
-git_sudo=(sudo)
 if [ -n "${SSH_DIR}" ]; then
 	sudo chmod 700 "${SSH_DIR}"
 	sudo chmod 600 "${SSH_DIR}/id_ed25519"
 	sudo chmod 644 "${SSH_DIR}/id_ed25519.pub"
-	git_sudo+=(env "GIT_SSH_COMMAND=ssh -i ${SSH_DIR}/id_ed25519 -o IdentitiesOnly=yes")
+	export GIT_SSH_COMMAND="ssh -i ${SSH_DIR}/id_ed25519 -o IdentitiesOnly=yes"
 fi
-
-
-: 'INIT CONFIG REPOSITORY'
-sudo mkdir -p "${ROOT_DIR}"
 
 if [ ! -d "${ROOT_DIR}/.git" ]; then
 	# first-time setup; clone repository
@@ -92,7 +101,7 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 		clone_args+=(--filter=blob:none --sparse)
 	fi
 
-	if ! "${git_sudo[@]}" git clone "${clone_args[@]}" \
+	if ! git clone "${clone_args[@]}" \
 		git@github.com:danterazo/docker-configs.git \
 		"${ROOT_DIR}"; then
 		echo "ERROR: Failed to clone repository"
@@ -106,12 +115,12 @@ else
 		fetch_args=(--filter=blob:none --refetch --prune)
 	fi
 
-	if ! "${git_sudo[@]}" git fetch "${fetch_args[@]}" origin main; then
+	if ! git fetch "${fetch_args[@]}" origin main; then
 		echo "ERROR: Failed to fetch the latest repository state"
 		exit 1
 	fi
-	"${git_sudo[@]}" git reset --hard FETCH_HEAD
-	"${git_sudo[@]}" git clean -fd
+	git reset --hard FETCH_HEAD
+	git clean -fd
 fi
 
 # move to root-level repo directory
@@ -119,9 +128,9 @@ cd "${ROOT_DIR}"
 
 # configure sparse-checkout
 if [ "${GIT_SPARSE}" = "1" ]; then
-	"${git_sudo[@]}" git sparse-checkout set --cone .common "${APP_NAME}" 2>/dev/null || true
+	git sparse-checkout set --cone .common "${APP_NAME}" 2>/dev/null || true
 else
-	"${git_sudo[@]}" git sparse-checkout disable 2>/dev/null || true
+	git sparse-checkout disable 2>/dev/null || true
 fi
 cd "${ROOT_DIR}/${APP_NAME}"
 
@@ -147,16 +156,6 @@ done
 
 
 : 'INIT PERMISSIONS'
-# create dante group if missing
-if ! getent group dante >/dev/null; then
-	sudo groupadd -g 1000 dante
-fi
-
-# create dante user if missing
-if ! id -u dante >/dev/null 2>&1; then
-	sudo useradd -u 1000 -g 1000 -m -d /home/dante -s /bin/bash dante
-fi
-
 # enable GPU access
 sudo groupadd -f video
 sudo groupadd -f render
