@@ -38,5 +38,5 @@ dupull() {
 durpull() {
 	upgrade
 	dpull
-	reboot
+	sudo reboot
 }
