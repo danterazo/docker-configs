@@ -8,6 +8,9 @@ ROOT_DIR="/docker"
 UBUNTU_CODENAME="resolute"
 GIT_SPARSE=1
 
+# pin Ubuntu release to stable / normal
+sudo sed -i 's/^Prompt=.*/Prompt=normal/' /etc/update-manager/release-upgrades
+
 
 : 'INSTALL HELPFUL PACKAGES'
 sudo apt-get update
