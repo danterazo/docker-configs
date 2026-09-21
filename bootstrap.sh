@@ -5,6 +5,7 @@
 APP_NAME="$(hostname)"
 ROOT_DIR="/docker"
 UBUNTU_CODENAME="resolute"
+GIT_SPARSE=1
 
 : 'INSTALL HELPFUL PACKAGES'
 sudo apt-get update
@@ -75,7 +76,12 @@ sudo mkdir -p "${ROOT_DIR}"
 
 if [ ! -d "${ROOT_DIR}/.git" ]; then
 	# first-time setup; clone repository
-	if ! sudo git clone --filter=blob:none --sparse \
+	clone_args=()
+	if [ "${GIT_SPARSE}" = "1" ]; then
+		clone_args+=(--filter=blob:none --sparse)
+	fi
+
+	if ! sudo git clone "${clone_args[@]}" \
 		git@github.com:danterazo/docker-configs.git \
 		"${ROOT_DIR}"; then
 		echo "ERROR: Failed to clone repository"
@@ -84,7 +90,12 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 else
 	# repo already exists; just update
 	cd "${ROOT_DIR}"
-	if ! sudo git fetch --filter=blob:none --refetch --prune origin main; then
+	fetch_args=(--prune)
+	if [ "${GIT_SPARSE}" = "1" ]; then
+		fetch_args=(--filter=blob:none --refetch --prune)
+	fi
+
+	if ! sudo git fetch "${fetch_args[@]}" origin main; then
 		echo "ERROR: Failed to fetch the latest repository state"
 		exit 1
 	fi
@@ -96,8 +107,12 @@ fi
 cd "${ROOT_DIR}"
 
 # configure sparse-checkout
-sudo git sparse-checkout init --cone 2>/dev/null || true
-sudo git sparse-checkout set .common "${APP_NAME}" 2>/dev/null || true
+if [ "${GIT_SPARSE}" = "1" ]; then
+	sudo git sparse-checkout init --cone 2>/dev/null || true
+	sudo git sparse-checkout set .common "${APP_NAME}" 2>/dev/null || true
+else
+	sudo git sparse-checkout disable 2>/dev/null || true
+fi
 cd "${ROOT_DIR}/${APP_NAME}"
 
 # clean up old profile.d symlinks
