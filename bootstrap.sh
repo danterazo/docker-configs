@@ -108,8 +108,7 @@ cd "${ROOT_DIR}"
 
 # configure sparse-checkout
 if [ "${GIT_SPARSE}" = "1" ]; then
-	sudo git sparse-checkout init --cone 2>/dev/null || true
-	sudo git sparse-checkout set .common "${APP_NAME}" 2>/dev/null || true
+	sudo git sparse-checkout set --cone .common "${APP_NAME}" 2>/dev/null || true
 else
 	sudo git sparse-checkout disable 2>/dev/null || true
 fi
