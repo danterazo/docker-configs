@@ -163,8 +163,11 @@ sudo pro config set apt_news=false
 
 # delete every update-motd.d file, with some exceptions
 shopt -s extglob
-sudo rm -fv /etc/update-motd.d/!(92-unattended-upgrades|85-fwupd.dpkg-dist|98-reboot-required)
+sudo rm -fv /etc/update-motd.d/!(85-fwupd.dpkg-dist|98-reboot-required)
 shopt -u extglob
+
+# disable SSH login message
+sudo sed -i 's/^#\?PrintLastLog.*/PrintLastLog no/' /etc/ssh/sshd_config
 
 : 'INIT PERMISSIONS'
 # enable GPU access
