@@ -111,19 +111,8 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 		exit 1
 	fi
 else
-	# repo already exists; just update
-	cd "${ROOT_DIR}"
-	fetch_args=(--prune)
-	if [ "${GIT_SPARSE}" = "1" ]; then
-		fetch_args=(--filter=blob:none --refetch --prune)
-	fi
-
-	if ! git fetch "${fetch_args[@]}" origin main; then
-		echo "ERROR: Failed to fetch the latest repository state"
-		exit 1
-	fi
-	git reset --hard FETCH_HEAD
-	git clean -fd
+	# repo already exists; leave it unchanged
+	echo "WARNING: Repository already exists at ${ROOT_DIR}; skipping clone / update..."
 fi
 
 # move to root-level repo directory
