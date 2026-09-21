@@ -189,5 +189,5 @@ sudo ln -sf /docker/.common/bashrc.sh /root/.bashrc
 sudo ln -sf /docker/.common/bashrc.sh /home/dante/.bashrc
 
 
-: 'NOTICES TO USER'
+: 'LOGS FOR USER'
 echo -e "\nDouble-check IP in PVE UI before proceeding! \n\n"
