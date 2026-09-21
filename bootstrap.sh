@@ -142,15 +142,13 @@ if [ "${REPO_CREATED}" = "0" ]; then
 	git pull
 fi
 
-# host-specific sparse profiles for fresh clones
-if [ "${REPO_CREATED}" = "1" ]; then
-	read -r -a host_apps <<< "${HOST_APPS[${HOST_NAME}]:-${HOST_NAME}}"
-	sparse_paths=('/.common/' '/bootstrap.sh')
-	for app in "${host_apps[@]}"; do
-		sparse_paths+=("/${app}/")
-	done
-	git sparse-checkout set --no-cone "${sparse_paths[@]}" 2>/dev/null || true
-fi
+# host-specific sparse profiles
+read -r -a host_apps <<< "${HOST_APPS[${HOST_NAME}]:-${HOST_NAME}}"
+sparse_paths=('/.common/' '/bootstrap.sh')	# common
+for app in "${host_apps[@]}"; do
+	sparse_paths+=("/${app}/")
+done
+git sparse-checkout set --no-cone "${sparse_paths[@]}" || true
 
 # move to app dir if the host contains only a single stack
 if [ -d "${ROOT_DIR}/${HOST_NAME}" ]; then
