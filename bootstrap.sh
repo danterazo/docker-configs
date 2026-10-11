@@ -1,7 +1,6 @@
 #!/bin/bash
 ## bootstrap PVE Docker LXCs
 
-
 : 'GLOBAL CONFIG'
 HOST_NAME="$(hostname)"
 ROOT_DIR="/docker"
@@ -17,19 +16,17 @@ declare -A HOST_APPS=(
 	["nvidia-vm"]='immich plex-video'
 )
 
-
 : 'SYSTEM CONFIG'
 # modify GRUB_CMDLINE_LINUX_DEFAULT
 GRUB_FILE="/etc/default/grub"
 CURRENT_GRUB=$(grep -oP '(?<=^GRUB_CMDLINE_LINUX_DEFAULT=")[^"]*' "$GRUB_FILE")
-CLEANED_GRUB=$(echo "$CURRENT_GRUB" | sed -E 's/\bquiet\b//g' | xargs)	# remove "quiet"
+CLEANED_GRUB=$(echo "$CURRENT_GRUB" | sed -E 's/\bquiet\b//g' | xargs) # remove "quiet"
 
 # apply grub changes only when the configuration changed
 if [ "${CURRENT_GRUB}" != "${CLEANED_GRUB}" ]; then
 	sudo sed -i -E "s|^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"|GRUB_CMDLINE_LINUX_DEFAULT=\"${CLEANED_GRUB}\"|" "$GRUB_FILE"
 	sudo update-grub
 fi
-
 
 : 'INSTALL PACKAGES'
 sudo apt-get update
@@ -40,11 +37,10 @@ if grep -Rqs 'ppa:zhangsongcui3371/fastfetch' /etc/apt/sources.list /etc/apt/sou
 	sudo add-apt-repository --remove ppa:zhangsongcui3371/fastfetch -y || true
 fi
 
-
 : 'INSTALL DOCKER'
 # add docker's official GPG key
 sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg |
 	sudo tee /etc/apt/keyrings/docker.asc >/dev/null
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
@@ -62,7 +58,6 @@ EOF
 sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io \
 	docker-buildx-plugin docker-compose-plugin
-
 
 : 'CONFIGURE DOCKER'
 if [ ! -f /etc/docker/daemon.json ]; then
@@ -94,12 +89,10 @@ if ! id -u dante >/dev/null 2>&1; then
 	sudo useradd -u 1000 -g 1000 -m -d /home/dante -s /bin/bash dante
 fi
 
-
 : 'GIT CONFIG'
 git config --global user.name "Dante Razo"
 git config --global user.email "github.d2brf@simplelogin.fr"
 git config --global pull.rebase false
-
 
 : 'INIT CONFIG REPOSITORY'
 sudo mkdir -p "${ROOT_DIR}"
@@ -144,8 +137,8 @@ if [ "${REPO_CREATED}" = "0" ]; then
 fi
 
 # host-specific sparse profiles
-read -r -a host_apps <<< "${HOST_APPS[${HOST_NAME}]:-${HOST_NAME}}"
-sparse_paths=('/.common/' '/bootstrap.sh' '/.gitignore')	# common
+read -r -a host_apps <<<"${HOST_APPS[${HOST_NAME}]:-${HOST_NAME}}"
+sparse_paths=('/.common/' '/bootstrap.sh' '/.gitignore') # common
 for app in "${host_apps[@]}"; do
 	sparse_paths+=("/${app}/")
 done
@@ -153,13 +146,12 @@ git sparse-checkout set --no-cone "${sparse_paths[@]}" || true
 
 # move to app dir if the host contains only a single stack
 if [ -d "${ROOT_DIR}/${HOST_NAME}" ]; then
-    # should exist in single-stack hosts
+	# should exist in single-stack hosts
 	cd "${ROOT_DIR}/${HOST_NAME}"
 else
-    # should exist in both single-stack and multi-stack hosts
+	# should exist in both single-stack and multi-stack hosts
 	cd "${ROOT_DIR}"
 fi
-
 
 : 'INIT PROFILE'
 # clean up old profile.d symlinks
@@ -207,7 +199,6 @@ shopt -u extglob
 # disable SSH login message
 sudo sed -i 's/^#\?PrintLastLog.*/PrintLastLog no/' /etc/ssh/sshd_config
 
-
 : 'INIT PERMISSIONS'
 # enable GPU access
 sudo groupadd -f video
@@ -219,12 +210,11 @@ sudo usermod -aG video,render,docker dante || true
 sudo chown -R dante:dante "${ROOT_DIR}"
 
 # grant dante passwordless reboot/poweroff/shutdown/apt
-sudo tee /etc/sudoers.d/dante > /dev/null <<'EOF'
+sudo tee /etc/sudoers.d/dante >/dev/null <<'EOF'
 dante ALL=(root) NOPASSWD: /usr/sbin/reboot, /usr/sbin/poweroff, /usr/sbin/shutdown, /usr/bin/apt-get update, /usr/bin/apt-get upgrade, /usr/bin/apt-get dist-upgrade, /usr/bin/apt-get clean, /usr/bin/apt-get autoremove
 EOF
 sudo chmod 0440 /etc/sudoers.d/dante
-sudo visudo -c	# validate sudoer file syntax
-
+sudo visudo -c # validate sudoer file syntax
 
 : 'BASH CONFIG'
 # share one bashrc entrypoint across accounts
@@ -237,7 +227,6 @@ fi
 sudo mkdir -p /home/dante
 sudo ln -sf /docker/.common/bashrc.sh /root/.bashrc
 sudo ln -sf /docker/.common/bashrc.sh /home/dante/.bashrc
-
 
 : 'LOGS FOR USER'
 echo -e "\nDouble-check IP in PVE UI before proceeding! \n\n"
