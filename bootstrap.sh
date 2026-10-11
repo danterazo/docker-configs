@@ -144,7 +144,7 @@ fi
 
 # host-specific sparse profiles
 read -r -a host_apps <<< "${HOST_APPS[${HOST_NAME}]:-${HOST_NAME}}"
-sparse_paths=('/.common/' '/bootstrap.sh')	# common
+sparse_paths=('/.common/' '/bootstrap.sh' '/.gitignore')	# common
 for app in "${host_apps[@]}"; do
 	sparse_paths+=("/${app}/")
 done
