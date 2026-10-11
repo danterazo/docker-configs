@@ -14,7 +14,7 @@ sudo do-release-upgrade
 
 : 'MULTI-TENANT HOSTS'
 declare -A HOST_APPS=(
-	[nvidia-vm]='immich plex-video'
+	["nvidia-vm"]='immich plex-video'
 )
 
 
