@@ -4,12 +4,14 @@
 *.credential*
 
 # ignore sensitive files (TODO: remove)
-*/gluetun/data/
-*/radicale/configs/users
-*/soulseek/slskd.yml
-*/cloudflare-ddns/config.json
-*/hivenet/machine-config/machine-id
-*/gluetun/oauth2/
+gluetun/data/
+gluetun/*/config/
+gluetun/oauth2/
+gluetun/soulseek/slskd.yml
+gluetun/soulseek/db/
+radicale/configs/users
+cloudflare-ddns/config.json
+hivenet/machine-config/machine-id
 **/tautulli
 
 # ignore temporary files
