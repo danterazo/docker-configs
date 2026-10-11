@@ -7,8 +7,9 @@
 gluetun/data/
 gluetun/*/config/
 gluetun/oauth2/
+gluetun/soulseek/slskd.yml
+gluetun/soulseek/db/
 radicale/configs/users
-soulseek/slskd.yml
 cloudflare-ddns/config.json
 hivenet/machine-config/machine-id
 **/tautulli
