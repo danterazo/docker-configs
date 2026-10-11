@@ -7,6 +7,10 @@ HOST_NAME="$(hostname)"
 ROOT_DIR="/docker"
 UBUNTU_CODENAME="resolute" # TODO: remove after Ubuntu 26.10 stable release
 
+: 'UPGRADE UBUNTU'
+# upgrade to stable interim releases, but never to a development release.
+sudo sed -i 's/^Prompt=.*/Prompt=normal/' /etc/update-manager/release-upgrades
+sudo do-release-upgrade
 
 : 'MULTI-TENANT HOSTS'
 declare -A HOST_APPS=(
@@ -15,9 +19,6 @@ declare -A HOST_APPS=(
 
 
 : 'SYSTEM CONFIG'
-# pin Ubuntu release to stable / normal
-sudo sed -i 's/^Prompt=.*/Prompt=normal/' /etc/update-manager/release-upgrades
-
 # modify GRUB_CMDLINE_LINUX_DEFAULT
 GRUB_FILE="/etc/default/grub"
 CURRENT_GRUB=$(grep -oP '(?<=^GRUB_CMDLINE_LINUX_DEFAULT=")[^"]*' "$GRUB_FILE")
