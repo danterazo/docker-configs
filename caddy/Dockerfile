@@ -7,7 +7,7 @@ ARG CADDY_URL="https://caddyserver.com/api/download?os=linux&arch=${TARGETARCH}\
 &p=github.com/greenpau/caddy-security"
 
 # download and install caddy with the specified plugins
-RUN wget -O /usr/bin/caddy "${CADDY_URL}" \
+RUN wget --user-agent="curl/8.0" -O /usr/bin/caddy "${CADDY_URL}" \
     && chmod +x /usr/bin/caddy
 
 # validate install
