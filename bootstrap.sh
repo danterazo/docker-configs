@@ -178,7 +178,7 @@ for script in "${ROOT_DIR}"/.common/*.sh; do
 done
 
 # link the shared fastfetch config to both root and dante users
-FASTFETCH_CONFIG="${ROOT_DIR}/.common/configs/fastfetch/config.jsonc"
+FASTFETCH_CONFIG="${ROOT_DIR}/.common/configs/fastfetch.jsonc"
 if [ -f "${FASTFETCH_CONFIG}" ]; then
 	for user_home in /home/dante /root; do
 		sudo install -d -o "$(basename "${user_home}")" -g "$(basename "${user_home}")" "${user_home}/.config/fastfetch"
@@ -190,7 +190,7 @@ else
 fi
 
 # link the shared direnv config to both root and dante users
-DIRENV_CONFIG="${ROOT_DIR}/.common/configs/direnv/direnv.toml"
+DIRENV_CONFIG="${ROOT_DIR}/.common/configs/direnv.toml"
 if [ -f "${DIRENV_CONFIG}" ]; then
 	for user_home in /home/dante /root; do
 		sudo install -d -o "$(basename "${user_home}")" -g "$(basename "${user_home}")" "${user_home}/.config/direnv" || exit 1
@@ -201,7 +201,7 @@ else
 	exit 1
 fi
 
-AUTOENV_CONFIG="${ROOT_DIR}/.common/configs/autoenv/autoenv.sh"
+AUTOENV_CONFIG="${ROOT_DIR}/.common/configs/autoenv.sh"
 if [ -f "${AUTOENV_CONFIG}" ]; then
 	for user_home in /home/dante /root; do
 		sudo install -d -o "$(basename "${user_home}")" -g "$(basename "${user_home}")" "${user_home}/.config/autoenv" || exit 1
