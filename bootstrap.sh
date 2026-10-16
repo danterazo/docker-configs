@@ -37,6 +37,9 @@ if grep -Rqs 'ppa:zhangsongcui3371/fastfetch' /etc/apt/sources.list /etc/apt/sou
 	sudo add-apt-repository --remove ppa:zhangsongcui3371/fastfetch -y || true
 fi
 
+# install autoenv using automated install script
+curl -#fLo- 'https://raw.githubusercontent.com/hyperupcall/autoenv/main/scripts/install.sh' | sh
+
 : 'INSTALL DOCKER'
 # add docker's official GPG key
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -195,6 +198,17 @@ if [ -f "${DIRENV_CONFIG}" ]; then
 	done
 else
 	echo "ERROR: ${DIRENV_CONFIG} not found. Sparse-checkout may have failed."
+	exit 1
+fi
+
+AUTOENV_CONFIG="${ROOT_DIR}/.common/configs/autoenv/autoenv.sh"
+if [ -f "${AUTOENV_CONFIG}" ]; then
+	for user_home in /home/dante /root; do
+		sudo install -d -o "$(basename "${user_home}")" -g "$(basename "${user_home}")" "${user_home}/.config/autoenv" || exit 1
+		sudo ln -sf "${AUTOENV_CONFIG}" "${user_home}/.config/autoenv/autoenv.sh" || exit 1
+	done
+else
+	echo "ERROR: ${AUTOENV_CONFIG} not found. Sparse-checkout may have failed."
 	exit 1
 fi
 

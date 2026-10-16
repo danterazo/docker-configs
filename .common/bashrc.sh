@@ -21,6 +21,10 @@ nvidia-vm)
 	;;
 esac
 
+if [[ -r "$HOME/.config/autoenv/autoenv.sh" ]]; then
+	source "$HOME/.config/autoenv/autoenv.sh"
+fi
+
 : 'STANDARD UBUNTU DEFAULTS'
 
 # don't put duplicate lines in the history. See bash(1) for more options
