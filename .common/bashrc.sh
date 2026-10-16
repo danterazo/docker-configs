@@ -6,9 +6,20 @@
 [ -z "$PS1" ] && return
 
 : 'DANTE ADDITIONS'
+# enable direnv
 if command -v direnv >/dev/null 2>&1; then
 	eval "$(direnv hook bash)"
 fi
+
+# update PATH
+case "${HOSTNAME%%.*}" in
+nvidia-vm)
+	export PATH="$PATH:/docker/plex-video:/docker/immich"
+	;;
+*)
+	export PATH="$PATH:/docker/${HOSTNAME%%.*}"
+	;;
+esac
 
 : 'STANDARD UBUNTU DEFAULTS'
 
