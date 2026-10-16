@@ -6,28 +6,6 @@ HOST_NAME="$(hostname)"
 ROOT_DIR="/docker"
 UBUNTU_CODENAME="resolute" # TODO: remove after Ubuntu 26.10 stable release
 
-configure_direnv() {
-	local config="${ROOT_DIR}/.common/configs/direnv/direnv.toml"
-	local user_home destination
-	if [ ! -f "${config}" ]; then
-		echo "ERROR: ${config} not found. Pull the repository and check sparse-checkout settings."
-		return 1
-	fi
-	for user_home in /home/dante /root; do
-		destination="${user_home}/.config/direnv/direnv.toml"
-		sudo install -d -o "$(basename "${user_home}")" -g "$(basename "${user_home}")" "${user_home}/.config/direnv" || return 1
-		if [ -e "${destination}" ] && [ ! -L "${destination}" ]; then
-			sudo cp -a -- "${destination}" "${destination}.bak.$(date +%Y%m%dT%H%M%S%N)" || return 1
-		fi
-		sudo ln -sfnT "${config}" "${destination}" || return 1
-	done
-}
-
-if [ "${1:-}" = "--direnv-only" ]; then
-	configure_direnv
-	exit $?
-fi
-
 : 'UPGRADE UBUNTU'
 # upgrade to stable interim releases, but never to a development release.
 sudo sed -i 's/^Prompt=.*/Prompt=normal/' /etc/update-manager/release-upgrades
@@ -208,7 +186,17 @@ else
 	exit 1
 fi
 
-configure_direnv || exit 1
+# link the shared direnv config to both root and dante users
+DIRENV_CONFIG="${ROOT_DIR}/.common/configs/direnv/direnv.toml"
+if [ -f "${DIRENV_CONFIG}" ]; then
+	for user_home in /home/dante /root; do
+		sudo install -d -o "$(basename "${user_home}")" -g "$(basename "${user_home}")" "${user_home}/.config/direnv" || exit 1
+		sudo ln -sf "${DIRENV_CONFIG}" "${user_home}/.config/direnv/direnv.toml" || exit 1
+	done
+else
+	echo "ERROR: ${DIRENV_CONFIG} not found. Sparse-checkout may have failed."
+	exit 1
+fi
 
 # use canonical's suggested marker files
 sudo touch /var/lib/update-notifier/hide-esm-in-motd
