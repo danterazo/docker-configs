@@ -13,6 +13,11 @@ natural-language deployment request can also select this workflow. Creating
 this skill, editing code, running local tests, or refreshing the deployment
 map does not authorize a deployment.
 
+For a metadata-only update of local `deployments.yaml`, use
+`/refresh-deployments` instead. Deployment still requires current ownership,
+state, and role discovery; follow the refresh workflow when updating the map,
+without treating that refresh as permission to deploy additional guests.
+
 ## Choose Targets
 
 - `/deploy` in a new thread, with no earlier edits, deployments, or named

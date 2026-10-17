@@ -11,6 +11,9 @@ Run `/refresh-deployments` in this repo to discover Docker guest metadata and
 update the root-level `deployments.yaml`. This is an agent workflow, not a scheduled
 job or a deployment command. Keep operational notes here, not in the YAML.
 
+To apply published code changes to running workloads, use `/deploy` instead.
+Refreshing this map does not deploy code or authorize workload changes.
+
 ## How to Run
 
 1. Open this repo in VS Code and open Copilot Chat in Agent mode.
