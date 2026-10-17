@@ -101,6 +101,14 @@
   and adguardhome must be disambiguated by guest ID and current owner.
 - Shared code such as bootstrap.sh and .common/ may affect multiple
   mapped deployments. Establish the affected targets before validation.
+- Required bootstrap during an approved deployment has standing user approval,
+  including its OS/package, permission/group/sudo, and SSH key/trust changes
+  and the required guest administrative shell. Report which guests require
+  it; follow the deploy skill. Those actions outside bootstrap.sh still need
+  approval. This exception never bypasses SSH verification or authorizes reboot.
+- Report and preserve untracked guest repository files during upgrades unless
+  cleanup is specifically approved. Stop on collisions or unsafe tracked
+  changes; leave non-conflicting untracked files for follow-up handling.
 - Deployment observations are dated snapshots, not live state or permission
   to connect. Recheck guest identity, owning node, state, and relevant
   addresses before remote work. Do not start stopped guests for testing

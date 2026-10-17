@@ -73,8 +73,8 @@ without treating that refresh as permission to deploy additional guests.
   narrower workflow; do not silently substitute it or change the helpers.
 - Do not commit, push, transfer files, change sparse-checkout rules, install
   tooling, start stopped guests, reboot, or change networking as implicit
-  deployment prerequisites. Bootstrap is conditional and requires the
-  specific approvals below; ask for every other needed scope expansion.
+  deployment prerequisites. Required bootstrap has the standing authorization
+  below; ask for every other needed scope expansion.
 - Execute deployment mutations sequentially. Stop rollout on failure and
   report completed, failed, and skipped targets; do not silently roll back
   or retry mutations.
@@ -119,16 +119,19 @@ to run an older deployed script. Do not expand the selected guest scope.
    Preserve the old Compose definitions and active-project snapshot before
    this pull. If changed definitions cannot safely tear down the old projects,
    stop and agree on a targeted teardown rather than silently missing them.
-2. Obtain approval for bootstrap on the named guests and its actual effects.
-   The current script includes an Ubuntu release upgrade, package installation,
-   a possible Docker restart, ownership and permission changes, and SSH
-   authentication/trust changes. Ordinary deployment approval does not cover
-   these actions; any action prohibited by operating policy remains a blocker
-   until the user explicitly approves that specific exception. Never reboot
-   implicitly. Do not run bootstrap locally or on a Proxmox owner.
-3. The current alias uses `runuser`, requiring a separately approved guest
-   administrative shell; it cannot simply be invoked as unprivileged `dante`.
-   Use only an approved access/elevation method inside that guest. Inspect
+2. The user has given standing approval to run required bootstrap on selected
+  deployment guests without reconfirmation. Report which guests require it
+  and inspect the incoming script first. This approval covers the script's
+  Ubuntu release upgrade, package installation, possible Docker restart,
+  ownership/permission/group/sudo changes, and SSH key/authentication/trust
+  changes. These actions outside `bootstrap.sh` still need their own approval.
+  Do not suppress bootstrap failures or silently skip phases. Never reboot
+  implicitly, run bootstrap locally or on a Proxmox owner, or bypass failed
+  SSH verification to reach a guest.
+3. The current alias uses `runuser`, requiring a guest administrative shell;
+  the standing bootstrap approval includes that shell through the existing
+  approved access method, not new remote access or trust configuration.
+  It cannot simply be invoked as unprivileged `dante`. Inspect
    and load the deployed alias explicitly in noninteractive Bash, enabling
    alias expansion before parsing its invocation (for example, invoke the
    reviewed alias using `eval 'bootstrap'` after sourcing its definition).
@@ -224,13 +227,16 @@ caddyserver.com while the guest's Caddy is stopped.
   edits. Complete Publish Local Changes using the applicable approvals
   before deployment. Do not imply that Git pull transfers local edits.
 4. Confirm the guest checkout location, repository identity, branch/upstream,
-   current revision, clean tracked/untracked worktree, sparse paths, and the
+  current revision, tracked worktree, untracked files, sparse paths, and the
    upstream revision that Git pull would retrieve. Inspect relevant ownership
    first, applying only the standing scoped repair approval in
    `.github/copilot-instructions.md` when needed, and run Git as `dante`.
    Do not probe Git as root or add `safe.directory` exceptions. `/docker` is
-   expected, but verify it before use. Preserve remote changes; do not reset, stash,
-   clean, force-pull, or bypass Git ownership checks. Do not print credentials
+  expected, but verify it before use. Report untracked files and preserve them
+  during upgrades; they do not block deployment unless they collide with
+  incoming paths or prevent safe operation. Leave cleanup for manual review
+  or a follow-up request. Preserve tracked remote changes; do not reset, stash,
+  clean, force-pull, or bypass Git ownership checks. Do not print credentials
    or environment files. Stop on divergence or unrelated upstream changes
    unless their inclusion is explicitly approved. `dpull` uses plain
    `git pull`, so confirm after `git fetch` that it would fast-forward.
