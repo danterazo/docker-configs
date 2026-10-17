@@ -1,0 +1,99 @@
+schema_version: 1
+
+last_updated:
+  date: "2026-10-16"
+  timestamp: "7:25:57 PM"
+
+cluster:
+  entrypoint:
+    ssh_target: cerulean
+    address: 100.100.20.43
+  nodes: [cerulean, kex, kveikur]
+
+undeployed_stacks: [common-dockge-agent]
+
+docker_guests:
+  100:
+    hostname: pocket-id
+    node: cerulean
+    address: 192.168.30.100
+    pool: prod
+    type: lxc
+  101:
+    hostname: nvidia-vm
+    node: kex
+    address: 192.168.30.101
+    pool: prod
+    type: qemu
+  102:
+    hostname: immich
+    node: kex
+    address: 192.168.30.102
+    pool: dev
+    type: lxc
+  103:
+    hostname: upsnap
+    node: kex
+    address: 192.168.30.103
+    pool: dev
+    type: lxc
+  104:
+    hostname: spoolman
+    node: cerulean
+    address: 192.168.30.104
+    pool: prod
+    type: lxc
+  108:
+    hostname: plex-video
+    node: kex
+    address: 192.168.30.108
+    pool: dev
+    type: lxc
+  116:
+    hostname: gluetun
+    node: kex
+    address: 192.168.30.116
+    pool: prod
+    type: lxc
+  120:
+    hostname: plex-music
+    node: kex
+    address: 192.168.30.120
+    pool: prod
+    type: lxc
+  200:
+    hostname: adguardhome
+    node: cerulean
+    address: 192.168.30.200
+    pool: prod
+    type: lxc
+  201:
+    hostname: adguardhome
+    node: kex
+    address: 192.168.30.201
+    pool: prod
+    type: lxc
+  202:
+    hostname: adguardhome
+    node: cerulean
+    address: 192.168.30.202
+    pool: prod
+    type: lxc
+  203:
+    hostname: caddy
+    node: cerulean
+    address: 192.168.30.203
+    pool: prod
+    type: lxc
+  204:
+    hostname: caddy
+    node: kex
+    address: 192.168.30.204
+    pool: prod
+    type: lxc
+  205:
+    hostname: caddy
+    node: cerulean
+    address: 192.168.30.205
+    pool: prod
+    type: lxc
