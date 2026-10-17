@@ -6,11 +6,13 @@ from typing import Optional
 ROOT: Path = Path(__file__).resolve().parents[1]
 ROOT_SECTIONS: set[str] = {"configs", "networks", "secrets", "services", "volumes"}
 CHILD_SECTIONS: set[str] = {"configs", "networks", "secrets", "services", "volumes"}
+# match mapping keys without mistaking scalar values for blocks
 KEY_PATTERN: Pattern[str] = compile(pattern=r"^([A-Za-z0-9_.-]+):(?:\s|$)")
 
 
 def blank_separator_count(lines: list[str], line_index: int) -> int:
     previous_index: int = line_index - 1
+    # comments belong with the following block, so they do not count as separators
     while previous_index >= 0 and lines[previous_index].lstrip().startswith("#"):
         previous_index -= 1
     blank_count: int = 0
@@ -37,6 +39,7 @@ def lint_file(path: Path) -> list[str]:
                 current_section = None
                 continue
             current_section = match.group(1)
+            # a repeated root section starts a fresh run of child blocks
             seen_child_section.discard(current_section)
             if current_section in ROOT_SECTIONS and seen_root_mapping:
                 blank_count: int = blank_separator_count(lines=lines, line_index=line_index)
@@ -47,12 +50,14 @@ def lint_file(path: Path) -> list[str]:
             seen_root_mapping = True
             continue
 
+        # only inspect direct children; nested compose options are not blocks
         if current_section not in CHILD_SECTIONS or not line.startswith("  ") or line.startswith("   "):
             continue
 
         match = KEY_PATTERN.match(string=line[2:])
         if not match:
             continue
+        # the first child follows its section header; only later siblings need separators
         if current_section in seen_child_section:
             label: str = "service" if current_section == "services" else f"{current_section[:-1]}"
             blank_count = blank_separator_count(lines=lines, line_index=line_index)
@@ -66,6 +71,7 @@ def lint_file(path: Path) -> list[str]:
 
 
 def main() -> int:
+    # include nested stacks as well as compose files at the repository root
     compose_files: list[Path] = sorted(ROOT.rglob(pattern="compose.yaml"))
     errors: list[str] = [error for path in compose_files for error in lint_file(path=path)]
     if errors:
