@@ -30,30 +30,25 @@ dpull() {
 
 # bootstrap, then pull git again and docker registry images via dpull
 dbpull() {
-	bootstrap
-	dpull
+	bootstrap && dpull
 }
 
 # upgrade packages, then pull git and docker registry images via dpull
 dupull() {
-	upgrade
-	dpull
+	upgrade && dpull
 }
 
 # upgrade packages, bootstrap, then pull git again and docker registry images via dpull
 dubpull() {
-	upgrade
-	dbpull
+	upgrade && dbpull
 }
 
 # upgrade packages, pull git and docker registry images via dpull, then reboot
 durpull() {
-	dupull
-	sudo reboot
+	dupull && sudo reboot
 }
 
 # upgrade packages, bootstrap, pull git again and docker registry images via dpull, then reboot
 durbpull() {
-	dubpull
-	sudo reboot
+	dubpull && sudo reboot
 }
