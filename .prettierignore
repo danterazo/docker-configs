@@ -7,7 +7,6 @@
 venv/
 node_modules/
 .vscode/
-.wip/
 tabby/source/
 
 # large or sensitive dirs from .gitignore
