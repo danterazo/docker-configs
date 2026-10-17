@@ -18,7 +18,7 @@ services:
   ladder-oauth:
     container_name: ladder-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
-    command: --config /oauth2-proxy.cfg
+    command: [--config, /oauth2-proxy.cfg]
     restart: always
     ports:
       - 8031:8031/tcp

@@ -3,7 +3,6 @@ services:
     image: freikin/dawarich:${IMAGE_VERSION}
     container_name: dawarich-app
     volumes:
-      - /usr/local/bundle/gems_app/
       - ./public/:/var/app/public/:rw
       - ./storage/:/var/app/storage/:rw
       - /self-hosted/dawarich/app/imports/:/var/app/tmp/imports/:rw
@@ -13,13 +12,7 @@ services:
     stdin_open: true
     tty: true
     entrypoint: web-entrypoint.sh
-    command:
-      - bin/rails
-      - server
-      - -p
-      - "3000"
-      - -b
-      - "::"
+    command: [bin/rails, server, -p, "3000", -b, "::"]
     restart: unless-stopped
     env_file: .env
     depends_on:
@@ -33,10 +26,7 @@ services:
         condition: service_started
         restart: true
     healthcheck:
-      test:
-        - CMD-SHELL
-        - wget -qO - http://127.0.0.1:3000/api/v1/health | grep -q
-          '"status"\s*:\s*"ok"'
+      test: [CMD-SHELL, "wget -qO - http://127.0.0.1:3000/api/v1/health | grep -q '\"status\"\\s*:\\s*\"ok\"'"]
       interval: 10s
       retries: 30
       start_period: 30s
@@ -45,20 +35,16 @@ services:
   dawarich-redis:
     image: redis:7.0-alpine
     container_name: dawarich-redis
-    command: redis-server
+    command: [redis-server, --appendonly, "yes", --appendfsync, always]
     networks:
       - dawarich-net
     volumes:
+      - ./redis-data/:/data/:rw
       - ./redis/:/var/shared/redis/:rw
       - ./shared-db/:/var/shared/:rw
     restart: always
     healthcheck:
-      test:
-        - CMD
-        - redis-cli
-        - --raw
-        - incr
-        - ping
+      test: [CMD, redis-cli, --raw, incr, ping]
       interval: 10s
       retries: 5
       start_period: 30s
@@ -77,9 +63,7 @@ services:
     env_file: .env
     restart: always
     healthcheck:
-      test:
-        - CMD-SHELL
-        - pg_isready -U postgres -d dawarich_development
+      test: [CMD-SHELL, pg_isready -U postgres -d dawarich_development]
       interval: 10s
       retries: 5
       start_period: 30s
@@ -92,9 +76,13 @@ services:
       - 2322
     user: ${PUID}:${PGID}
     env_file: .env
+    environment:
+      INITIAL_DOWNLOAD: "FALSE"
+      UPDATE_STRATEGY: DISABLED
+      FORCE_UPDATE: "FALSE"
     volumes:
       - ./photon/:/photon/:rw
-      - /self-hosted/dawarich/photon-db/:/photon/photon_data/:rw
+      - /self-hosted/dawarich/photon-db/:/photon/data/photon_data/:rw
     restart: always
     networks:
       - dawarich-net
@@ -103,7 +91,6 @@ services:
     image: freikin/dawarich:${IMAGE_VERSION}
     container_name: dawarich-sidekiq
     volumes:
-      - /usr/local/bundle/gems_sidekiq/
       - ./public/:/var/app/public/:rw
       - ./storage/:/var/app/storage/:rw
       - /self-hosted/dawarich/app/imports/:/var/app/tmp/imports/:rw
@@ -112,10 +99,7 @@ services:
     stdin_open: true
     tty: true
     entrypoint: sidekiq-entrypoint.sh
-    command:
-      - bundle
-      - exec
-      - sidekiq
+    command: [bundle, exec, sidekiq]
     restart: on-failure
     env_file: .env
     depends_on:
@@ -132,9 +116,7 @@ services:
         condition: service_started
         restart: true
     healthcheck:
-      test:
-        - CMD-SHELL
-        - bundle exec sidekiqmon processes | grep $${HOSTNAME}
+      test: [CMD-SHELL, "bundle exec sidekiqmon processes | grep $${HOSTNAME}"]
       interval: 10s
       retries: 30
       start_period: 30s
@@ -143,7 +125,7 @@ services:
   dawarich-oauth:
     container_name: dawarich-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
-    command: --config /oauth2-proxy.cfg
+    command: [--config, /oauth2-proxy.cfg]
     restart: always
     ports:
       - 3002:3002/tcp

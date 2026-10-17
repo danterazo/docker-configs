@@ -18,8 +18,7 @@ services:
       - ./config/:/config/:rw
     restart: unless-stopped
     healthcheck:
-      test: curl -fSs https://speed.samskeyti.com/api/healthcheck | jq -r .message ||
-        exit 1
+      test: [CMD-SHELL, curl -fSs https://speed.samskeyti.com/api/healthcheck | jq -r .message || exit 1]
       interval: 10s
       retries: 3
       start_period: 30s

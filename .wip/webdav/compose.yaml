@@ -20,7 +20,7 @@ services:
   webdav-oauth:
     container_name: webdav-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
-    command: --config /oauth2-proxy.cfg
+    command: [--config, /oauth2-proxy.cfg]
     restart: unless-stopped
     #ports:
     #  - 842:842/tcp

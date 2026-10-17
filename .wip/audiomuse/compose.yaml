@@ -26,8 +26,7 @@ services:
     environment:
       SERVICE_TYPE: worker
     volumes:
-      - /app/temp_audio
-      - /app/plugin/installed
+      - ./flask-plugins/:/app/plugin/installed/:rw
     depends_on:
       - postgres
     restart: unless-stopped
@@ -51,8 +50,7 @@ services:
       - .env
       - .secrets
     volumes:
-      - /app/temp_audio
-      - /app/plugin/installed
+      - ./worker-plugins/:/app/plugin/installed/:rw
     depends_on:
       - postgres
     restart: unless-stopped

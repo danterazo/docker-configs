@@ -63,25 +63,30 @@ services:
     cap_drop:
       - NET_RAW
     # https://github.com/immich-app/immich/issues/23462#issuecomment-4430239688
-    command: >
-      python -m gunicorn immich_ml.main:app
-      -k immich_ml.config.CustomUvicornWorker
-      -c immich_ml/gunicorn_conf.py
-      -b 0.0.0.0:3003
-      --log-config-json immich_ml/log_conf.json
-      --workers 1
-      --timeout 300
-      --keep-alive 2
-      --graceful-timeout 10
-      --max-requests 200
-      --max-requests-jitter 20
+    # prettier-ignore
+    command: [
+      python, -m, gunicorn, immich_ml.main:app,
+      -k, immich_ml.config.CustomUvicornWorker,
+      -c, immich_ml/gunicorn_conf.py,
+      -b, 0.0.0.0:3003,
+      --log-config-json, immich_ml/log_conf.json,
+      --workers, "1",
+      --timeout, "300",
+      --keep-alive, "2",
+      --graceful-timeout, "10",
+      --max-requests, "200",
+      --max-requests-jitter, "20",
+    ]
 
   immich-redis:
     container_name: immich-redis
     image: docker.io/redis:6.2-alpine@sha256:eaba718fecd1196d88533de7ba49bf903ad33664a92debb24660a922ecd9cac8
     cpus: 1
+    command: [redis-server, --appendonly, "yes", --appendfsync, always]
+    volumes:
+      - ./redis-data/:/data/:rw
     healthcheck:
-      test: redis-cli ping || exit 1
+      test: [CMD-SHELL, redis-cli ping || exit 1]
     restart: always
     networks:
       - immich-net
