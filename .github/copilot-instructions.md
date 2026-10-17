@@ -50,6 +50,25 @@
 - When the user explicitly asks to push, note any existing unpushed commits but
   do not treat their presence as a blocker. Push the current branch and its
   commits unless the user limits the requested push scope.
+- Requests for multiple Git commits or compartmentalized Git changes authorize
+  local Git subagents without asking for approval each time, unless the user
+  explicitly says not to use them. Keep one writer responsible for the index,
+  commits, and push; do not let agents concurrently mutate the same checkout.
+  Give them the approved scope and preserve work outside it. Verify the final
+  commit contents, messages, worktree/index state, and published revision.
+- During approved deployments, use bounded read-only subagents for independent
+  discovery, preflight, functional probes, and log review where useful. Pass
+  the same target/access approvals and safety constraints to each agent.
+  Keep deployment mutations sequential and validate each guest before the
+  next mutation. The deploy skill defines ownership and failure gates.
+- If direct terminal execution stops returning output, retry read-only Git
+  inspection once after the terminal is restored. A local VS Code shell task
+  is pre-approved as a direct execution fallback for deployment/Git work;
+  no separate approval is needed to create its task definition. Keep that
+  execution artifact out of deployment commits unless explicitly requested,
+  preserve existing task definitions, and verify actual output and exit status.
+  This fallback never bypasses a permission denial, changes tool approvals,
+  or authorizes new remote access. Do not infer success from echoed commands.
 - Deploy published commits only. Ignore and preserve uncommitted local work,
   including bootstrap edits; it does not block deployment. Alert the user to
   locally staged changes without committing, unstaging, or deploying them.

@@ -85,6 +85,33 @@ without treating that refresh as permission to deploy additional guests.
   and before/after snapshots. Finish validation before mutating the next
   guest; concurrency never bypasses networking waves or failure gates.
 
+## Subagent Coordination
+
+- Use subagents for independent read-only discovery, guest preflight,
+  functional probes, and bounded log review when this reduces elapsed time.
+  Limit concurrency to a small batch, normally two to four workers, and
+  respect guest/owner load and rate limits. Do not duplicate the same probe
+  or create persistent/background agents.
+- Give each worker explicit guest IDs, confirmed owners, approved access
+  methods, the intended published revision, and the same no-secrets,
+  no-installation, no-trust-bypass, and no-remote-staging rules. Delegate
+  only within approved access scope; a subagent is not new permission.
+- Assign one coordinator as the only deployment writer. Workers must not
+  pull into working trees, bootstrap, stop/start stacks, deploy, or repair
+  state. The coordinator performs approved mutations sequentially and
+  stops on failure; it does not mutate the next guest while the current
+  guest's validation is incomplete. Networking waves and settling windows
+  remain mandatory.
+- Require structured results identifying guest, owner, revision, timestamps,
+  endpoint/vantage point, expected/observed response, and command exit status.
+  Missing output, errors, and timeouts are gaps, not passes. Join the required
+  results before advancing; verify critical results against actual evidence
+  rather than relying on a worker's unqualified success summary.
+- Local Git subagents may organize explicitly requested multiple commits
+  under the repository instructions. Never run competing Git writers;
+  respect a request to use no subagents, and do not fold uncommitted local
+  edits into a deployment without an explicit publishing request.
+
 ## Publish Local Changes
 
 - Select deployment content from published commits, not the local index or
