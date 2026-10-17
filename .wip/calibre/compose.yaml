@@ -6,8 +6,7 @@ services:
     environment:
       PUID: "1000"
       PGID: "1000"
-    env_file:
-      - .env
+    env_file: .env
     volumes:
       - calibre_config:/config/:rw
       - /mnt/mega-pool/media/books/calibre/:/library/:rw
