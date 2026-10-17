@@ -1,6 +1,7 @@
 # Remote Proxmox deployment code
 
 ## Execution context
+
 - This workspace is a local working copy of code deployed on REMOTE LXCs;
   some workloads may run on remote VMs. It is not a live guest filesystem.
 - The assistant runs in the local WSL2 instance `ovedur` as `dante` and has
@@ -22,6 +23,7 @@
   use context rather than assuming the term excludes VMs.
 
 ## Cluster entrypoint
+
 - Cerulean, hostname cerulean, IP 100.100.20.43, is a verified Proxmox node.
   Read-only discovery worked through the existing root SSH access.
 - Use deployments.yaml for guest IDs, configured addresses, observed owning
@@ -33,6 +35,7 @@
   host-key verification, or trust relationships.
 
 ## Deployment map and validation
+
 - Read the root-level deployments.yaml before planning deployment or remote
   validation. Match stack directory names to guest hostnames, including
   parent directories for nested stacks, and apply the exceptions below.
@@ -109,6 +112,7 @@
   comes from bootstrap.sh; confirm the actual checkout before using it.
 
 ## Guest repository identity and ownership
+
 - Run Git commands and repository edits inside guests as dante, not root.
   Approved remote repository tasks include using runuser -u dante inside
   the guest; no separate confirmation is needed for that user selection.
@@ -122,7 +126,7 @@
 - Root can access dante-owned files, but Git's dubious-ownership safeguard
   is separate from filesystem permissions. Prevent the warning by selecting
   dante before Git, rather than probing Git as root or hiding stderr.
-  Do not add safe.directory exceptions, use safe.directory=*, or otherwise
+  Do not add safe.directory exceptions, use safe.directory=\*, or otherwise
   disable ownership checks. If Git fails as dante, stop and report it.
 - For LXC repository commands, use this on the confirmed owning node:
 
@@ -138,6 +142,7 @@
   rebooting. Review deployed helpers and obtain their required approvals.
 
 ## LXC access
+
 - When asked to "SSH into a container" in an LXC context, first confirm its
   current owning Proxmox node, SSH into that node by host alias (for example,
   ssh cerulean), then use pct exec from there. This also applies to any other
@@ -154,6 +159,7 @@
 - Prepare guest config changes locally and show diffs before applying.
 
 ## VM access
+
 - Prefer noninteractive SSH using configured SSH host aliases.
 - Use qm guest exec only when the QEMU guest agent is available.
 - Do not assume a VM supports pct exec.
@@ -171,6 +177,7 @@
   description, or guest-agent data, then ask the user if still unknown.
 
 ## Operating policy
+
 - Begin with read-only diagnostics.
 - Explain the target and intended effect before changes.
 - Ask before editing files, installing packages, restarting services,

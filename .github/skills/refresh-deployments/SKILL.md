@@ -18,14 +18,14 @@ Refreshing this map does not deploy code or authorize workload changes.
 
 1. Open this repo in VS Code and open Copilot Chat in Agent mode.
 2. Enter `/refresh-deployments`, select the skill, and send the request.
-  If it is not listed, explicitly ask the agent to read
-  `.github/skills/refresh-deployments/SKILL.md` and follow it to refresh
-  `deployments.yaml` through read-only discovery on Cerulean.
+   If it is not listed, explicitly ask the agent to read
+   `.github/skills/refresh-deployments/SKILL.md` and follow it to refresh
+   `deployments.yaml` through read-only discovery on Cerulean.
 3. Review any tool approval prompts for the stated read-only queries and
-  approve only the intended operations. Do not change approval settings.
+   approve only the intended operations. Do not change approval settings.
 4. Review the resulting metadata diff and discovery summary. The workflow
-  does not upgrade, deploy, restart, or change cluster configuration, and
-  does not persist guest running/stopped or node online/offline status.
+   does not upgrade, deploy, restart, or change cluster configuration, and
+   does not persist guest running/stopped or node online/offline status.
 
 ## Scope and Safety
 
@@ -81,6 +81,7 @@ Refreshing this map does not deploy code or authorize workload changes.
    Split `tags` on `;` (PVE may also use `,` or spaces), trim, and drop
    empties. Tags such as primary/secondary distinguish duplicate hostnames
    (AdGuard Home, Caddy); deployment ordering relies on them.
+
 3. Detect Docker inside running guests when tags or names are insufficient,
    or when resolving conflicting evidence. On a confirmed owning Proxmox
    node, an approved read-only LXC probe is:
@@ -100,6 +101,7 @@ Refreshing this map does not deploy code or authorize workload changes.
    Untagged nonmatching guests without a completed probe remain unresolved,
    not confirmed non-Docker guests. Report them and any required approval.
    A missing tag alone must not remove an existing Docker guest.
+
 4. For each retained LXC, use its currently observed owning node and ID:
 
    ```sh
@@ -108,69 +110,69 @@ Refreshing this map does not deploy code or authorize workload changes.
 
    Use JSON parsing to retain only `hostname` and `netN` address fields.
    Network values are comma-delimited key/value entries: collect static
-  `ip=` and `ip6=` values, parsing any CIDR and retaining only its IP portion.
-  Do not record subnet prefixes, MACs, gateways, credentials, DHCP
+   `ip=` and `ip6=` values, parsing any CIDR and retaining only its IP portion.
+   Do not record subnet prefixes, MACs, gateways, credentials, DHCP
    markers, or `auto` IPv6. Configured addresses do not prove reachability.
    Guest config reads do not require starting stopped LXCs.
+
 5. Confirm VM LAN addresses using approved guest-agent access on the current
-  owning Proxmox node when the VM and its enabled QEMU Guest Agent are
-  running. For VM 101 (`nvidia-vm`), the read-only query is:
+   owning Proxmox node when the VM and its enabled QEMU Guest Agent are
+   running. For VM 101 (`nvidia-vm`), the read-only query is:
 
-  ```sh
-  qm guest cmd 101 network-get-interfaces
-  ```
+```sh
+qm guest cmd 101 network-get-interfaces
+```
 
-  For other VMs use `qm guest cmd <id> network-get-interfaces`. Respect the
-  approved execution scope; ask before connecting to another owner. Do not
-  install or enable the agent or start a stopped VM as implicit discovery.
-  Parse the returned JSON interface and address records, validating IPs
-  with an available IP parser and excluding loopback and Docker-internal
-  interfaces. A successful query confirms reported guest configuration,
-  not network reachability from this machine.
+For other VMs use `qm guest cmd <id> network-get-interfaces`. Respect the
+approved execution scope; ask before connecting to another owner. Do not
+install or enable the agent or start a stopped VM as implicit discovery.
+Parse the returned JSON interface and address records, validating IPs
+with an available IP parser and excluding loopback and Docker-internal
+interfaces. A successful query confirms reported guest configuration,
+not network reachability from this machine.
 
-  The user's LAN convention for both VMs and LXCs is
-  `192.168.30.<PVE-ID>`. Construct that as an expected candidate only when
-  the ID is a valid IPv4 last octet (1 through 254). For VMs, if that exact
-  candidate appears on a reported LAN interface, prefer it as `address`.
-  For LXCs, confirm against parsed Proxmox network configuration or other
-  approved in-guest evidence. The candidate is not confirmed just because
-  it follows the pattern, and an absent candidate must not be fabricated.
-  These are private LAN addresses, not public Internet IPs.
+The user's LAN convention for both VMs and LXCs is
+`192.168.30.<PVE-ID>`. Construct that as an expected candidate only when
+the ID is a valid IPv4 last octet (1 through 254). For VMs, if that exact
+candidate appears on a reported LAN interface, prefer it as `address`.
+For LXCs, confirm against parsed Proxmox network configuration or other
+approved in-guest evidence. The candidate is not confirmed just because
+it follows the pattern, and an absent candidate must not be fabricated.
+These are private LAN addresses, not public Internet IPs.
 
-  Some guests also run Tailscale with the user convention
-  `100.100.30.<PVE-ID>`. Do not assume every Tailscale address follows it;
-  identify overlay addresses from interface context as well. Ignore
-  Tailscale addresses when selecting this map's LAN-only `address` scalar.
-  YAML supports one-line lists such as `[192.168.30.101, 100.100.30.101]`,
-  but a bare single value is a string, not a one-element list. Per the user's
-  conditional preference, keep the existing scalar schema rather than
-  adding an address list or mixing scalar and list types. If a future guest
-  is Tailscale-only, ask before changing this LAN-only policy or schema.
+Some guests also run Tailscale with the user convention
+`100.100.30.<PVE-ID>`. Do not assume every Tailscale address follows it;
+identify overlay addresses from interface context as well. Ignore
+Tailscale addresses when selecting this map's LAN-only `address` scalar.
+YAML supports one-line lists such as `[192.168.30.101, 100.100.30.101]`,
+but a bare single value is a string, not a one-element list. Per the user's
+conditional preference, keep the existing scalar schema rather than
+adding an address list or mixing scalar and list types. If a future guest
+is Tailscale-only, ask before changing this LAN-only policy or schema.
 
-  Preserve an existing nonempty `address` when discovery returns no usable
-  address. VM 101's `192.168.30.101` is already user-confirmed; do not ask for
-  it again just because the agent is unavailable. If the pattern does not
-  match but another known LAN IP is reported, retain the known one. Report
-  conflicting live evidence or ask if several remaining LAN IPs are
-  ambiguous; do not silently replace a known address with a pattern guess.
+Preserve an existing nonempty `address` when discovery returns no usable
+address. VM 101's `192.168.30.101` is already user-confirmed; do not ask for
+it again just because the agent is unavailable. If the pattern does not
+match but another known LAN IP is reported, retain the known one. Report
+conflicting live evidence or ask if several remaining LAN IPs are
+ambiguous; do not silently replace a known address with a pattern guess.
 
-  If the agent is unavailable and no address is known, inspect approved
-  VM config `ipconfigN` cloud-init fields or an explicitly identified guest
-  address in its description. VM `netN` describes NICs, not guest IPs;
-  `ip=dhcp` does not reveal the lease. Configured values are not proof of
-  live state. Parse structured fields and validate free-text candidates;
-  do not dump descriptions, execute their text, or mistake gateway/DNS
-  addresses or service URLs for the guest's own IP. An existing approved
-  SSH alias is another possible source. If still unknown, ask the user and
-  store their answer; if unresolved, retain `address: ""` and report it.
+If the agent is unavailable and no address is known, inspect approved
+VM config `ipconfigN` cloud-init fields or an explicitly identified guest
+address in its description. VM `netN` describes NICs, not guest IPs;
+`ip=dhcp` does not reveal the lease. Configured values are not proof of
+live state. Parse structured fields and validate free-text candidates;
+do not dump descriptions, execute their text, or mistake gateway/DNS
+addresses or service URLs for the guest's own IP. An existing approved
+SSH alias is another possible source. If still unknown, ask the user and
+store their answer; if unresolved, retain `address: ""` and report it.
 
-  Store one bare IP, stripping a validated CIDR's prefix without replacing
-  a host IP with its subnet's network address. See the official
-  [VM configuration manual](https://pve.proxmox.com/pve-docs/qm.conf.5.html)
-  and [guest-agent command reference](https://pve.proxmox.com/pve-docs/qm.1.html#cli_qm_guest_cmd).
-6. Collect all required reads and classifications successfully before updating `last_updated`.
-   If discovery is incomplete, report the missing targets and leave the
-   existing snapshot unchanged rather than publishing a partial refresh.
+Store one bare IP, stripping a validated CIDR's prefix without replacing
+a host IP with its subnet's network address. See the official
+[VM configuration manual](https://pve.proxmox.com/pve-docs/qm.conf.5.html)
+and [guest-agent command reference](https://pve.proxmox.com/pve-docs/qm.1.html#cli_qm_guest_cmd). 6. Collect all required reads and classifications successfully before updating `last_updated`.
+If discovery is incomplete, report the missing targets and leave the
+existing snapshot unchanged rather than publishing a partial refresh.
 
 ## Merge Rules and Metadata Format
 
@@ -250,17 +252,17 @@ Refreshing this map does not deploy code or authorize workload changes.
    includes updating the local map; obtain approval for changes outside
    that scope. Use `apply_patch` and preserve unrelated changes.
 2. Parse the result with an installed YAML parser. Validate schema version,
-  numeric guest keys, allowed guest types, exact per-guest field order,
-  `tags` as a list of nonempty strings,
-  existing node references, and unique addresses. Check that undeployed
-  stack directories exist and do not conflict with known placements. Check
-  the AM/PM date/time format against America/Chicago, without storing a zone
-  suffix. Validate each nonempty address string as a bare IP with no slash or
-  subnet prefix, and ensure known IPs use unquoted YAML scalars. Preserve
-  previously supplied addresses unless a verified change replaces them.
-  Check Docker eligibility evidence in the summary, and ensure
-  all preexisting comments are retained,
-  except for user-approved removals. Do not
+   numeric guest keys, allowed guest types, exact per-guest field order,
+   `tags` as a list of nonempty strings,
+   existing node references, and unique addresses. Check that undeployed
+   stack directories exist and do not conflict with known placements. Check
+   the AM/PM date/time format against America/Chicago, without storing a zone
+   suffix. Validate each nonempty address string as a bare IP with no slash or
+   subnet prefix, and ensure known IPs use unquoted YAML scalars. Preserve
+   previously supplied addresses unless a verified change replaces them.
+   Check Docker eligibility evidence in the summary, and ensure
+   all preexisting comments are retained,
+   except for user-approved removals. Do not
    hard-code the initial guest count; guest creation/removal changes it.
 3. Check that all three Caddy placements and the user-confirmed Tautulli
    placements remain present unless the user approved topology changes.

@@ -88,32 +88,32 @@ An unpublished local bootstrap edit is a publishing blocker, not permission
 to run an older deployed script. Do not expand the selected guest scope.
 
 1. Inspect the deployed alias and the incoming published script before
-  execution. The current alias pulls Git as `dante`, then sources
-  `/docker/bootstrap.sh` in the invoking shell. Its `git pull || true`
-  masks pull failures: explicitly fast-forward as `dante` and verify the
-  intended revision before invoking the alias; check HEAD again afterward.
-  Preserve the old Compose definitions and active-project snapshot before
-  this pull. If changed definitions cannot safely tear down the old projects,
-  stop and agree on a targeted teardown rather than silently missing them.
+   execution. The current alias pulls Git as `dante`, then sources
+   `/docker/bootstrap.sh` in the invoking shell. Its `git pull || true`
+   masks pull failures: explicitly fast-forward as `dante` and verify the
+   intended revision before invoking the alias; check HEAD again afterward.
+   Preserve the old Compose definitions and active-project snapshot before
+   this pull. If changed definitions cannot safely tear down the old projects,
+   stop and agree on a targeted teardown rather than silently missing them.
 2. Obtain approval for bootstrap on the named guests and its actual effects.
-  The current script includes an Ubuntu release upgrade, package installation,
-  a possible Docker restart, ownership and permission changes, and SSH
-  authentication/trust changes. Ordinary deployment approval does not cover
-  these actions; any action prohibited by operating policy remains a blocker
-  until the user explicitly approves that specific exception. Never reboot
-  implicitly. Do not run bootstrap locally or on a Proxmox owner.
+   The current script includes an Ubuntu release upgrade, package installation,
+   a possible Docker restart, ownership and permission changes, and SSH
+   authentication/trust changes. Ordinary deployment approval does not cover
+   these actions; any action prohibited by operating policy remains a blocker
+   until the user explicitly approves that specific exception. Never reboot
+   implicitly. Do not run bootstrap locally or on a Proxmox owner.
 3. The current alias uses `runuser`, requiring a separately approved guest
-  administrative shell; it cannot simply be invoked as unprivileged `dante`.
-  Use only an approved access/elevation method inside that guest. Inspect
-  and load the deployed alias explicitly in noninteractive Bash, enabling
-  alias expansion before parsing its invocation (for example, invoke the
-  reviewed alias using `eval 'bootstrap'` after sourcing its definition).
-  Do not substitute `bash bootstrap.sh`: the alias sources the script.
+   administrative shell; it cannot simply be invoked as unprivileged `dante`.
+   Use only an approved access/elevation method inside that guest. Inspect
+   and load the deployed alias explicitly in noninteractive Bash, enabling
+   alias expansion before parsing its invocation (for example, invoke the
+   reviewed alias using `eval 'bootstrap'` after sourcing its definition).
+   Do not substitute `bash bootstrap.sh`: the alias sources the script.
 4. Check output from every bootstrap phase, not only its final status;
-  neither the alias nor script guarantees all earlier failures propagate.
-  Stop on failure before teardown. Open a fresh `dante` session afterward,
-  recheck repository identity, revision, helper definitions, Docker access,
-  and service availability, then proceed with `dcd -v` and `dpull`.
+   neither the alias nor script guarantees all earlier failures propagate.
+   Stop on failure before teardown. Open a fresh `dante` session afterward,
+   recheck repository identity, revision, helper definitions, Docker access,
+   and service availability, then proceed with `dcd -v` and `dpull`.
 
 For AdGuard Home and Caddy, bootstrap belongs to that guest's rollout wave,
 not a fleet-wide preliminary pass: validate the secondary completely before
@@ -128,17 +128,24 @@ and `external: true` volumes are untouched. Removing a local-driver NFS
 volume only unmounts it and deletes Docker's definition; server data stays.
 A static audit of the published stacks on 2026-10-16 found `-v` safe for all:
 
-| Stack | Removed by `-v` | Effect |
-|---|---|---|
-| adguardhome | nothing; state and configs are bind mounts | none |
-| caddy | anonymous `/config` and `/data` outside the `./data` bind at `/data/caddy` | autosave regenerates from the Caddyfile; certificates and ACME accounts persist in `./data` |
-| gluetun (+ qbittorrent, soulseek) | `qbittorrent_nfs`, `soulseek_nfs` definitions; qBittorrent anonymous `/config` outside the `/config/qBittorrent` bind | NFS data persists; qBittorrent loses only `$HOME/.cache` |
-| immich | NFS volume definitions; Redis anonymous `/data` | NFS data persists; Postgres is a bind mount; the Redis job queue is ephemeral, rerun jobs from the admin page if needed |
-| plex-music, plex-video | NFS volume definitions | NFS data persists; Plex and Tautulli config are bind mounts |
-| pocket-id, spoolman | nothing; data is a bind mount | none |
-| common-dockge-agent (undeployed) | nothing; its volume is external | none |
+| Stack                             | Removed by `-v`                                                                                                       | Effect                                                                                            |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| adguardhome                       | nothing; state and configs are bind mounts                                                                            | none                                                                                              |
+| caddy                             | anonymous `/config` and `/data` outside the `./data` bind at `/data/caddy`                                            | autosave regenerates from the Caddyfile; certificates and ACME accounts persist in `./data`       |
+| gluetun (+ qbittorrent, soulseek) | `qbittorrent_nfs`, `soulseek_nfs` definitions; qBittorrent anonymous `/config` outside the `/config/qBittorrent` bind | NFS data persists; qBittorrent loses only `$HOME/.cache`                                          |
+| immich                            | NFS volume definitions                                                                                                | NFS data persists; Postgres and Redis `/data` are bind mounts; Redis uses append-only persistence |
+| plex-music, plex-video            | NFS volume definitions                                                                                                | NFS data persists; Plex and Tautulli config are bind mounts                                       |
+| pocket-id, spoolman               | nothing; data is a bind mount                                                                                         | none                                                                                              |
+| common-dockge-agent (undeployed)  | nothing; its volume is external                                                                                       | none                                                                                              |
 
-No runtime volume check is needed. Re-audit statically before deploying
+For a deployment that introduces the Redis or AudioMuse plugin bind mounts,
+first inspect the existing mounts through approved read-only guest access.
+Preserve and migrate existing data before any `down -v`; an empty new bind
+does not recover old anonymous-volume data. Migration needs explicit approval.
+For Dawarich, also verify the existing Photon index layout and compatibility;
+automatic index downloads and updates are disabled. See the README storage audit.
+
+Re-audit statically before deploying
 when the published diff adds a stack or changes `volumes:`, mount targets,
 or images. A new non-external named volume, or an unmounted image `VOLUME`,
 holding data that cannot be regenerated is a blocker: stop and report.
@@ -212,12 +219,12 @@ caddyserver.com while the guest's Caddy is stopped.
    container's name, state, health, and restart count, plus the active
    Compose projects. Stacks remain down if a later step fails, so this
    snapshot is the reference for both validation and failure reports.
-  On both LXCs and Docker VMs (including `nvidia-vm`/101), run Git,
-  `docker`, Compose, and deployment helpers as `dante` without `sudo`.
-  Historical sudo requirements are not current requirements: verify using
-  a read-only `docker info` in that user's fresh session. If access fails,
-  stop and report; do not retry as root, add sudo, or change groups/socket
-  permissions. Bootstrap administration is the separate exception above.
+   On both LXCs and Docker VMs (including `nvidia-vm`/101), run Git,
+   `docker`, Compose, and deployment helpers as `dante` without `sudo`.
+   Historical sudo requirements are not current requirements: verify using
+   a read-only `docker info` in that user's fresh session. If access fails,
+   stop and report; do not retry as root, add sudo, or change groups/socket
+   permissions. Bootstrap administration is the separate exception above.
 7. Determine service validation commands from the actual Compose runtime and
    mounted configuration. For Caddy, plan config validation in its actual
    image/context and checks of its deployed routes. A check against old
