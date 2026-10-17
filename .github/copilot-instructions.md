@@ -89,15 +89,20 @@
   at .github/skills/refresh-deployments/SKILL.md. Operational notes and
   refresh procedures live there; keep the YAML metadata-only, keyed by
   bare guest IDs, without guest runtime or node online/offline status.
-- For an explicit deployment request, follow /deploy through
-  .github/skills/deploy/SKILL.md. Resolve all target guests and current
-  owners, confirm the intended changes are published, and run the approved
-  dcd -v + dpull workflow inside the guests, never locally or on the PVE host.
-- That workflow stops, pulls/rebuilds, and recreates every top-level Compose
-  stack in that guest checkout, then validates startup. Disclose and obtain
-  approval for this guest-wide impact before running it. dupull adds OS
-  package upgrades/removal and needs separate explicit approval. A request
-  to add a skill is not permission to deploy.
+- For routine deployment requests, follow `/deploy` in
+  `.github/skills/deploy/SKILL.md`: push existing committed `main` changes,
+  then run `dupull` as `dante` in the selected running Docker guests. An
+  explicit `/deploy` request authorizes `dupull`'s APT upgrades/removal and
+  guest-wide pull/build/recreate effects. Never commit uncommitted work or
+  force-push. A request to add a skill is not permission to deploy.
+- Use `/deploy-deep` in `.github/skills/deploy-deep/SKILL.md` only when the
+  user requests the exhaustive deployment workflow. It uses `dcd -v` and
+  `dpull`, with staged networking rollout, health/API/log/browser checks, and
+  the additional volume-removal and downtime gates defined in that skill.
+- Both workflows resolve live owners and use existing SSH/Proxmox access;
+  run guest Git, Docker, Compose, and helpers as `dante`, never locally or on
+  the PVE host. Keep stopped guests untouched and deploy only published
+  commits.
 - Detect Docker guests using the exact PVE docker tag, a read-only in-guest
   Docker binary check, or a repo stack/hostname match as a likely candidate.
   Preserve known Docker guests when stopped or unprobeable; report uncertain

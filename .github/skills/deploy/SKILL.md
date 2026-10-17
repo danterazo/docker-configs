@@ -80,7 +80,7 @@ is sourced, so enable alias expansion and source aliases first:
 
 ```bash
 set -e
- test "$(id -un)" = dante
+test "$(id -un)" = dante
 cd /docker
 shopt -s expand_aliases
 source /docker/.common/aliases.sh
