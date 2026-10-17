@@ -162,9 +162,9 @@
   recursively chown the worktree, which can change nested service data. If
   Git cannot update a tracked path as `dante`, inspect that path and stop
   rather than broadening ownership changes. For Immich, verify PostgreSQL
-  `999:999` and Redis `999:1000` runtime identities against their bind mounts.
-  Compose `user:` changes process identity; it does not map host IDs to
-  container IDs.
+  `999:999` and the Valkey runtime identity against their bind mounts; do not
+  assume Valkey kept the prior Redis image's UID/GID. Compose `user:` changes
+  process identity; it does not map host IDs to container IDs.
 - Treat pre-deployment container health as a hard gate. Do not mutate a guest
   with unhealthy, restarting, or exited containers, or restart counts that
   continue increasing during baseline observation. A weaker readiness result
@@ -230,6 +230,9 @@
 
 ## LXC access
 
+- LXCs are not directly accessible over SSH. Connect to the guest's current
+  owning Proxmox node, then use `pct exec`; for example, "SSH into caddy"
+  means SSH to caddy's owner and run `pct exec` for the LXC.
 - When asked to "SSH into a container" in an LXC context, first confirm its
   current owning Proxmox node, SSH into that node by host alias (for example,
   ssh cerulean), then use pct exec from there. This also applies to any other
@@ -247,6 +250,9 @@
 
 ## VM access
 
+- QEMU VMs, including `nvidia-vm`, are directly accessible over SSH through
+  their existing trusted guest aliases. Connect to the VM itself, not its PVE
+  owner; never bypass failed SSH host-key verification.
 - Prefer noninteractive SSH using configured SSH host aliases.
 - Use qm guest exec only when the QEMU guest agent is available.
 - Do not assume a VM supports pct exec.

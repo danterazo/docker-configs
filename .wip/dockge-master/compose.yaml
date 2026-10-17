@@ -7,8 +7,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
       - ./data/:/app/data/:rw
-      - /apps/:/opt/stacks/:rw
+      - /apps/:/apps/:rw
     env_file: .env
+    environment:
+      DOCKGE_STACKS_DIR: /apps
     networks:
       - dockge-master-net
     extra_hosts:

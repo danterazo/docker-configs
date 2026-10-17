@@ -33,7 +33,7 @@ services:
       timeout: 10s
 
   dawarich-redis:
-    image: redis:7.0-alpine
+    image: redis:7.4-alpine
     container_name: dawarich-redis
     command: [redis-server, --appendonly, "yes", --appendfsync, always]
     networks:

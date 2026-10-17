@@ -202,15 +202,21 @@ A static audit of the published stacks on 2026-10-16 found `-v` safe for all:
 | adguardhome                       | nothing; state and configs are bind mounts                                                                            | none                                                                                              |
 | caddy                             | anonymous `/config` and `/data` outside the `./data` bind at `/data/caddy`                                            | autosave regenerates from the Caddyfile; certificates and ACME accounts persist in `./data`       |
 | gluetun (+ qbittorrent, soulseek) | `qbittorrent_nfs`, `soulseek_nfs` definitions; qBittorrent anonymous `/config` outside the `/config/qBittorrent` bind | NFS data persists; qBittorrent loses only `$HOME/.cache`                                          |
-| immich                            | NFS volume definitions                                                                                                | NFS data persists; Postgres and Redis `/data` are bind mounts; Redis uses append-only persistence |
+| immich                            | NFS volume definitions                                                                                                | NFS data persists; Postgres and Valkey `/data` are bind mounts; Valkey uses append-only persistence |
 | plex-music, plex-video            | NFS volume definitions                                                                                                | NFS data persists; Plex and Tautulli config are bind mounts                                       |
 | pocket-id, spoolman               | nothing; data is a bind mount                                                                                         | none                                                                                              |
 | common-dockge-agent (undeployed)  | nothing; its volume is external                                                                                       | none                                                                                              |
 
-For a deployment that introduces the Redis or AudioMuse plugin bind mounts,
-first inspect the existing mounts through approved read-only guest access.
-Preserve and migrate existing data before any `down -v`; an empty new bind
-does not recover old anonymous-volume data. Migration needs explicit approval.
+For a deployment that introduces or changes the Immich Valkey or AudioMuse
+plugin bind mounts, first inspect the existing mounts through approved
+read-only guest access. Preserve existing data before any `down -v`; an empty
+new bind does not recover old anonymous-volume data. Migration needs explicit
+approval. The current Immich Valkey image replaces Redis while retaining the
+same AOF bind mount, so preserve `immich/redis-data` and verify AOF recovery;
+no export/import step is indicated by the release Compose template. Immich's
+Postgres image remains version `14-vectorchord0.4.3-pgvectors0.2.0` and is now
+pinned to digest `sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23`;
+the digest pin alone does not change the database schema.
 For Dawarich, also verify the existing Photon index layout and compatibility;
 automatic index downloads and updates are disabled. See the README storage audit.
 
@@ -332,6 +338,10 @@ Run commands directly in the integrated terminal; do not create VS Code task
 definitions just to execute deployment or preflight commands. If terminal
 execution is unavailable, stop and report the blocker rather than switching
 execution methods or bypassing approval prompts.
+QEMU VMs, including `nvidia-vm`/VM 101, are accessed directly over SSH using
+their trusted guest aliases. LXCs are not directly SSH-accessible: SSH to the
+confirmed owning PVE node, then use `pct exec`. Thus, "SSH into caddy" means
+connect to caddy's owner and execute inside its LXC.
 For recovery snippets intended to be pasted into an already-interactive SSH
 shell, do not use `set -e`; guard each phase with `if`/`return` so a failed
 check leaves the user's remote shell open. The deployment body below runs in
@@ -412,7 +422,7 @@ Capture a baseline before mutation and repeat after the settling window.
 | Spoolman | Request `/api/v1/health` on the discovered guest IP and published port, parse the expected healthy result, and check the UI. Also check `https://spools.samskeyti.net` through Caddy. |
 | Pocket ID | Run `/app/pocket-id healthcheck` inside its container and check the direct published HTTP endpoint. Also verify the expected sign-in page through `https://id.samskeyti.net`; expected authentication responses alone do not prove login functionality. Do not perform a sign-in. |
 | Immich, Plex, and Tautulli | Use the deployed version's documented unauthenticated ping/identity/health endpoint where available and verify an application-specific response, plus the expected UI. If authentication is required, report that limit rather than retrieving credentials or inferring success. |
-| Internal dependencies | Use existing read-only native probes from the dependency's own guest/container context. For Immich PostgreSQL, check the Compose healthcheck and inspect bind-mount ownership against the database process UID/GID; `pg_isready` alone is insufficient. For Immich Redis with AOF enabled, require `PING`, `aof_last_write_status:ok` (strip `\r` first; `INFO` uses CRLF), and write access as the actual Redis process UID to its data bind mount. The Compose healthcheck stays Immich's official `PING` check. Keep internal ports internal. These checks do not replace the owning app's external probe. |
+| Internal dependencies | Use existing read-only native probes from the dependency's own guest/container context. For Immich PostgreSQL, check the Compose healthcheck and inspect bind-mount ownership against the database process UID/GID; `pg_isready` alone is insufficient. For Immich Valkey with AOF enabled, require `PING`, `aof_last_write_status:ok` (strip `\r` first; `INFO` uses CRLF), and write access as the actual Valkey process UID to its data bind mount. The Compose healthcheck stays Immich's Redis-compatible `PING` check. Keep internal ports internal. These checks do not replace the owning app's external probe. |
 
 For PostgreSQL, a successful `pg_isready` only proves that the server socket
 accepts connections; it does not supersede a failing Compose healthcheck or
@@ -424,10 +434,12 @@ the database until the owner mismatch is confirmed and a recovery plan is
 approved. For Immich on VM 101, the Compose bind source is
 `/docker/immich/data/immich`; also check whether bootstrap changed its
 ownership. Immich's current database process uses UID/GID `999:999`; its bind
-source must be writable by that identity. Its Redis process uses UID/GID
-`999:1000`; the AOF bind source must be writable by that identity as well.
-Verify both identities and paths from the running images rather than assuming
-them after an image update. Compose `user:` sets the process identity inside
+source must be writable by that identity. The AOF source is
+`/docker/immich/redis-data`; verify the Valkey process UID/GID from the running
+image and confirm that identity can write there. Do not assume the previous
+Redis image's UID/GID remains correct after the image change. Verify both
+identities and paths from the running images rather than assuming them after
+an image update. Compose `user:` sets the process identity inside
 the container; it does not translate host UID/GID values. For bind mounts,
 either set host ownership to the verified container identity or separately
 design and validate an idmapped mount. Do not enable daemon-wide

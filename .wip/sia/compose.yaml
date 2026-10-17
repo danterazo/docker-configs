@@ -1,6 +1,6 @@
 services:
   sia-host:
-    image: siacentral/hostd:latest
+    image: ghcr.io/siafoundation/hostd:latest
     container_name: sia-host
     network_mode: container:gluetun # use VPN
     security_opt:
