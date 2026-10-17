@@ -49,7 +49,8 @@ without treating that refresh as permission to deploy additional guests.
   that task, using existing access. Ask when targets or access scope are
   ambiguous. Obey tool approval prompts; never alter approval settings,
   credentials, host-key verification, permissions, or trust relationships.
-- Per guest, the workflow is: stop every top-level stack with `dcd -v`
+- Per guest, first complete Bootstrap Changes below when applicable, then
+  stop every top-level stack with `dcd -v`
   (`dcd` is the `docker compose down` alias in `.common/aliases.sh`), run
   `dpull` from `.common/functions.sh`, then validate startup. Stopping first
   forces a clean recreate, so validation proves the stacks start from the
@@ -71,10 +72,53 @@ without treating that refresh as permission to deploy additional guests.
   beyond this disclosed scope. If it is not approved, stop and propose a
   narrower workflow; do not silently substitute it or change the helpers.
 - Do not commit, push, transfer files, change sparse-checkout rules, install
-  tooling, start stopped guests, run bootstrap, reboot, or change networking
-  as implicit deployment prerequisites. Ask for each needed scope expansion.
+  tooling, start stopped guests, reboot, or change networking as implicit
+  deployment prerequisites. Bootstrap is conditional and requires the
+  specific approvals below; ask for every other needed scope expansion.
 - Execute guests sequentially. Stop rollout on failure and report completed,
   failed, and skipped targets; do not silently roll back or retry mutations.
+
+## Bootstrap Changes
+
+For each selected guest, compare its recorded predeploy revision with the
+intended published revision. If that incoming diff includes `bootstrap.sh`,
+run the guest's `bootstrap` alias before `dcd -v`, `dpull`, or any other
+deployment mutation. Read-only preflight and required approvals come first.
+An unpublished local bootstrap edit is a publishing blocker, not permission
+to run an older deployed script. Do not expand the selected guest scope.
+
+1. Inspect the deployed alias and the incoming published script before
+  execution. The current alias pulls Git as `dante`, then sources
+  `/docker/bootstrap.sh` in the invoking shell. Its `git pull || true`
+  masks pull failures: explicitly fast-forward as `dante` and verify the
+  intended revision before invoking the alias; check HEAD again afterward.
+  Preserve the old Compose definitions and active-project snapshot before
+  this pull. If changed definitions cannot safely tear down the old projects,
+  stop and agree on a targeted teardown rather than silently missing them.
+2. Obtain approval for bootstrap on the named guests and its actual effects.
+  The current script includes an Ubuntu release upgrade, package installation,
+  a possible Docker restart, ownership and permission changes, and SSH
+  authentication/trust changes. Ordinary deployment approval does not cover
+  these actions; any action prohibited by operating policy remains a blocker
+  until the user explicitly approves that specific exception. Never reboot
+  implicitly. Do not run bootstrap locally or on a Proxmox owner.
+3. The current alias uses `runuser`, requiring a separately approved guest
+  administrative shell; it cannot simply be invoked as unprivileged `dante`.
+  Use only an approved access/elevation method inside that guest. Inspect
+  and load the deployed alias explicitly in noninteractive Bash, enabling
+  alias expansion before parsing its invocation (for example, invoke the
+  reviewed alias using `eval 'bootstrap'` after sourcing its definition).
+  Do not substitute `bash bootstrap.sh`: the alias sources the script.
+4. Check output from every bootstrap phase, not only its final status;
+  neither the alias nor script guarantees all earlier failures propagate.
+  Stop on failure before teardown. Open a fresh `dante` session afterward,
+  recheck repository identity, revision, helper definitions, Docker access,
+  and service availability, then proceed with `dcd -v` and `dpull`.
+
+For AdGuard Home and Caddy, bootstrap belongs to that guest's rollout wave,
+not a fleet-wide preliminary pass: validate the secondary completely before
+bootstrapping another instance or a primary. Bootstrap itself may interrupt
+Docker, so confirm the serving peer before bootstrap as well as before down.
 
 ## Volume Removal (`dcd -v`)
 
@@ -168,6 +212,12 @@ caddyserver.com while the guest's Caddy is stopped.
    container's name, state, health, and restart count, plus the active
    Compose projects. Stacks remain down if a later step fails, so this
    snapshot is the reference for both validation and failure reports.
+  On both LXCs and Docker VMs (including `nvidia-vm`/101), run Git,
+  `docker`, Compose, and deployment helpers as `dante` without `sudo`.
+  Historical sudo requirements are not current requirements: verify using
+  a read-only `docker info` in that user's fresh session. If access fails,
+  stop and report; do not retry as root, add sudo, or change groups/socket
+  permissions. Bootstrap administration is the separate exception above.
 7. Determine service validation commands from the actual Compose runtime and
    mounted configuration. For Caddy, plan config validation in its actual
    image/context and checks of its deployed routes. A check against old
@@ -186,12 +236,17 @@ Run the repository shell inside the guest as `dante`, using
 `pct exec <id> --keep-env 0 -- runuser -u dante -- /bin/bash --noprofile --norc`
 for LXCs. For VMs, prefer an existing trusted `dante` SSH alias. Do not switch
 execution methods to bypass failed SSH host-key verification. Root is for
-approved administrative actions, not Git; do not run the helper body as root.
+approved administrative actions, not Git; do not run the Docker helper body
+as root. This applies to every Docker VM, not only VM 101. An approved root
+guest session may select `dante` via `runuser`; it must not execute Docker
+or Git as root. Never infer a need for sudo from the guest being a VM.
 
 `dpull` is a Bash function and `dcd` is an alias. Do not assume a
 noninteractive shell reads the interactive `.bashrc`, which returns early
-without a prompt, or expands aliases. After reviewing the deployed files,
-the guest-side command body is:
+without a prompt, or expands aliases. After reviewing the deployed files
+and completing any required Bootstrap Changes phase, the guest-side command
+body below applies when the checked-out definitions can tear down the old
+projects safely:
 
 ```bash
 set -e
@@ -210,8 +265,10 @@ dpull
 
 Execute this body in noninteractive Bash inside the selected guest, with no
 interactive startup files. The loop mirrors `dpull`'s stack discovery and
-runs before its `git pull`, so containers stop using the definitions that
-created them. It spells out the `dcd` alias definition because aliases are
+runs before its `git pull` in the normal path, so containers stop using the
+definitions that created them. The bootstrap path has already pulled;
+use the teardown plan established before that pull instead if necessary.
+It spells out the `dcd` alias definition because aliases are
 not expanded noninteractively; confirm the deployed alias matches. Use safe
 argument passing/quoting across SSH, the owner shell, and `pct exec`; do not
 interpolate untrusted discovery output into shell commands. Never source the

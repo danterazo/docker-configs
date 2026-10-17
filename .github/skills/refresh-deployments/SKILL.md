@@ -39,6 +39,13 @@ Refreshing this map does not deploy code or authorize workload changes.
 - An explicit invocation requesting a refresh authorizes read-only SSH to
   the configured entrypoint for that refresh. Otherwise ask before SSH.
   This skill does not authorize staging, deploying, or restarting anything.
+- Docker VMs, including `nvidia-vm` (101), are first-class Docker guests;
+  do not restrict discovery to LXCs. Any approved in-guest Docker daemon
+  checks run as `dante` without `sudo`, just as on LXCs. Do not carry forward
+  historical VM sudo requirements. On permission failure, stop and report;
+  do not elevate or change groups, ownership, or socket permissions.
+  This metadata-only workflow never runs the `bootstrap` alias, even when
+  `bootstrap.sh` has changed; that conditional phase belongs to `/deploy`.
 - Use the existing SSH configuration and authentication. Use noninteractive
   connections, a bounded connection timeout, and strict host-key checking.
   Stop on access or verification failure; do not change trust or try bypasses.
