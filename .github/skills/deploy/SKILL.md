@@ -87,18 +87,23 @@ without treating that refresh as permission to deploy additional guests.
 
 ## Publish Local Changes
 
-- Check for both uncommitted changes and commits ahead of the upstream
-  before selecting the intended deployment revision. Fetch published
-  `main` and confirm the branch, upstream, and fast-forward relationship.
-- Include publishing in deployment planning: do not leave local changes
-  silently undeployed. Explain the pending diff and request approval to
-  commit and push when the request has not already authorized those actions.
-  A push request authorizes pushing existing commits, not committing edits.
-- After approval, validate the reviewed changes, stage only approved paths,
-  commit if needed, and push the current branch without force. Preserve
-  unrelated edits and disclose existing unpushed commits. Do not create a
-  branch or resolve divergence implicitly. Confirm the published SHA before
-  guest deployment; `dpull` cannot deploy an unpublished local change.
+- Select deployment content from published commits, not the local index or
+  working tree. Ignore local unstaged and untracked changes for deployment;
+  preserve them unchanged and do not let them block the published rollout.
+- Alert the user to locally staged changes, but do not commit, unstage, or
+  include them in deployment. Staged changes are not a deployment blocker.
+  Do not request that uncommitted work be published as a prerequisite.
+- Fetch published `main` and confirm the branch, upstream, fast-forward
+  relationship, and intended published SHA. Review and validate that revision,
+  not uncommitted local files. This includes bootstrap and volume audits.
+- Disclose existing unpushed commits. Push committed work only when authorized,
+  without force; do not create a branch or resolve divergence implicitly.
+  A push request does not authorize committing staged or unstaged changes.
+- When the user separately requests a commit, include only the approved edits
+  and preserve unrelated staged work. If the same paths contain unrelated
+  changes that cannot be safely separated, ask rather than including them.
+  That documentation or publishing task need not block an otherwise safe
+  deployment of the previously selected published revision.
 - Publishing approval does not authorize guest downtime, bootstrap, OS
   upgrades, credential provisioning, or any other deployment prerequisite.
 
@@ -108,8 +113,10 @@ For each selected guest, compare its recorded predeploy revision with the
 intended published revision. If that incoming diff includes `bootstrap.sh`,
 run the guest's `bootstrap` alias before `dcd -v`, `dpull`, or any other
 deployment mutation. Read-only preflight and required approvals come first.
-An unpublished local bootstrap edit is a publishing blocker, not permission
-to run an older deployed script. Do not expand the selected guest scope.
+Ignore unpublished local bootstrap edits; they neither trigger bootstrap nor
+block deploying the selected published revision. Inspect and run that
+revision's script when required by the guest's incoming published diff.
+Do not expand the selected guest scope.
 
 1. Inspect the deployed alias and the incoming published script before
    execution. The current alias pulls Git as `dante`, then sources
@@ -223,9 +230,10 @@ caddyserver.com while the guest's Caddy is stopped.
    and 120, not a separate required sparse-checkout stack. Inspect actual
    Compose references before inferring additional repo paths.
 3. Inspect local changes and relevant tests. Identify the intended published
-   commit and branch. `dpull` cannot deploy local uncommitted or unpushed
-  edits. Complete Publish Local Changes using the applicable approvals
-  before deployment. Do not imply that Git pull transfers local edits.
+  commit and branch. Alert the user to staged local changes; preserve and
+  exclude all uncommitted local work without blocking deployment. Follow
+  Publish Local Changes for authorized pushes of existing commits. `dpull`
+  retrieves published commits, not local staged or working-tree edits.
 4. Confirm the guest checkout location, repository identity, branch/upstream,
   current revision, tracked worktree, untracked files, sparse paths, and the
    upstream revision that Git pull would retrieve. Inspect relevant ownership

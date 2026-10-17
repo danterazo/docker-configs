@@ -50,6 +50,12 @@
 - When the user explicitly asks to push, note any existing unpushed commits but
   do not treat their presence as a blocker. Push the current branch and its
   commits unless the user limits the requested push scope.
+- Deploy published commits only. Ignore and preserve uncommitted local work,
+  including bootstrap edits; it does not block deployment. Alert the user to
+  locally staged changes without committing, unstaging, or deploying them.
+  A push request authorizes existing commits, not a commit of local edits.
+  Explicitly requested commits must exclude unrelated staged work. Review
+  and validate the intended published revision rather than local edits.
 - Use /refresh-deployments to update the map through the repo-local skill
   at .github/skills/refresh-deployments/SKILL.md. Operational notes and
   refresh procedures live there; keep the YAML metadata-only, keyed by
