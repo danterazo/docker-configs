@@ -1,11 +1,12 @@
-import re
-import sys
 from pathlib import Path
+from re import Match, Pattern, compile
+from sys import exit
+from typing import Optional
 
 ROOT: Path = Path(__file__).resolve().parents[1]
 ROOT_SECTIONS: set[str] = {"configs", "networks", "secrets", "services", "volumes"}
 CHILD_SECTIONS: set[str] = {"configs", "networks", "secrets", "services", "volumes"}
-KEY_PATTERN: re.Pattern[str] = re.compile(pattern=r"^([A-Za-z0-9_.-]+):(?:\s|$)")
+KEY_PATTERN: Pattern[str] = compile(pattern=r"^([A-Za-z0-9_.-]+):(?:\s|$)")
 
 
 def blank_separator_count(lines: list[str], line_index: int) -> int:
@@ -22,7 +23,7 @@ def blank_separator_count(lines: list[str], line_index: int) -> int:
 def lint_file(path: Path) -> list[str]:
     lines: list[str] = path.read_text(encoding="utf-8").splitlines()
     errors: list = []
-    current_section: str | None = None
+    current_section: Optional[str] = None
     seen_child_section: set[str] = set()
     seen_root_mapping: bool = False
 
@@ -31,7 +32,7 @@ def lint_file(path: Path) -> list[str]:
             continue
 
         if not line.startswith((" ", "\t")):
-            match = KEY_PATTERN.match(line)
+            match: Optional[Match[str]] = KEY_PATTERN.match(line)
             if not match:
                 current_section = None
                 continue
@@ -75,4 +76,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    exit(main())
