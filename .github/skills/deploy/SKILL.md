@@ -332,6 +332,10 @@ Run commands directly in the integrated terminal; do not create VS Code task
 definitions just to execute deployment or preflight commands. If terminal
 execution is unavailable, stop and report the blocker rather than switching
 execution methods or bypassing approval prompts.
+For recovery snippets intended to be pasted into an already-interactive SSH
+shell, do not use `set -e`; guard each phase with `if`/`return` so a failed
+check leaves the user's remote shell open. The deployment body below runs in
+a deliberately noninteractive shell, where fail-fast behavior is intentional.
 For an LXC, run `pct exec <id> --keep-env 0 -- ...` on that owner. Do not use
 interactive `pct enter`, and do not substitute a local or host command if
 guest access fails. For a VM, use approved configured SSH access or an available
@@ -408,7 +412,7 @@ Capture a baseline before mutation and repeat after the settling window.
 | Spoolman | Request `/api/v1/health` on the discovered guest IP and published port, parse the expected healthy result, and check the UI. Also check `https://spools.samskeyti.net` through Caddy. |
 | Pocket ID | Run `/app/pocket-id healthcheck` inside its container and check the direct published HTTP endpoint. Also verify the expected sign-in page through `https://id.samskeyti.net`; expected authentication responses alone do not prove login functionality. Do not perform a sign-in. |
 | Immich, Plex, and Tautulli | Use the deployed version's documented unauthenticated ping/identity/health endpoint where available and verify an application-specific response, plus the expected UI. If authentication is required, report that limit rather than retrieving credentials or inferring success. |
-| Internal dependencies | Use existing read-only native probes from the dependency's own guest/container context. For Immich PostgreSQL, check the Compose healthcheck and inspect bind-mount ownership against the database process UID/GID; `pg_isready` alone is insufficient. For Immich Redis with AOF enabled, require `PING`, `aof_last_write_status:ok`, and write access as the actual Redis process UID to its data bind mount. Keep internal ports internal. These checks do not replace the owning app's external probe. |
+| Internal dependencies | Use existing read-only native probes from the dependency's own guest/container context. For Immich PostgreSQL, check the Compose healthcheck and inspect bind-mount ownership against the database process UID/GID; `pg_isready` alone is insufficient. For Immich Redis with AOF enabled, require `PING`, `aof_last_write_status:ok` (strip `\r` first; `INFO` uses CRLF), and write access as the actual Redis process UID to its data bind mount. The Compose healthcheck stays Immich's official `PING` check. Keep internal ports internal. These checks do not replace the owning app's external probe. |
 
 For PostgreSQL, a successful `pg_isready` only proves that the server socket
 accepts connections; it does not supersede a failing Compose healthcheck or
