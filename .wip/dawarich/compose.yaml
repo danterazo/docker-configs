@@ -3,9 +3,9 @@ services:
     image: freikin/dawarich:${IMAGE_VERSION}
     container_name: dawarich-app
     volumes:
-      - dawarich_cache:/usr/local/bundle/gems_app/:rw
-      - dawarich_public:/var/app/public/:rw
-      - dawarich_storage:/var/app/storage/:rw
+      - /usr/local/bundle/gems_app/
+      - ./public/:/var/app/public/:rw
+      - ./storage/:/var/app/storage/:rw
       - /self-hosted/dawarich/app/imports/:/var/app/tmp/imports/:rw
     networks:
       - dawarich-net
@@ -41,6 +41,7 @@ services:
       retries: 30
       start_period: 30s
       timeout: 10s
+
   dawarich-redis:
     image: redis:7.0-alpine
     container_name: dawarich-redis
@@ -48,8 +49,8 @@ services:
     networks:
       - dawarich-net
     volumes:
-      - dawarich_redis:/var/shared/redis/:rw
-      - dawarich_shared-db:/var/shared/:rw
+      - ./redis/:/var/shared/redis/:rw
+      - ./shared-db/:/var/shared/:rw
     restart: always
     healthcheck:
       test:
@@ -62,13 +63,14 @@ services:
       retries: 5
       start_period: 30s
       timeout: 10s
+
   dawarich-db:
     image: postgis/postgis:17-3.5-alpine
     container_name: dawarich-db
     shm_size: 1G
     volumes:
-      - dawarich_postgres:/var/lib/postgresql/data/:rw
-      - dawarich_shared-db:/var/shared/:rw
+      - ./postgres/:/var/lib/postgresql/data/:rw
+      - ./shared-db/:/var/shared/:rw
       - /self-hosted/dawarich/db-dumps/:/dumps:rw
     networks:
       - dawarich-net
@@ -91,18 +93,19 @@ services:
     user: ${PUID}:${PGID}
     env_file: .env
     volumes:
-      - dawarich_photon:/photon/:rw
+      - ./photon/:/photon/:rw
       - /self-hosted/dawarich/photon-db/:/photon/photon_data/:rw
     restart: always
     networks:
       - dawarich-net
+
   dawarich-sidekiq:
     image: freikin/dawarich:${IMAGE_VERSION}
     container_name: dawarich-sidekiq
     volumes:
-      - dawarich_cache:/usr/local/bundle/gems_sidekiq/:rw
-      - dawarich_public:/var/app/public/:rw
-      - dawarich_storage:/var/app/storage/:rw
+      - /usr/local/bundle/gems_sidekiq/
+      - ./public/:/var/app/public/:rw
+      - ./storage/:/var/app/storage/:rw
       - /self-hosted/dawarich/app/imports/:/var/app/tmp/imports/:rw
     networks:
       - dawarich-net
@@ -136,6 +139,7 @@ services:
       retries: 30
       start_period: 30s
       timeout: 10s
+
   dawarich-oauth:
     container_name: dawarich-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
@@ -153,6 +157,7 @@ services:
       dawarich-app:
         condition: service_healthy
         restart: true
+
 networks:
   dawarich-net:
     name: dawarich-net
@@ -161,29 +166,6 @@ networks:
     external: true
   #  immich-net:
   #    external: true
-
-volumes:
-  dawarich_cache:
-    external: true
-    name: dawarich_cache
-  dawarich_public:
-    external: true
-    name: dawarich_public
-  dawarich_storage:
-    external: true
-    name: dawarich_storage
-  dawarich_redis:
-    external: true
-    name: dawarich_redis
-  dawarich_shared-db:
-    external: true
-    name: dawarich_shared-db
-  dawarich_postgres:
-    external: true
-    name: dawarich_postgres
-  dawarich_photon:
-    external: true
-    name: dawarich_photon
 
 x-dockge:
   urls:
