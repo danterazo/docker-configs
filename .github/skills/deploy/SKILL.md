@@ -36,6 +36,10 @@ for full functional, health, log, or visual validation.
 1. Read `.github/copilot-instructions.md` and `deployments.yaml`. Confirm the
    local checkout identity and branch. Preserve and exclude staged, unstaged,
    and untracked local files; do not commit them.
+   Read the current deployment-blocker notes in `/ai/pending-changes.md`.
+   Skip and report a selected guest with a known unresolved service/network
+   blocker; do not treat `dupull` success as clearing it. Lite mode does not
+   discover new application reachability failures.
 2. Fetch `origin/main` and check the local `main` relationship. If local `main`
    has fast-forwardable commits ahead, push them with ordinary `git push` (no
    force). If it is only behind, use the fetched `origin/main` as the target.

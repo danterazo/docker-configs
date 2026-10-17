@@ -302,6 +302,10 @@ caddyserver.com while the guest's Caddy is stopped.
    before using recorded observations.
    Confirm each owner, guest ID/type, and in-guest hostname; `pct` is for LXCs,
    never VMs. Do not start stopped guests; report skipped deployments.
+  Read `/ai/pending-changes.md` for unresolved target-specific service or
+  network blockers. Do not bootstrap, stop, or update a blocked guest until
+  its failing baseline has been rechecked and passes; a container-local
+  healthcheck or successful deployment helper does not clear the blocker.
 2. NVIDIA VM 101 hosts the `immich` and `plex-video` repo directories. Tautulli
    is a service inside the Plex Compose definitions on VM 101 and LXCs 108
    and 120, not a separate required sparse-checkout stack. Inspect actual
@@ -466,7 +470,7 @@ Capture a baseline before mutation and repeat after the settling window.
 | Gluetun and Soulseek | Run the image's existing read-only healthcheck where present, and test each exposed app's actual health endpoint or expected UI. Gluetun's VPN health does not prove qBittorrent or Soulseek is accessible. Discover rather than invent a Soulseek health endpoint. |
 | Spoolman | Request `/api/v1/health` on the discovered guest IP and published port, parse the expected healthy result, and check the UI. Also check `https://spools.samskeyti.net` through Caddy. |
 | Pocket ID | Run `/app/pocket-id healthcheck` inside its container and check the direct published HTTP endpoint. Also verify the expected sign-in page through `https://id.samskeyti.net`; expected authentication responses alone do not prove login functionality. Do not perform a sign-in. |
-| Immich, Plex, and Tautulli | Use the deployed version's documented unauthenticated ping/identity/health endpoint where available and verify an application-specific response, plus the expected UI. If authentication is required, report that limit rather than retrieving credentials or inferring success. |
+| Immich, Plex, and Tautulli | Use the deployed version's documented unauthenticated ping/identity/health endpoint where available and verify an application-specific response, plus the expected UI. Plex's image healthcheck may probe only `localhost`; it does not prove the published guest port works. If authentication is required, report that limit rather than retrieving credentials or inferring success. |
 | Internal dependencies | Use existing read-only native probes from the dependency's own guest/container context. For Immich PostgreSQL, check the Compose healthcheck and inspect bind-mount ownership against the database process UID/GID; `pg_isready` alone is insufficient. For Immich Valkey with AOF enabled, require `PING`, `aof_last_write_status:ok` (strip `\r` first; `INFO` uses CRLF), and write access as the actual Valkey process UID to its data bind mount. The Compose healthcheck stays Immich's Redis-compatible `PING` check. Keep internal ports internal. These checks do not replace the owning app's external probe. |
 
 For PostgreSQL, a successful `pg_isready` only proves that the server socket
@@ -534,6 +538,17 @@ networking to make a probe succeed without the applicable approval.
      read-only checks for non-HTTP services, including AdGuard Home DNS
      queries against that guest's address and keepalived state in its logs.
      Internal-only dependencies use the planned in-guest checks.
+    If a local healthcheck passes but the guest-IP request fails or closes
+    without an HTTP response, compare the same safe endpoint from container
+    loopback, the container bridge IP, the guest's published IP, and an
+    independent client. Inspect read-only network mode, actual port bindings,
+    bridge address, and listener address. A bridge-IP failure localizes the
+    issue inside the container/network namespace; a working bridge endpoint
+    with a failing published IP points toward host forwarding. For Plex,
+    compare only network-related preference values with the working server;
+    redact tokens and never dump `Preferences.xml`. Do not change ports,
+    firewall rules, preferences, or network mode during diagnosis. A passing
+    localhost healthcheck never overrides a failing published endpoint.
    - Run the applicable Functional Service Checks above; an inherited Docker
      healthcheck alone does not establish external app accessibility.
    - For Caddy, run `caddy validate` in its container and check these routes

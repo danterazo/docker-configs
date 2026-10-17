@@ -102,7 +102,9 @@
 - Both workflows resolve live owners and use existing SSH/Proxmox access;
   run guest Git, Docker, Compose, and helpers as `dante`, never locally or on
   the PVE host. Keep stopped guests untouched and deploy only published
-  commits.
+  commits. Lite `/deploy` success confirms only that `dupull` completed; it
+  does not establish application reachability or clear a known blocker in
+  `/ai/pending-changes.md`.
 - Detect Docker guests using the exact PVE docker tag, a read-only in-guest
   Docker binary check, or a repo stack/hostname match as a likely candidate.
   Preserve known Docker guests when stopped or unprobeable; report uncertain
