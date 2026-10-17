@@ -39,6 +39,10 @@
   Deduplicate IDs and include all guests with a matching hostname. Gluetun's
   nested qbittorrent and soulseek paths also target guest 116. Ask or discover
   unmatched paths rather than guessing placement.
+- Treat stacks under .wip/ as undeployed. Do not include them in remote-access,
+  deployment, or remote-validation targets unless a matching guest is explicitly
+  listed in the root-level deployments.yaml; normal approval requirements still
+  apply.
 - Use /refresh-deployments to update the map through the repo-local skill
   at .github/skills/refresh-deployments/SKILL.md. Operational notes and
   refresh procedures live there; keep the YAML metadata-only, keyed by
