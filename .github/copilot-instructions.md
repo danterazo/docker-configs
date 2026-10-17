@@ -3,6 +3,10 @@
 ## Execution context
 - This workspace is a local working copy of code deployed on REMOTE LXCs;
   some workloads may run on remote VMs. It is not a live guest filesystem.
+- The assistant runs in the local WSL2 instance `ovedur` as `dante` and has
+  SSH access to configured Proxmox node aliases, not directly to LXC guests.
+  For LXC access, SSH to the current owning node, then use `pct exec` or
+  `pct pull` there; do not assume commands run inside guests locally.
 - Do not assume Copilot runs on a Proxmox host or deployment target.
   Confirm the current hostname and account before operating.
 - Local edits do not deploy changes or imply that scripts should run here.
