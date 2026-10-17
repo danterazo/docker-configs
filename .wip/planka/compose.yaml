@@ -4,9 +4,9 @@ services:
     container_name: planka-app
     restart: always
     volumes:
-      - planka_avatars:/app/public/user-avatars/:rw
-      - planka_backgrounds:/app/public/project-background-images/:rw
-      - planka_attachments:/app/private/attachments/:rw
+      - ./avatars/:/app/public/user-avatars/:rw
+      - ./backgrounds/:/app/public/project-background-images/:rw
+      - ./attachments/:/app/private/attachments/:rw
     env_file: .env
     depends_on:
       planka-db:
@@ -21,7 +21,7 @@ services:
     restart: always
     env_file: .env
     volumes:
-      - planka_db:/var/lib/postgresql/data/:rw
+      - ./db/:/var/lib/postgresql/data/:rw
     #user: ${PUID}:${PGID}
     healthcheck:
       test:
@@ -41,7 +41,7 @@ services:
     # expose:
     #   - ${PLANKA_PORT}
     ports:
-      - ${PLANKA_PORT}:${PLANKA_PORT}/tcp
+      - "${PLANKA_PORT}:${PLANKA_PORT}/tcp"
     env_file: .env
     volumes:
       - /self-hosted/planka/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro
@@ -55,19 +55,6 @@ networks:
   planka-net:
     name: planka-net
   proxy-net:
-    external: true
-volumes:
-  planka_avatars:
-    name: planka_avatars
-    external: true
-  planka_backgrounds:
-    name: planka_backgrounds
-    external: true
-  planka_attachments:
-    name: planka_attachments
-    external: true
-  planka_db:
-    name: planka_db
     external: true
 
 x-dockge:
