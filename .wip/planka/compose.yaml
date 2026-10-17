@@ -34,7 +34,7 @@ services:
   planka-oauth:
     container_name: planka-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
-    command: [--config, /oauth2-proxy.cfg]
+    command: --config /oauth2-proxy.cfg
     restart: always
     # expose:
     #   - ${PLANKA_PORT}

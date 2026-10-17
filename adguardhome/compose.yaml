@@ -29,7 +29,7 @@ services:
     image: ghcr.io/bakito/adguardhome-sync:latest
     container_name: adguardhome-sync
     restart: unless-stopped
-    command: [run]
+    command: run
     profiles:
       - sync
     ports:

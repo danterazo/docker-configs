@@ -125,7 +125,7 @@ services:
   dawarich-oauth:
     container_name: dawarich-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
-    command: [--config, /oauth2-proxy.cfg]
+    command: --config /oauth2-proxy.cfg
     restart: always
     ports:
       - 3002:3002/tcp
