@@ -23,3 +23,6 @@
 [tool.ruff]
     line-length = 150
     exclude = [".git", ".venv"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/lint-compose-spacing.py" = ["UP045"]
