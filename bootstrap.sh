@@ -4,7 +4,7 @@
 : 'GLOBAL CONFIG'
 HOST_NAME="$(hostname)"
 ROOT_DIR="/docker"
-UBUNTU_CODENAME="resolute" # TODO: remove after Ubuntu 26.10 stable release
+DOCKER_FALLBACK_SUITE="resolute" # latest LTS
 
 : 'UPGRADE UBUNTU'
 # upgrade to stable interim releases, but never to a development release.
@@ -51,13 +51,18 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg |
 	sudo tee /etc/apt/keyrings/docker.asc >/dev/null
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-# TODO: replace Suites definition after Ubuntu 26.10 stable release
+# docker's repo can lag new ubuntu releases
+DOCKER_SUITE="$(. /etc/os-release && echo "${VERSION_CODENAME}")"
+if ! curl -fsSI --max-time 15 "https://download.docker.com/linux/ubuntu/dists/${DOCKER_SUITE}/Release" >/dev/null; then
+	echo "WARNING: Docker has no '${DOCKER_SUITE}' suite; using '${DOCKER_FALLBACK_SUITE}'"
+	DOCKER_SUITE="${DOCKER_FALLBACK_SUITE}"
+fi
+
 # add the repository to apt sources
 sudo tee /etc/apt/sources.list.d/docker.sources >/dev/null <<EOF
 Types: deb
 URIs: https://download.docker.com/linux/ubuntu
-Suites: ${UBUNTU_CODENAME}
-# Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Suites: ${DOCKER_SUITE}
 Components: stable
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
