@@ -95,8 +95,7 @@ if ! id -u dante >/dev/null 2>&1; then
 fi
 
 # existing guests may have a root-owned home for dante
-sudo mkdir -p /home/dante/.config
-sudo chown dante:dante /home/dante /home/dante/.config
+sudo chown dante:dante /home/dante
 
 : 'GIT CONFIG'
 # run git as a user from a cwd they can read; /docker is owned by dante
@@ -279,7 +278,7 @@ sudo chown -R dante:dante "${ROOT_DIR}"
 
 # grant dante passwordless reboot/poweroff/shutdown/apt
 sudo tee /etc/sudoers.d/dante >/dev/null <<'EOF'
-dante ALL=(root) NOPASSWD: /usr/sbin/reboot, /usr/sbin/poweroff, /usr/sbin/shutdown, /usr/bin/apt-get update, /usr/bin/apt-get upgrade, /usr/bin/apt-get dist-upgrade, /usr/bin/apt-get clean, /usr/bin/apt-get autoremove
+dante ALL=(root) NOPASSWD: /usr/sbin/reboot, /usr/sbin/poweroff, /usr/sbin/shutdown, /usr/bin/apt-get update, /usr/bin/apt-get upgrade, /usr/bin/apt-get dist-upgrade, /usr/bin/apt-get dist-upgrade -y, /usr/bin/apt-get clean, /usr/bin/apt-get autoremove, /usr/bin/apt-get autoremove -y --purge
 EOF
 sudo chmod 0440 /etc/sudoers.d/dante
 sudo visudo -c # validate sudoer file syntax
