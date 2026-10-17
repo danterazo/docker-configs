@@ -2,17 +2,17 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-ROOT_SECTIONS = {"configs", "networks", "secrets", "services", "volumes"}
-CHILD_SECTIONS = {"configs", "networks", "secrets", "services", "volumes"}
-KEY_PATTERN = re.compile(r"^([A-Za-z0-9_.-]+):(?:\s|$)")
+ROOT: Path = Path(__file__).resolve().parents[1]
+ROOT_SECTIONS: set[str] = {"configs", "networks", "secrets", "services", "volumes"}
+CHILD_SECTIONS: set[str] = {"configs", "networks", "secrets", "services", "volumes"}
+KEY_PATTERN: re.Pattern[str] = re.compile(pattern=r"^([A-Za-z0-9_.-]+):(?:\s|$)")
 
 
 def blank_separator_count(lines: list[str], line_index: int) -> int:
-    previous_index = line_index - 1
+    previous_index: int = line_index - 1
     while previous_index >= 0 and lines[previous_index].lstrip().startswith("#"):
         previous_index -= 1
-    blank_count = 0
+    blank_count: int = 0
     while previous_index >= 0 and not lines[previous_index].strip():
         blank_count += 1
         previous_index -= 1
@@ -20,11 +20,11 @@ def blank_separator_count(lines: list[str], line_index: int) -> int:
 
 
 def lint_file(path: Path) -> list[str]:
-    lines = path.read_text(encoding="utf-8").splitlines()
-    errors = []
-    current_section = None
-    seen_child_section = set()
-    seen_root_mapping = False
+    lines: list[str] = path.read_text(encoding="utf-8").splitlines()
+    errors: list = []
+    current_section: str | None = None
+    seen_child_section: set[str] = set()
+    seen_root_mapping: bool = False
 
     for line_index, line in enumerate(lines):
         if not line.strip() or line.lstrip().startswith("#"):
@@ -38,7 +38,7 @@ def lint_file(path: Path) -> list[str]:
             current_section = match.group(1)
             seen_child_section.discard(current_section)
             if current_section in ROOT_SECTIONS and seen_root_mapping:
-                blank_count = blank_separator_count(lines, line_index)
+                blank_count = blank_separator_count(lines=lines, line_index=line_index)
                 if blank_count == 0:
                     errors.append(f"{path}:{line_index + 1}: add a blank line before the {current_section} section")
                 elif blank_count > 1:
@@ -53,8 +53,8 @@ def lint_file(path: Path) -> list[str]:
         if not match:
             continue
         if current_section in seen_child_section:
-            label = "service" if current_section == "services" else f"{current_section[:-1]}"
-            blank_count = blank_separator_count(lines, line_index)
+            label: str = "service" if current_section == "services" else f"{current_section[:-1]}"
+            blank_count = blank_separator_count(lines=lines, line_index=line_index)
             if blank_count == 0:
                 errors.append(f"{path}:{line_index + 1}: add a blank line before this {label} block")
             elif blank_count > 1:
@@ -65,10 +65,10 @@ def lint_file(path: Path) -> list[str]:
 
 
 def main() -> int:
-    compose_files = sorted(ROOT.rglob("compose.yaml"))
-    errors = [error for path in compose_files for error in lint_file(path)]
+    compose_files: list[Path] = sorted(ROOT.rglob(pattern="compose.yaml"))
+    errors: list[str] = [error for path in compose_files for error in lint_file(path=path)]
     if errors:
-        print("\n".join(errors))
+        print(*errors, sep="\n")
         return 1
     print(f"Compose spacing is valid in {len(compose_files)} files.")
     return 0
