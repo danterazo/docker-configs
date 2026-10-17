@@ -119,6 +119,14 @@ Keep output bounded, but do not pipe interactive prompts through filters. If
 elevated access is required but not already approved, stop. Secrets must be
 entered directly by the user, never requested through chat or tools.
 
+Do not write logs, staging files, or scratch folders on Proxmox nodes or in
+guests; read remote output through the command result, bounded with `tail`
+or `grep`. Any log that must be kept locally goes under
+`/tmp/lxc-deploy-logs/` in this WSL2 instance; it is tmpfs and cleared on
+boot, so it needs no cleanup. Do not use other local log locations. Local
+logs are only a convenience: judge success from server-side evidence such
+as guest Git HEAD, Compose state, container logs, and service checks.
+
 ## Verify and Report
 
 1. Check the command result and bounded output from EACH phase. The existing
