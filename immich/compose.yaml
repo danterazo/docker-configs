@@ -86,7 +86,9 @@ services:
     volumes:
       - ./redis-data/:/data/:rw
     healthcheck:
-      test: [CMD-SHELL, redis-cli ping || exit 1]
+      test:
+        - CMD-SHELL
+        - redis-cli ping | grep -q PONG && redis-cli INFO persistence | grep -q '^aof_last_write_status:ok$'
     restart: always
     networks:
       - immich-net

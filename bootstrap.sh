@@ -113,8 +113,7 @@ for git_user in root dante; do
 done
 
 : 'INIT CONFIG REPOSITORY'
-sudo mkdir -p "${ROOT_DIR}"
-sudo chown -R dante:dante "${ROOT_DIR}"
+sudo install -d -o dante -g dante "${ROOT_DIR}"
 
 # pre-seed GitHub host keys system-wide; source: https://api.github.com/meta (verified 2026-10-16)
 KNOWN_HOSTS="/etc/ssh/ssh_known_hosts"
@@ -159,7 +158,7 @@ else
 	git clone "${AUTOENV_URL}" "$HOME/.autoenv" || exit 1
 fi
 
-REPO_URL="git@github.com:danterazo/docker-configs.git"
+REPO_URL="git@github.com:danterazo/docker-stacks.git"
 REPO_CREATED=0
 if [ ! -d "${ROOT_DIR}/.git" ]; then
 	# first-time setup; clone repository
@@ -171,6 +170,15 @@ if [ ! -d "${ROOT_DIR}/.git" ]; then
 else
 	# repo already exists; preserve its sparse-checkout configuration
 	echo "WARNING: Repository already exists at ${ROOT_DIR}; preserving checkout settings..."
+	sudo chown dante:dante "${ROOT_DIR}" || exit 1
+	if [[ -d "${ROOT_DIR}/.git" && ! -L "${ROOT_DIR}/.git" ]]; then
+		sudo chown -R dante:dante "${ROOT_DIR}/.git" || exit 1
+	elif [[ -f "${ROOT_DIR}/.git" ]]; then
+		sudo chown dante:dante "${ROOT_DIR}/.git" || exit 1
+	else
+		echo "ERROR: Git metadata not found at ${ROOT_DIR}/.git"
+		exit 1
+	fi
 fi
 
 # move to root-level repo directory
@@ -272,9 +280,6 @@ sudo groupadd -f video
 sudo groupadd -f render
 sudo usermod -aG video,render,docker root || true
 sudo usermod -aG video,render,docker dante || true
-
-# fix bind permissions
-sudo chown -R dante:dante "${ROOT_DIR}"
 
 # grant dante passwordless reboot/poweroff/shutdown/apt
 sudo tee /etc/sudoers.d/dante >/dev/null <<'EOF'
