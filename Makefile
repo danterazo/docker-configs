@@ -1,10 +1,10 @@
 SHELL := /bin/bash
 EXCLUDES := \( -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './.vscode' -o -path './.wip' -o -path './tabby/source' \) -prune -o
 
-.PHONY: fix format fix-text lint-compose-spacing lint-docker fix-caddy deps clean
+.PHONY: fix format fix-text fix-shell lint-compose-spacing lint-docker fix-caddy deps clean
 
 # format everything
-format: fix-python fix-caddy lint-compose-spacing lint-docker
+format: fix-python fix-shell fix-caddy lint-compose-spacing lint-docker
 
 # alias
 fix: format
@@ -29,6 +29,10 @@ fix-caddy:
 fix-python:
 	ruff check --fix .
 	ruff format .
+
+fix-shell:
+	find . $(EXCLUDES) -type f \( -name '*.sh' -o -name '*.bash' -o -name '.bashrc' -o -name '.profile' \) -print0 \
+		| xargs -0 -r shfmt -w -i 0
 
 deps:
 	poetry lock
