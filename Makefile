@@ -20,8 +20,11 @@ lint-docker:
 		| xargs -0 -I {} sh -c 'docker buildx build --check --file "$$1" "$$(dirname "$$1")"' _ {}
 
 fix-caddy:
-	find caddy/configs -type f \( -name 'Caddyfile*' -o -name '*.conf' \) -print0 \
-		| xargs -0 -I {} docker exec caddy caddy fmt --overwrite {}
+	find caddy/configs -type f \( -name 'Caddyfile*' -o -name '*.conf' \) -printf '%P\0' \
+		| xargs -0 -r -I {} docker run --rm \
+			--user "$$(id -u):$$(id -g)" \
+			--mount "type=bind,source=$(CURDIR)/caddy/configs,target=/etc/caddy" \
+			caddy:alpine caddy fmt --overwrite "/etc/caddy/{}"
 
 fix-python:
 	ruff check --fix .
