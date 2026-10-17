@@ -300,5 +300,5 @@ sudo mkdir -p /home/dante
 sudo ln -sf /docker/.common/bashrc.sh /root/.bashrc
 sudo ln -sf /docker/.common/bashrc.sh /home/dante/.bashrc
 
-: 'LOGS FOR USER'
+: 'REMINDERS FOR USER'
 echo -e "\nDouble-check IP in PVE UI before proceeding! \n\n"
