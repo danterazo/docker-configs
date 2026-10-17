@@ -1,0 +1,14 @@
+{
+  "MD012": {
+    "maximum": 2
+  },
+  "MD013": {
+    "line_length": 150,
+    "tables": false
+  },
+  "MD022": false,
+  "MD031": false,
+  "MD032": false,
+  "MD047": false,
+  "MD058": false
+}
