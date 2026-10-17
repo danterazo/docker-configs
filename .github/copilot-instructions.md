@@ -92,17 +92,26 @@
   on Cerulean, and 204 on Kex at discovery time. Do not validate only one.
 - Deployment validation must check each recreated app's configured IP and
   port with a protocol-appropriate webpage, API, or service probe, not just
-  container health. For Caddy, also verify the reverse-proxied
-  https://pve.samskeyti.net endpoint through normal DNS and pinned to each
-  deployed instance; this is the representative route instead of checking
-  every Caddy URL. Check specifically changed routes as well. Follow the
-  deploy skill for endpoint discovery, response checks, and reporting gaps.
+  container health. AdGuard Home must answer DNS queries against each guest
+  IP, not only its VIP; verify a serving peer before downtime. For other
+  services, use existing read-only healthchecks and app-specific API probes,
+  including qBittorrent connection status and externally exposed health
+  endpoints where available. Follow the deploy skill's functional checks.
+- For Caddy, check https://pve.samskeyti.net (Proxmox, an external non-Docker
+  backend), https://spools.samskeyti.net (Spoolman), and
+  https://id.samskeyti.net (Pocket ID), through normal DNS and pinned to each
+  deployed instance. Also check specifically changed routes. These proxy
+  checks supplement direct app IP/port checks; do not sweep every Caddy URL.
 - If Caddy or app IP/port checks are inconclusive for a web app, use the
   built-in browser to inspect the rendered page and capture a non-sensitive
   screenshot. Verify the expected app/login screen, not merely an HTTP status.
   Preserve TLS and authentication boundaries; do not log in implicitly.
   Visual checks supplement per-instance Caddy and direct/protocol checks,
   never replace them. Report inaccessible pages and remaining gaps as such.
+- Prefer shared or supported background browser pages without switching the
+  user's active tab. If available tools cannot hide agent-started/shared tabs,
+  disclose that limitation; do not change browser settings or claim hidden
+  execution. Keep screenshots free of credentials and sensitive app data.
 - Caddy and AdGuard Home deployments are staggered: one secondary of each
   type first, validated, then the rest, primaries last, as defined in the
   deploy skill. Primary/secondary roles come from PVE tags in

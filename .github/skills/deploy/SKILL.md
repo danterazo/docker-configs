@@ -339,6 +339,31 @@ boot, so it needs no cleanup. Do not use other local log locations. Local
 logs are only a convenience: judge success from server-side evidence such
 as guest Git HEAD, Compose state, container logs, and service checks.
 
+## Functional Service Checks
+
+Validate what each service does, not merely its running state. Discover the
+actual endpoint, port, network namespace, version, and expected response
+before deployment. Prefer existing Compose/image healthchecks and documented
+read-only APIs. Use bounded timeouts, parse JSON/XML responses with a parser,
+and report only the assertion result, not secret-bearing response bodies.
+Capture a baseline before mutation and repeat after the settling window.
+
+| Service | Functional check |
+| --- | --- |
+| AdGuard Home | Query a benign public name such as `example.com` against each guest's actual IP, not only the VIP. Use `dig +time=3 +tries=1 @<guest-ip> example.com A` or a standard DNS resolver API with an explicit server and timeout. Require a successful response with valid expected records, not merely an open port. Test UDP and TCP where both are configured. Confirm a serving peer before disrupting any instance. |
+| qBittorrent | Run the deployed healthcheck and query the published WebUI/API port from the approved client vantage point. The current check parses `/api/v2/transfer/info` and requires `connection_status == "connected"`; recheck that contract against the deployed version. Account for its shared Gluetun network namespace. Do not start downloads, change settings, or log in implicitly. |
+| Gluetun and Soulseek | Run the image's existing read-only healthcheck where present, and test each exposed app's actual health endpoint or expected UI. Gluetun's VPN health does not prove qBittorrent or Soulseek is accessible. Discover rather than invent a Soulseek health endpoint. |
+| Spoolman | Request `/api/v1/health` on the discovered guest IP and published port, parse the expected healthy result, and check the UI. Also check `https://spools.samskeyti.net` through Caddy. |
+| Pocket ID | Run `/app/pocket-id healthcheck` inside its container and check the direct published HTTP endpoint. Also verify the expected sign-in page through `https://id.samskeyti.net`; expected authentication responses alone do not prove login functionality. Do not perform a sign-in. |
+| Immich, Plex, and Tautulli | Use the deployed version's documented unauthenticated ping/identity/health endpoint where available and verify an application-specific response, plus the expected UI. If authentication is required, report that limit rather than retrieving credentials or inferring success. |
+| Internal dependencies | Use existing read-only native probes, such as Redis `PING` or PostgreSQL readiness, from the dependency's own guest/container context. Keep internal ports internal. These checks do not replace the owning app's external probe. |
+
+Record endpoint, guest, client vantage point, expected and observed response,
+and probe time. An unexpected response, failed query, unreachable healthcheck,
+or unavailable/unauthorized probe is a failure or explicit validation gap,
+not a pass. Do not install tooling, weaken authentication/TLS, or change
+networking to make a probe succeed without the applicable approval.
+
 ## Verify and Report
 
 1. Check the exit status and bounded output from each phase. The body
@@ -377,17 +402,21 @@ as guest Git HEAD, Compose state, container logs, and service checks.
      read-only checks for non-HTTP services, including AdGuard Home DNS
      queries against that guest's address and keepalived state in its logs.
      Internal-only dependencies use the planned in-guest checks.
-   - For Caddy, run `caddy validate` in its container and check the
-     reverse-proxied `https://pve.samskeyti.net` webpage/API through normal
-     DNS. Also use `curl --resolve pve.samskeyti.net:443:<guest-ip>` against
-     each deployed Caddy guest individually, preserving the hostname/SNI
-     and TLS certificate verification. Normal DNS or a shared VIP alone
-     cannot prove the recreated instance serves the route. Verify the
-     expected Proxmox response, not merely that DNS resolves or TLS connects;
-     502/503/504 responses fail validation. This representative route replaces
-     a sweep of every Caddy URL, but also check routes specifically changed
-     by the deployment. These proxy checks supplement, not replace, direct
-     app IP/port checks.
+   - Run the applicable Functional Service Checks above; an inherited Docker
+     healthcheck alone does not establish external app accessibility.
+   - For Caddy, run `caddy validate` in its container and check these routes
+     through normal DNS and pinned to each deployed Caddy guest individually:
+     `https://pve.samskeyti.net`, `https://spools.samskeyti.net`, and
+     `https://id.samskeyti.net`. Proxmox is not a Docker service; its route
+     validates proxying to an external backend. Spoolman and Pocket ID cover
+     Docker-backed routes. Use `curl --resolve <hostname>:443:<guest-ip>`
+     for each hostname, preserving SNI and TLS certificate verification.
+     Normal DNS or a shared VIP alone cannot prove a recreated instance
+     serves a route. Verify the expected application/page/API response;
+     DNS resolution, TLS connection, or an unexplained authentication status
+     is insufficient. Proxy 502/503/504 responses fail validation. These
+     representative routes replace a full URL sweep; also check specifically
+     changed routes. Proxy checks supplement direct app IP/port checks.
    - When Caddy or direct IP/port checks are inconclusive for a web app, use
      the built-in browser to open the discovered webpage, inspect its rendered
      content, and capture a screenshot for visual validation. Confirm the
@@ -396,6 +425,12 @@ as guest Git HEAD, Compose state, container logs, and service checks.
      only safe read-only navigation; do not log in, submit forms, or change
      application settings implicitly. Keep credentials and sensitive page
      content out of reports and screenshots.
+   - Prefer reusing an already shared browser page or supported background
+     navigation that leaves the user's active tab unchanged. If the built-in
+     browser tools expose no hidden/background-tab control, tell the user;
+     do not claim that agent-started tabs are hidden or change browser settings
+     to hide them. Browser visibility limitations do not authorize replacing
+     visual checks with HTTP-only checks.
    - Preserve normal TLS verification and expected hostname/SNI in browser
      checks. A normal-DNS browser visit does not prove each Caddy instance;
      retain the per-instance pinned checks. Do not browse an HTTPS IP if it
