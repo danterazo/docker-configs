@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 EXCLUDES := \( -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './.vscode' -o -path './.wip' -o -path './tabby/source' \) -prune -o
 
-.PHONY: fix format fix-text lint-compose-spacing lint-docker fix-caddy deps
+.PHONY: fix format fix-text lint-compose-spacing lint-docker fix-caddy deps clean
 
 # format everything
 format: fix-python fix-caddy lint-compose-spacing lint-docker
@@ -34,3 +34,6 @@ deps:
 	poetry lock
 	poetry update
 	poetry install
+
+clean:
+	find . -type f \( -name 'Zone.Identifier' -o -name '*:Zone.Identifier' \) -print -delete
