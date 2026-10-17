@@ -94,10 +94,24 @@ if ! id -u dante >/dev/null 2>&1; then
 	sudo useradd -u 1000 -g 1000 -m -d /home/dante -s /bin/bash dante
 fi
 
+# existing guests may have a root-owned home for dante
+sudo mkdir -p /home/dante/.config
+sudo chown dante:dante /home/dante /home/dante/.config
+
 : 'GIT CONFIG'
-git config --global user.name "Dante Razo"
-git config --global user.email "github.d2brf@simplelogin.fr"
-git config --global pull.rebase false
+# run git as a user from a cwd they can read; /docker is owned by dante
+user_git() {
+	local user="$1"
+	shift
+	(cd / && sudo -u "${user}" -H env ${GIT_SSH_COMMAND:+"GIT_SSH_COMMAND=${GIT_SSH_COMMAND}"} git "$@")
+}
+dante_git() { user_git dante "$@"; }
+
+for git_user in root dante; do
+	user_git "${git_user}" config --global user.name "Dante Razo"
+	user_git "${git_user}" config --global user.email "github.d2brf@simplelogin.fr"
+	user_git "${git_user}" config --global pull.rebase false
+done
 
 : 'INIT CONFIG REPOSITORY'
 sudo mkdir -p "${ROOT_DIR}"
@@ -114,6 +128,13 @@ github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+V
 EOF
 
 # TODO: set up SSH key sharing
+# dante runs the /docker git commands, so it needs the shared key too
+if [ ! -f /home/dante/.ssh/id_ed25519 ] && [ -f /root/.ssh/id_ed25519 ] && [ -f /root/.ssh/id_ed25519.pub ]; then
+	sudo install -d -m 700 -o dante -g dante /home/dante/.ssh
+	sudo install -m 600 -o dante -g dante /root/.ssh/id_ed25519 /home/dante/.ssh/id_ed25519
+	sudo install -m 644 -o dante -g dante /root/.ssh/id_ed25519.pub /home/dante/.ssh/id_ed25519.pub
+fi
+
 # fix SSH permissions, preferring dante's key over root's
 SSH_DIR=""
 for path in /home/dante/.ssh /root/.ssh; do
@@ -143,7 +164,7 @@ REPO_URL="git@github.com:danterazo/docker-configs.git"
 REPO_CREATED=0
 if [ ! -d "${ROOT_DIR}/.git" ]; then
 	# first-time setup; clone repository
-	if ! git clone "${REPO_URL}" "${ROOT_DIR}"; then
+	if ! dante_git clone "${REPO_URL}" "${ROOT_DIR}"; then
 		echo "ERROR: Failed to clone repository"
 		exit 1
 	fi
@@ -156,8 +177,8 @@ fi
 # move to root-level repo directory
 cd "${ROOT_DIR}"
 if [ "${REPO_CREATED}" = "0" ]; then
-	git remote set-url origin "${REPO_URL}"
-	git pull
+	dante_git -C "${ROOT_DIR}" remote set-url origin "${REPO_URL}"
+	dante_git -C "${ROOT_DIR}" pull
 fi
 
 # host-specific sparse profiles
@@ -166,7 +187,7 @@ sparse_paths=('/.common/' '/bootstrap.sh' '/.gitignore') # common
 for app in "${host_apps[@]}"; do
 	sparse_paths+=("/${app}/")
 done
-git sparse-checkout set --no-cone "${sparse_paths[@]}" || true
+dante_git -C "${ROOT_DIR}" sparse-checkout set --no-cone "${sparse_paths[@]}" || true
 
 # move to app dir if the host contains only a single stack
 if [ -d "${ROOT_DIR}/${HOST_NAME}" ]; then
