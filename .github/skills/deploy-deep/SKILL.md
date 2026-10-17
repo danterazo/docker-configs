@@ -463,14 +463,38 @@ read-only APIs. Use bounded timeouts, parse JSON/XML responses with a parser,
 and report only the assertion result, not secret-bearing response bodies.
 Capture a baseline before mutation and repeat after the settling window.
 
+Choose one HTTP validation route per app before the first mutation:
+
+- Normally use its configured proxied hostname, not both hostname and direct
+  IP/port. If there is no active proxy route, use the published backend.
+- If ANY Caddy instance is selected for an upgrade or requires deployment,
+  validate ALL other apps through the backend IP, port, and protocol that
+  Caddy actually proxies, for the entire rollout, including baselines and
+  browser checks. Keep this choice even while other Caddy peers are online or
+  after a Caddy instance recovers. Do not change Caddy's configuration.
+- A direct-backend check must not follow a redirect through Caddy or Pocket
+  ID and count that as backend success. For OAuth apps, use a documented
+  unauthenticated backend endpoint; mark the UI/auth handoff as deferred to
+  proxy recovery rather than changing callback registration or logging in.
+  Preserve TLS verification; report an unsupported direct TLS/UI check as a
+  gap, never bypass trust or force the check through Caddy.
+- Caddy's OWN recovery validation is the exception: after each Caddy instance
+  returns, use its normal representative proxied URLs, pinned to that instance
+  with the correct hostname/SNI, and the normal-DNS browser check. These
+  checks establish proxy recovery, not the other apps' independent baseline.
+- DNS and other non-HTTP protocols still use their actual service endpoints.
+  Add a second route only for a changed network path or a concrete failure,
+  not as routine duplicate coverage. A proxy-only pass does not establish
+  direct-IP reachability or clear an existing direct-endpoint blocker.
+
 | Service | Functional check |
 | --- | --- |
 | AdGuard Home | Query a benign public name such as `example.com` against each guest's actual IP, not only the VIP. Use `dig +time=3 +tries=1 @<guest-ip> example.com A` or a standard DNS resolver API with an explicit server and timeout. Require a successful response with valid expected records, not merely an open port. Test UDP and TCP where both are configured. Confirm a serving peer before disrupting any instance. |
 | qBittorrent | Run the deployed container healthcheck. The current check calls `/api/v2/transfer/info` from inside the container and requires `connection_status == "connected"`; recheck that contract against the deployed version. Do not require an external-client API request; the API may reject requests from outside its trusted context. Account for the shared Gluetun network namespace. Check its published WebUI as a separate optional reachability check. Do not start downloads, change settings, or log in implicitly. |
 | Gluetun and Soulseek | Run the image's existing read-only healthcheck where present, and test each exposed app's actual health endpoint or expected UI. Gluetun's VPN health does not prove qBittorrent or Soulseek is accessible. Discover rather than invent a Soulseek health endpoint. |
-| Spoolman | Request `/api/v1/health` on the discovered guest IP and published port, parse the expected healthy result, and check the UI. Also check `https://spools.samskeyti.net` through Caddy. |
-| Pocket ID | Run `/app/pocket-id healthcheck` inside its container and check the direct published HTTP endpoint. Also verify the expected sign-in page through `https://id.samskeyti.net`; expected authentication responses alone do not prove login functionality. Do not perform a sign-in. |
-| Immich, Plex, and Tautulli | Use the deployed version's documented unauthenticated ping/identity/health endpoint where available and verify an application-specific response, plus the expected UI. Plex's image healthcheck may probe only `localhost`; it does not prove the published guest port works. If authentication is required, report that limit rather than retrieving credentials or inferring success. |
+| Spoolman | Request `/api/v1/health` via the selected route, parse the healthy result, and check the UI via that same route. Use `spools.samskeyti.net` normally, or Caddy's backend IP/port during a Caddy rollout. |
+| Pocket ID | Run `/app/pocket-id healthcheck` inside its container and verify the sign-in page via the selected route: `id.samskeyti.net` normally, or its backend IP/port during a Caddy rollout. Do not perform a sign-in. |
+| Immich, Plex, and Tautulli | Use one documented unauthenticated ping/identity endpoint where needed and verify the UI via the selected route, not duplicate proxy/direct routes. During a Caddy rollout, use backend IP/port and defer proxy-dependent OAuth UI handoffs. Plex's localhost healthcheck does not establish external reachability. Report authentication limits without retrieving credentials or logging in. |
 | Internal dependencies | Use existing read-only native probes from the dependency's own guest/container context. For Immich PostgreSQL, check the Compose healthcheck and inspect bind-mount ownership against the database process UID/GID; `pg_isready` alone is insufficient. For Immich Valkey with AOF enabled, require `PING`, `aof_last_write_status:ok` (strip `\r` first; `INFO` uses CRLF), and write access as the actual Valkey process UID to its data bind mount. The Compose healthcheck stays Immich's Redis-compatible `PING` check. Keep internal ports internal. These checks do not replace the owning app's external probe. |
 
 For PostgreSQL, a successful `pg_isready` only proves that the server socket
@@ -525,60 +549,60 @@ networking to make a probe succeed without the applicable approval.
      loops. Distinguish benign startup noise; do not dump environment
      values or resolved secret-bearing configs.
    - Run service checks after the settling window, since probes can race
-     startup. For every recreated app, probe its discovered IP and exposed
-     port from an approved client vantage point, not only localhost inside
-     its container. For HTTP(S), request an actual webpage/API/health path
-     and verify the expected status and application-specific response; a
-     listening socket, redirect alone, unrelated default page, or proxy
-     error is not sufficient. Follow expected redirects with bounded hops
-     and verify the final destination; note when a direct URL redirects to
-     a proxy rather than independently proving the backend works. Treat an
+     startup. For each app, probe its selected proxy or backend route from
+     an approved client vantage point, not only localhost inside its
+     container. Do not hit every declared port: add another port only when it
+     serves an independent app or protocol. For HTTP(S), use one
+     application-specific API/identity/health response to verify the backend;
+     a listening socket or redirect alone is not sufficient. Follow expected
+     redirects with bounded hops and verify the final destination. Treat an
      authentication response as expected only when confirmed for that app;
-     never read credentials or log in implicitly. Use protocol-appropriate
-     read-only checks for non-HTTP services, including AdGuard Home DNS
-     queries against that guest's address and keepalived state in its logs.
-     Internal-only dependencies use the planned in-guest checks.
-    If a local healthcheck passes but the guest-IP request fails or closes
-    without an HTTP response, compare the same safe endpoint from container
-    loopback, the container bridge IP, the guest's published IP, and an
-    independent client. Inspect read-only network mode, actual port bindings,
-    bridge address, and listener address. A bridge-IP failure localizes the
-    issue inside the container/network namespace; a working bridge endpoint
-    with a failing published IP points toward host forwarding. For Plex,
-    compare only network-related preference values with the working server;
-    redact tokens and never dump `Preferences.xml`. Do not change ports,
-    firewall rules, preferences, or network mode during diagnosis. A passing
-    localhost healthcheck never overrides a failing published endpoint.
+     never read credentials or log in implicitly. For user-facing web apps,
+    use one browser visit to that selected route as the primary UI check;
+     do not duplicate it with curl requests made only to scrape a title. Use
+     protocol-appropriate checks for non-HTTP services, including AdGuard DNS
+     over both configured UDP/TCP and keepalived state. Internal-only
+     dependencies use the planned in-guest checks.
+   - If a local healthcheck passes but the guest-IP request fails or closes
+     without an HTTP response, compare the same safe endpoint from container
+     loopback, the container bridge IP, the guest's published IP, and an
+     independent client. Inspect read-only network mode, actual port bindings,
+     bridge address, and listener address. A bridge-IP failure localizes the
+     issue inside the container/network namespace; a working bridge endpoint
+     with a failing published IP points toward host forwarding. For Plex,
+     compare only network-related preference values with the working server;
+     redact tokens and never dump `Preferences.xml`. Do not change ports,
+     firewall rules, preferences, or network mode during diagnosis. A passing
+     localhost healthcheck never overrides a failing published endpoint.
    - Run the applicable Functional Service Checks above; an inherited Docker
      healthcheck alone does not establish external app accessibility.
-   - For Caddy, run `caddy validate` in its container and check these routes
-     through normal DNS and pinned to each deployed Caddy guest individually:
-     `https://pve.samskeyti.net`, `https://spools.samskeyti.net`, and
-     `https://id.samskeyti.net`. Proxmox is not a Docker service; its route
-     validates proxying to an external backend. Spoolman and Pocket ID cover
-     Docker-backed routes. Use `curl --resolve <hostname>:443:<guest-ip>`
-     for each hostname, preserving SNI and TLS certificate verification.
-     Normal DNS or a shared VIP alone cannot prove a recreated instance
-     serves a route. Verify the expected application/page/API response;
-     DNS resolution, TLS connection, or an unexplained authentication status
-     is insufficient. Proxy 502/503/504 responses fail validation. These
-     representative routes replace a full URL sweep; also check specifically
-     changed routes. Proxy checks supplement direct app IP/port checks.
-   - When Caddy or direct IP/port checks are inconclusive for a web app, use
-     the built-in browser to open the discovered webpage, inspect its rendered
-     content, and capture a screenshot for visual validation. Confirm the
-     expected application or login page is visibly rendered, rather than a
-     blank/loading screen, unrelated page, or proxy/browser error. Exercise
-     only safe read-only navigation; do not log in, submit forms, or change
-     application settings implicitly. Keep credentials and sensitive page
-     content out of reports and screenshots.
+   - For each deployed Caddy instance, run `caddy validate` and pin checks
+     with `curl --resolve <hostname>:443:<guest-ip>`, preserving SNI and
+     normal TLS verification. Always check specifically changed routes. For
+     global Caddy changes without a specific route, check one external-backend
+     route (`pve.samskeyti.net`) and one Docker-backed route (`spools` or
+     `id`) per instance; do not sweep all representative routes by default.
+     Verify application-specific responses, not only DNS/TLS/status; proxy
+     502/503/504 responses fail. A shared VIP cannot prove an individual
+     instance serves a route. These checks supplement, not multiply, the
+    selected app endpoint check above. Run these proxied checks only as
+    Caddy's recovery validation, not as a dependency of other app checks
+    during a Caddy rollout.
+   - For each changed/recreated web app, use the built-in browser on its
+    selected route to verify the expected rendered UI or login page and
+     capture one non-sensitive screenshot. Visual validation is the primary
+     UI assertion; use one request to a separate API/identity endpoint only
+     when needed to prove the backend independently. Exercise safe read-only
+     navigation only; do not log in, submit forms, or change settings. Keep
+     credentials and sensitive page content out of reports and screenshots.
      For apps using Pocket ID OAuth2, including Immich, a handoff to
      `https://id.samskeyti.net` is expected. Capture the app's initial
      sign-in/handoff page promptly; a later identity-provider interaction
-     page is not evidence that the app page failed. Use the app's configured
-     hostname for OAuth UI checks because a direct-IP callback may be
-     unregistered, and retain the separate direct IP/API probe. Do not
-     continue authentication.
+    page is not evidence that the app page failed. In normal proxy mode,
+    use the configured hostname and do not add a duplicate direct-IP probe.
+    In Caddy-rollout backend mode, verify an unauthenticated backend endpoint
+    instead and defer the proxy-dependent UI handoff; a direct-IP callback
+    may be unregistered. Do not continue authentication.
    - Prefer reusing an already shared browser page or supported background
      navigation that leaves the user's active tab unchanged. If the built-in
      browser tools expose no hidden/background-tab control, tell the user;
@@ -592,8 +616,10 @@ networking to make a probe succeed without the applicable approval.
      to make a check pass. Record the browser endpoint, vantage point, visual
      result, and remaining per-instance or backend gaps. Browser checks do not
      replace container/config validation, DNS probes, or internal dependencies.
-     If the browser cannot reach or validate the expected page, report the
-     gap and stop the rollout rather than declaring the service healthy.
+    If the browser cannot reach or validate the expected page, report the
+    gap and stop the rollout rather than declaring the service healthy,
+    except for explicitly deferred proxy-dependent OAuth UI checks in backend
+    mode; report those separately from the verified backend result.
    - Use bounded connection/request timeouts and certificate verification;
      never bypass TLS or access controls to make a probe pass. Record the
      endpoint, probe vantage point, expected/observed result, and any blocked
@@ -606,9 +632,30 @@ networking to make a probe succeed without the applicable approval.
    validation must pass before the next wave begins. Do not claim full
    success if a target was stopped, unreachable, failed, or skipped.
 5. Report guest ID, owner, role tag, before/after revision, helper result,
-  validation result, direct IP/port and Caddy proxy probe results, and any
+  validation result, selected route and Caddy recovery probe results, and any
   browser visual-validation results when used, failures, validation gaps,
   or skipped targets. Record important
    observations in the repo only as authorized; keep secrets and runtime
    status out of `deployments.yaml`. Do not promise automatic rollback of
    mutable image tags, and never reboot as part of this skill.
+
+## Learn From The Run
+
+Before the final report, briefly review the session's failures, tricky steps,
+user corrections, repeated work, and avoidable delays. Do this automatically
+on success or when stopping for a blocker, using evidence already collected;
+do not add probes, log reads, or a session-history investigation for this step.
+
+- If there is a concrete reusable lesson, make a small targeted update to the
+  relevant deployment skill. Update `.github/copilot-instructions.md` only
+  when the lesson applies across workflows. Preserve concurrent edits and
+  existing approvals and safety gates. This step authorizes these narrow
+  documentation edits, not operational changes or scope expansion.
+- Record unresolved incidents in the canonical pending ledger with verified
+  evidence, target/path, blocker, and next safe action. Keep temporary runtime
+  observations and unproven hypotheses out of enduring instructions; never
+  record credentials or turn a workaround into a permission exception.
+- Validate changed documentation with `git diff --check` and mention the
+  lesson/update briefly in the final report. Do not commit or push retrospective
+  edits without an explicit request; an earlier deployment push does not cover
+  newly written documentation. If there is no new lesson, make no edits.

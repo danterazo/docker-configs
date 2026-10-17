@@ -105,6 +105,15 @@
   commits. Lite `/deploy` success confirms only that `dupull` completed; it
   does not establish application reachability or clear a known blocker in
   `/ai/pending-changes.md`.
+- In `/deploy-deep`, check one primary published endpoint per app and use a
+  rendered browser page as the main UI assertion. Normally use the configured
+  proxied hostname, not both hostname and IP. If ANY Caddy instance is being
+  upgraded or requires deployment, use Caddy's actual backend IP/port/protocol
+  for ALL other app checks throughout that rollout so Caddy state cannot
+  affect their results. Defer proxy-dependent OAuth UI checks and use an
+  unauthenticated backend endpoint; do not follow proxy redirects as proof of
+  backend success. Only Caddy's own recovery checks use its representative
+  proxied URLs, pinned per instance. Lite `/deploy` remains probe-free.
 - Detect Docker guests using the exact PVE docker tag, a read-only in-guest
   Docker binary check, or a repo stack/hostname match as a likely candidate.
   Preserve known Docker guests when stopped or unprobeable; report uncertain
@@ -126,8 +135,8 @@
   A file timestamp is not a claim that remote discovery was performed.
 - For caddy changes, plan validation on ALL three Caddy LXCs: 203 and 205
   on Cerulean, and 204 on Kex at discovery time. Do not validate only one.
-- Deployment validation must check each recreated app's configured IP and
-  port with a protocol-appropriate webpage, API, or service probe, not just
+- Deep deployment validation must check each recreated app's selected proxy
+  or direct-backend route with an app-specific response or rendered UI, not just
   container health. AdGuard Home must answer DNS queries against each guest
   IP, not only its VIP; verify a serving peer before downtime. For other
   services, use existing read-only healthchecks and app-specific API probes,
@@ -135,17 +144,19 @@
   endpoints where available. For qBittorrent, rely on its in-container
   healthcheck; do not require an external API request. Follow the deploy
   skill's functional checks.
-- For Caddy, check https://pve.samskeyti.net (Proxmox, an external non-Docker
-  backend), https://spools.samskeyti.net (Spoolman), and
-  https://id.samskeyti.net (Pocket ID), through normal DNS and pinned to each
-  deployed instance. Also check specifically changed routes. These proxy
-  checks supplement direct app IP/port checks; do not sweep every Caddy URL.
+- For Caddy recovery, check specifically changed routes, or for global changes
+  one external-backend route (`https://pve.samskeyti.net`) and one Docker-backed
+  route (`https://spools.samskeyti.net` or `https://id.samskeyti.net`), pinned
+  to each deployed instance. Use normal DNS for its rendered UI check. These
+  proxied checks validate Caddy itself; other apps use direct backends during
+  any Caddy rollout. Do not sweep every Caddy URL.
 - If Caddy or app IP/port checks are inconclusive for a web app, use the
   built-in browser to inspect the rendered page and capture a non-sensitive
   screenshot. Verify the expected app/login screen, not merely an HTTP status.
   Preserve TLS and authentication boundaries; do not log in implicitly.
-  Visual checks supplement per-instance Caddy and direct/protocol checks,
-  never replace them. Report inaccessible pages and remaining gaps as such.
+  Visual checks are the main UI assertion on the selected route; keep distinct
+  protocol and per-instance Caddy recovery checks. Report inaccessible pages,
+  deferred OAuth handoffs, and remaining gaps as such.
 - Prefer shared or supported background browser pages without switching the
   user's active tab. If available tools cannot hide agent-started/shared tabs,
   disclose that limitation; do not change browser settings or claim hidden
