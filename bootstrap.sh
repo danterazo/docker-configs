@@ -9,7 +9,7 @@ UBUNTU_CODENAME="resolute" # TODO: remove after Ubuntu 26.10 stable release
 : 'UPGRADE UBUNTU'
 # upgrade to stable interim releases, but never to a development release.
 sudo sed -i 's/^Prompt=.*/Prompt=normal/' /etc/update-manager/release-upgrades
-sudo do-release-upgrade
+sudo do-release-upgrade -f DistUpgradeViewNonInteractive
 
 : 'MULTI-TENANT HOSTS'
 declare -A HOST_APPS=(
