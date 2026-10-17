@@ -1,17 +1,36 @@
 ---
-name: deploy-changes
-description: "Deploy published repo changes to Docker guests through their confirmed Proxmox owners using dupull. Use when explicitly asked to deploy a stack such as caddy, roll out changes to LXCs or VMs, or run dupull remotely."
-argument-hint: "Stack directory to deploy, for example caddy"
+name: deploy
+description: "Deploy published repo changes to Docker guests through their confirmed Proxmox owners using dupull. Use when explicitly asked to deploy all pending changes, the guests edited in the current thread, every guest, or named stacks/guest IDs, or to run dupull remotely."
+argument-hint: "Optional: all, stack names, or guest IDs, for example caddy or 100 200"
 user-invocable: true
 disable-model-invocation: true
 ---
 
-# Deploy Changes
+# Deploy
 
-Invoke `/deploy-changes caddy` to request deployment planning and execution
-for Caddy. An explicit natural-language deployment request can also select
-this workflow. Creating this skill, editing code, running local tests, or
-refreshing the deployment map does not authorize a deployment.
+Invoke `/deploy` to request deployment planning and execution. An explicit
+natural-language deployment request can also select this workflow. Creating
+this skill, editing code, running local tests, or refreshing the deployment
+map does not authorize a deployment.
+
+## Choose Targets
+
+- `/deploy` in a new thread, with no earlier edits, deployments, or named
+  guests in the conversation: deploy all pending changes. Fetch published
+  `main`, then for each running Docker guest compare its `/docker` HEAD with
+  `origin/main` and select it when files in its sparse paths changed. Changes
+  to shared paths such as `.common/` or `bootstrap.sh` select every guest.
+  Report guests already at `origin/main` as up to date and skip them.
+- `/deploy` in an existing thread: target only the guests whose stacks or
+  guest IDs were edited, deployed, or explicitly named earlier in that
+  thread. Show the derived list with the reason for each guest and get
+  confirmation before running.
+- `/deploy all`: every running Docker guest in `docker_guests`, whether or not
+  it has pending changes.
+- `/deploy <stacks or guest IDs>`: exactly what is named. A stack resolves to
+  every guest that runs it; a guest ID selects only that guest.
+- In every mode, list the targets and the dupull scope, obtain the approvals
+  below, and deploy only published commits.
 
 ## Scope and Approval
 

@@ -39,8 +39,8 @@
   at .github/skills/refresh-deployments/SKILL.md. Operational notes and
   refresh procedures live there; keep the YAML metadata-only, keyed by
   bare guest IDs, without guest runtime or node online/offline status.
-- For an explicit deployment request, follow /deploy-changes through
-  .github/skills/deploy-changes/SKILL.md. Resolve all target guests and current
+- For an explicit deployment request, follow /deploy through
+  .github/skills/deploy/SKILL.md. Resolve all target guests and current
   owners, confirm the intended changes are published, and run the approved
   dupull workflow inside the guests, never locally or on the PVE host.
 - dupull upgrades OS packages and then pulls/rebuilds/recreates every
