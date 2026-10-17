@@ -3,9 +3,9 @@ services:
     image: robiningelbrecht/strava-statistics:latest
     container_name: strava-stats
     volumes:
-      - strava-stats_build:/var/www/build/:rw
-      - strava-stats_db:/var/www/storage/database:rw
-      - strava-stats_logs:/var/www/storage/files:rw # HTML, logs, etc.
+      - ./build/:/var/www/build/:rw
+      - ./db/:/var/www/storage/database:rw
+      - ./files/:/var/www/storage/files:rw # HTML, logs, etc.
       - /self-hosted/strava-stats/.env:/var/www/.env:ro
     env_file: .env
     # expose:
@@ -21,16 +21,6 @@ networks:
   strava-net:
     name: strava-net
   proxy-net:
-    external: true
-volumes:
-  strava-stats_build:
-    name: strava-stats_build
-    external: true
-  strava-stats_storage:
-    name: strava-stats_storage
-    external: true
-  strava-stats_logs:
-    name: strava-stats_logs
     external: true
 
 x-dockge:

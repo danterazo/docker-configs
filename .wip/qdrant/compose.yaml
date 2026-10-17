@@ -6,8 +6,5 @@ services:
     ports:
       - 6333:6333/tcp
     volumes:
-      - data:/qdrant/storage
+      - ./data/:/qdrant/storage/
     env_file: .env
-
-volumes:
-  data:

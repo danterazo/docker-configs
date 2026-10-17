@@ -8,7 +8,7 @@ services:
       PGID: 1000
     env_file: .env
     volumes:
-      - calibre_config:/config/:rw
+      - ./config/:/config/:rw
       - /mnt/mega-pool/media/books/calibre/:/library/:rw
     # expose:
     #   - 8083
@@ -19,10 +19,6 @@ services:
       - proxy-net
 networks:
   proxy-net:
-    external: true
-volumes:
-  calibre_config:
-    name: calibre_config
     external: true
 
 x-dockge:

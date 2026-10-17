@@ -10,8 +10,8 @@ services:
     #ports:
     #- 5900:5900
     volumes:
-      - thunderbird_appdata:/config/:rw
-      - thunderbird_mail:/mail/:rw
+      - ./config/:/config/:rw
+      - ./mail/:/mail/:rw
     restart: always
     networks:
       - thunderbird-net
@@ -37,7 +37,7 @@ services:
     container_name: proton-mail-bridge
     image: ghcr.io/videocurio/proton-mail-bridge:latest
     volumes:
-      - proton-mail-bridge_data:/root/:rw
+      - ./proton-mail-bridge/:/root/:rw
     env_file: .env
     restart: always
     networks:
@@ -48,16 +48,6 @@ networks:
     name: thunderbird-net
   proxy-net:
     external: true
-volumes:
-  thunderbird_appdata:
-    external: true
-    name: thunderbird_appdata
-  thunderbird_mail:
-    external: true
-    name: thunderbird_mail
-  proton-mail-bridge_data:
-    external: true
-    name: proton-mail-bridge_data
 
 x-dockge:
   urls:

@@ -6,7 +6,7 @@ services:
     cpus: 1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
-      - dockge-master_db:/app/data/:rw
+      - ./data/:/app/data/:rw
       - /apps/:/opt/stacks/:rw
     env_file: .env
     networks:
@@ -14,6 +14,7 @@ services:
     extra_hosts:
       - immich.lxc:192.168.30.104
       - networking.vm:192.168.30.100
+
   dockge-oauth:
     container_name: dockge-master-oauth
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
@@ -28,13 +29,10 @@ services:
       - dockge-master-net
     depends_on:
       - dockge-master-app
+
 networks:
   dockge-master-net:
     name: dockge-master-net
-volumes:
-  dockge-master_db:
-    name: dockge-master_db
-    external: true
 
 x-dockge:
   urls:

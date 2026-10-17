@@ -12,22 +12,14 @@ services:
       - 8082:8082/tcp # UI
       - 5002:5002 # service
     volumes:
-      - traccar_logs:/opt/traccar/logs/:rw
-      - traccar_db:/opt/traccar/data/:rw
+      - ./logs/:/opt/traccar/logs/:rw
+      - ./data/:/opt/traccar/data/:rw
       - /self-hosted/traccar/config/:/opt/traccar/conf/:rw
     networks:
       - proxy-net
 
 networks:
   proxy-net:
-    external: true
-
-volumes:
-  traccar_logs:
-    name: traccar_logs
-    external: true
-  traccar_db:
-    name: traccar_db
     external: true
 
 x-dockge:

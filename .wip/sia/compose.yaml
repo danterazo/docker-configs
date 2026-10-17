@@ -7,11 +7,6 @@ services:
       - no-new-privileges:true
     env_file: .env
     volumes:
-      - sia-host_data:/data:rw
+      - ./data/:/data:rw
       - /mnt/mega-pool/decentralized/sia/:/storage/:rw
     restart: unless-stopped
-
-volumes:
-  sia-host_data:
-    name: sia-host_data
-    external: true

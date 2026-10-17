@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
     volumes:
       - /self-hosted/radicale/configs/:/config/:ro
-      - radicale_data:/data/:rw
+      - ./data/:/data/:rw
       #- /home/dante/.gitconfig:/data/:rw
       #- /ssh-agent:/ssh-agent # forward local machine SSH key to docker (for Git)
     networks:
@@ -53,13 +53,11 @@ services:
       - proxy-net
     depends_on:
       - radicale
-volumes:
-  radicale_data:
-    name: radicale_data
-    external: true
+
 networks:
   radicale-net:
     name: radicale-net
+
   proxy-net:
     external: true
 

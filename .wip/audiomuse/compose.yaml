@@ -26,8 +26,8 @@ services:
     environment:
       SERVICE_TYPE: worker
     volumes:
-      - flask-audio:/app/temp_audio # Volume for temporary audio files
-      - flask-plugins:/app/plugin/installed # This container's own plugins cache (code + pip deps)
+      - /app/temp_audio
+      - /app/plugin/installed
     depends_on:
       - postgres
     restart: unless-stopped
@@ -51,8 +51,8 @@ services:
       - .env
       - .secrets
     volumes:
-      - worker-audio:/app/temp_audio # Volume for temporary audio files
-      - worker-plugins:/app/plugin/installed # This container's own plugins cache (code + pip deps)
+      - /app/temp_audio
+      - /app/plugin/installed
     depends_on:
       - postgres
     restart: unless-stopped
@@ -71,14 +71,3 @@ services:
 networks:
   audiomuse-net:
     name: audiomuse-net
-
-# caches
-volumes:
-  flask-audio:
-    name: flask-audio
-  flask-plugins:
-    name: flask-plugins
-  worker-audio:
-    name: worker-audio
-  worker-plugins:
-    name: worker-plugins
