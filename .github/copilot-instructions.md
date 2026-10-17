@@ -97,6 +97,12 @@
   deployed instance; this is the representative route instead of checking
   every Caddy URL. Check specifically changed routes as well. Follow the
   deploy skill for endpoint discovery, response checks, and reporting gaps.
+- If Caddy or app IP/port checks are inconclusive for a web app, use the
+  built-in browser to inspect the rendered page and capture a non-sensitive
+  screenshot. Verify the expected app/login screen, not merely an HTTP status.
+  Preserve TLS and authentication boundaries; do not log in implicitly.
+  Visual checks supplement per-instance Caddy and direct/protocol checks,
+  never replace them. Report inaccessible pages and remaining gaps as such.
 - Caddy and AdGuard Home deployments are staggered: one secondary of each
   type first, validated, then the rest, primaries last, as defined in the
   deploy skill. Primary/secondary roles come from PVE tags in

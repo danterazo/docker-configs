@@ -388,6 +388,23 @@ as guest Git HEAD, Compose state, container logs, and service checks.
      a sweep of every Caddy URL, but also check routes specifically changed
      by the deployment. These proxy checks supplement, not replace, direct
      app IP/port checks.
+   - When Caddy or direct IP/port checks are inconclusive for a web app, use
+     the built-in browser to open the discovered webpage, inspect its rendered
+     content, and capture a screenshot for visual validation. Confirm the
+     expected application or login page is visibly rendered, rather than a
+     blank/loading screen, unrelated page, or proxy/browser error. Exercise
+     only safe read-only navigation; do not log in, submit forms, or change
+     application settings implicitly. Keep credentials and sensitive page
+     content out of reports and screenshots.
+   - Preserve normal TLS verification and expected hostname/SNI in browser
+     checks. A normal-DNS browser visit does not prove each Caddy instance;
+     retain the per-instance pinned checks. Do not browse an HTTPS IP if it
+     causes a certificate mismatch or alter trust, DNS, or browser security
+     to make a check pass. Record the browser endpoint, vantage point, visual
+     result, and remaining per-instance or backend gaps. Browser checks do not
+     replace container/config validation, DNS probes, or internal dependencies.
+     If the browser cannot reach or validate the expected page, report the
+     gap and stop the rollout rather than declaring the service healthy.
    - Use bounded connection/request timeouts and certificate verification;
      never bypass TLS or access controls to make a probe pass. Record the
      endpoint, probe vantage point, expected/observed result, and any blocked
@@ -401,7 +418,8 @@ as guest Git HEAD, Compose state, container logs, and service checks.
    success if a target was stopped, unreachable, failed, or skipped.
 5. Report guest ID, owner, role tag, before/after revision, helper result,
   validation result, direct IP/port and Caddy proxy probe results, and any
-  failures, validation gaps, or skipped targets. Record important
+  browser visual-validation results when used, failures, validation gaps,
+  or skipped targets. Record important
    observations in the repo only as authorized; keep secrets and runtime
    status out of `deployments.yaml`. Do not promise automatic rollback of
    mutable image tags, and never reboot as part of this skill.
