@@ -26,6 +26,9 @@ job or a deployment command. Keep operational notes here, not in the YAML.
 
 ## Scope and Safety
 
+- The user's "containers" normally means both Proxmox VMs and LXCs in this
+  repo. It may mean Docker containers in Docker-specific context; interpret
+  it contextually rather than requiring the user to enumerate guest types.
 - This is a local checkout. Confirm the local hostname and account before
   commands and use the repo root as the working directory.
 - Read `.github/copilot-instructions.md` and `deployments.yaml` first. Check

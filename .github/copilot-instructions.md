@@ -13,6 +13,9 @@
   identify the target: cluster entrypoint, host node, LXC ID, or VM ID.
 - Confirm guest identity and owning node before operating on it.
 - Never substitute a local or host command when a remote guest command fails.
+- In this repo, the user's "containers" normally means Proxmox guests, both
+  VMs and LXCs. In Docker-specific context it may mean Docker containers;
+  use context rather than assuming the term excludes VMs.
 
 ## Cluster entrypoint
 - Cerulean, hostname cerulean, IP 100.100.20.43, is a verified Proxmox node.
@@ -97,6 +100,14 @@
 - Prefer noninteractive SSH using configured SSH host aliases.
 - Use qm guest exec only when the QEMU guest agent is available.
 - Do not assume a VM supports pct exec.
+- Prefer approved qm guest cmd <id> network-get-interfaces on the current
+  owner to confirm VM LAN addresses (for VM 101, use ID 101). The expected
+  LAN convention is 192.168.30.<PVE-ID>; confirm it appears on a LAN interface
+  before treating an inferred candidate as observed. This is a private LAN
+  address, not a public Internet IP. Never synthesize an invalid IPv4 octet.
+- Some guests also use Tailscale addresses following 100.100.30.<PVE-ID>.
+  This is a user convention, not a rule for all Tailscale IPs. Keep the YAML's
+  single address scalar LAN-only; ignore Tailscale addresses for this map.
 - VM 101 (nvidia-vm) has the user-provided IP 192.168.30.101. Preserve known
   addresses if discovery yields none; do not repeatedly ask for an IP already
   set. For a VM with no known IP, check approved Proxmox configuration,
