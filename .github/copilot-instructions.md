@@ -13,7 +13,8 @@
 - Local edits do not deploy changes or imply that scripts should run here.
 - In particular, bootstrap.sh is intended for remote deployment targets.
   Never run it locally to validate edits; use non-executing checks such as
-  bash -n. Running it remotely requires explicit approval for that target.
+  `bash -O extglob -n bootstrap.sh` (plain `bash -n` fails on its extglob
+  expression). Running it remotely requires explicit approval for that target.
 - Before commands, distinguish local validation from remote execution and
   identify the target: cluster entrypoint, host node, LXC ID, or VM ID.
 - Confirm guest identity and owning node before operating on it.
@@ -178,6 +179,8 @@
 
 ## Operating policy
 
+- Avoid editing README.md unless the task makes it genuinely necessary or
+  important; prioritize code and configuration changes otherwise.
 - Begin with read-only diagnostics.
 - Explain the target and intended effect before changes.
 - Ask before editing files, installing packages, restarting services,
