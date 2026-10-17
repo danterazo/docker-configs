@@ -84,6 +84,13 @@
   A file timestamp is not a claim that remote discovery was performed.
 - For caddy changes, plan validation on ALL three Caddy LXCs: 203 and 205
   on Cerulean, and 204 on Kex at discovery time. Do not validate only one.
+- Deployment validation must check each recreated app's configured IP and
+  port with a protocol-appropriate webpage, API, or service probe, not just
+  container health. For Caddy, also verify the reverse-proxied
+  https://pve.samskeyti.net endpoint through normal DNS and pinned to each
+  deployed instance; this is the representative route instead of checking
+  every Caddy URL. Check specifically changed routes as well. Follow the
+  deploy skill for endpoint discovery, response checks, and reporting gaps.
 - Caddy and AdGuard Home deployments are staggered: one secondary of each
   type first, validated, then the rest, primaries last, as defined in the
   deploy skill. Primary/secondary roles come from PVE tags in

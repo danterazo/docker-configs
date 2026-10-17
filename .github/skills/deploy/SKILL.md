@@ -1,6 +1,6 @@
 ---
 name: deploy
-description: "Deploy published repo changes to Docker guests through their confirmed Proxmox owners: stop each guest's stacks with dcd -v, run dpull, then validate startup. AdGuard Home and Caddy roll out staggered. Use when explicitly asked to deploy all pending changes, the guests edited in the current thread, every guest, or named stacks/guest IDs."
+description: "Deploy published repo changes to Docker guests through their confirmed Proxmox owners: stop each guest's stacks with dcd -v, run dpull, then validate startup and app IP/port accessibility, including Caddy reverse-proxy checks. AdGuard Home and Caddy roll out staggered. Use when explicitly asked to deploy all pending changes, the guests edited in the current thread, every guest, or named stacks/guest IDs."
 argument-hint: "Optional: all, stack names, or guest IDs, for example caddy or 100 200"
 user-invocable: true
 disable-model-invocation: true
@@ -75,8 +75,32 @@ without treating that refresh as permission to deploy additional guests.
   tooling, start stopped guests, reboot, or change networking as implicit
   deployment prerequisites. Bootstrap is conditional and requires the
   specific approvals below; ask for every other needed scope expansion.
-- Execute guests sequentially. Stop rollout on failure and report completed,
-  failed, and skipped targets; do not silently roll back or retry mutations.
+- Execute deployment mutations sequentially. Stop rollout on failure and
+  report completed, failed, and skipped targets; do not silently roll back
+  or retry mutations.
+- Run independent read-only discovery, preflight, and service checks
+  concurrently in bounded batches to reduce elapsed time. Keep each result
+  associated with its guest and owner. Within a guest's validation window,
+  run independent checks concurrently, but preserve the full settling window
+  and before/after snapshots. Finish validation before mutating the next
+  guest; concurrency never bypasses networking waves or failure gates.
+
+## Publish Local Changes
+
+- Check for both uncommitted changes and commits ahead of the upstream
+  before selecting the intended deployment revision. Fetch published
+  `main` and confirm the branch, upstream, and fast-forward relationship.
+- Include publishing in deployment planning: do not leave local changes
+  silently undeployed. Explain the pending diff and request approval to
+  commit and push when the request has not already authorized those actions.
+  A push request authorizes pushing existing commits, not committing edits.
+- After approval, validate the reviewed changes, stage only approved paths,
+  commit if needed, and push the current branch without force. Preserve
+  unrelated edits and disclose existing unpushed commits. Do not create a
+  branch or resolve divergence implicitly. Confirm the published SHA before
+  guest deployment; `dpull` cannot deploy an unpublished local change.
+- Publishing approval does not authorize guest downtime, bootstrap, OS
+  upgrades, credential provisioning, or any other deployment prerequisite.
 
 ## Bootstrap Changes
 
@@ -197,8 +221,8 @@ caddyserver.com while the guest's Caddy is stopped.
    Compose references before inferring additional repo paths.
 3. Inspect local changes and relevant tests. Identify the intended published
    commit and branch. `dpull` cannot deploy local uncommitted or unpushed
-   edits. If publishing is needed, report the blocker and ask before Git
-   commits or pushes. Do not imply that Git pull transfers local edits.
+  edits. Complete Publish Local Changes using the applicable approvals
+  before deployment. Do not imply that Git pull transfers local edits.
 4. Confirm the guest checkout location, repository identity, branch/upstream,
    current revision, clean tracked/untracked worktree, sparse paths, and the
    upstream revision that Git pull would retrieve. Inspect relevant ownership
@@ -226,9 +250,17 @@ caddyserver.com while the guest's Caddy is stopped.
    stop and report; do not retry as root, add sudo, or change groups/socket
    permissions. Bootstrap administration is the separate exception above.
 7. Determine service validation commands from the actual Compose runtime and
-   mounted configuration. For Caddy, plan config validation in its actual
-   image/context and checks of its deployed routes. A check against old
-   deployed files is not validation of unpublished local changes.
+  mounted configuration. Inventory each app's actual IP, exposed port,
+  protocol, and webpage/API/health path across every stack that will be
+  recreated, including nested stacks. Resolve published host ports versus
+  container ports, host/shared networking, and configured bind addresses;
+  never use a wildcard bind address as a destination or assume default
+  ports. Use current guest addresses, not stale map entries. Do not print
+  secrets or entire resolved Compose configurations. Record which endpoints
+  are intentionally internal-only and choose an appropriate in-guest probe
+  for those rather than exposing them. For Caddy, plan config validation in
+  its actual image/context and the reverse-proxy checks below. A check
+  against old deployed files is not validation of unpublished local changes.
 
 ## Execute Through the Correct Owner
 
@@ -318,16 +350,44 @@ as guest Git HEAD, Compose state, container logs, and service checks.
      loops. Distinguish benign startup noise; do not dump environment
      values or resolved secret-bearing configs.
    - Run service checks after the settling window, since probes can race
-     startup: Caddy `caddy validate` in its container plus `curl --resolve`
-     route checks against that guest's address; AdGuard Home DNS queries
-     against that guest's address and keepalived state in its logs; HTTP
-     health endpoints where available. A running container is not proof
-     that config validation or route checks passed.
+     startup. For every recreated app, probe its discovered IP and exposed
+     port from an approved client vantage point, not only localhost inside
+     its container. For HTTP(S), request an actual webpage/API/health path
+     and verify the expected status and application-specific response; a
+     listening socket, redirect alone, unrelated default page, or proxy
+     error is not sufficient. Follow expected redirects with bounded hops
+     and verify the final destination; note when a direct URL redirects to
+     a proxy rather than independently proving the backend works. Treat an
+     authentication response as expected only when confirmed for that app;
+     never read credentials or log in implicitly. Use protocol-appropriate
+     read-only checks for non-HTTP services, including AdGuard Home DNS
+     queries against that guest's address and keepalived state in its logs.
+     Internal-only dependencies use the planned in-guest checks.
+   - For Caddy, run `caddy validate` in its container and check the
+     reverse-proxied `https://pve.samskeyti.net` webpage/API through normal
+     DNS. Also use `curl --resolve pve.samskeyti.net:443:<guest-ip>` against
+     each deployed Caddy guest individually, preserving the hostname/SNI
+     and TLS certificate verification. Normal DNS or a shared VIP alone
+     cannot prove the recreated instance serves the route. Verify the
+     expected Proxmox response, not merely that DNS resolves or TLS connects;
+     502/503/504 responses fail validation. This representative route replaces
+     a sweep of every Caddy URL, but also check routes specifically changed
+     by the deployment. These proxy checks supplement, not replace, direct
+     app IP/port checks.
+   - Use bounded connection/request timeouts and certificate verification;
+     never bypass TLS or access controls to make a probe pass. Record the
+     endpoint, probe vantage point, expected/observed result, and any blocked
+     or untestable checks without credentials or sensitive response bodies.
+     Missing tools, network reachability, or authorization are validation
+     gaps, not passes; stop and report rather than installing tools, changing
+     networking, or expanding remote access without approval. A running
+     container is not proof of application accessibility.
 4. AdGuard Home and Caddy follow Networking Rollout Order; a guest's
    validation must pass before the next wave begins. Do not claim full
    success if a target was stopped, unreachable, failed, or skipped.
 5. Report guest ID, owner, role tag, before/after revision, helper result,
-   validation result, and any failures or skipped targets. Record important
+  validation result, direct IP/port and Caddy proxy probe results, and any
+  failures, validation gaps, or skipped targets. Record important
    observations in the repo only as authorized; keep secrets and runtime
    status out of `deployments.yaml`. Do not promise automatic rollback of
    mutable image tags, and never reboot as part of this skill.
