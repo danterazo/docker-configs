@@ -18,6 +18,9 @@ services:
   tautulli-music:
     container_name: tautulli
     image: lscr.io/linuxserver/tautulli:latest
+    user: 1000:1000
+    tmpfs:
+      - /run:uid=1000,gid=1000,exec
     cpus: 1
     env_file: .env
     volumes:
