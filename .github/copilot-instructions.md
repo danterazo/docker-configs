@@ -115,7 +115,9 @@
   IP, not only its VIP; verify a serving peer before downtime. For other
   services, use existing read-only healthchecks and app-specific API probes,
   including qBittorrent connection status and externally exposed health
-  endpoints where available. Follow the deploy skill's functional checks.
+  endpoints where available. For qBittorrent, rely on its in-container
+  healthcheck; do not require an external API request. Follow the deploy
+  skill's functional checks.
 - For Caddy, check https://pve.samskeyti.net (Proxmox, an external non-Docker
   backend), https://spools.samskeyti.net (Spoolman), and
   https://id.samskeyti.net (Pocket ID), through normal DNS and pinned to each
