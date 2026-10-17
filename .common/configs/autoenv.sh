@@ -1,6 +1,7 @@
 AUTOENV_ENV_FILENAME=.autoenv.sh
 AUTOENV_VIEWER=cat
-unset AUTOENV_ENABLE_LEAVE AUTOENV_ASSUME_YES
+AUTOENV_ASSUME_YES=yes
+unset AUTOENV_ENABLE_LEAVE
 
 if [[ -r "$HOME/.autoenv/activate.sh" ]]; then
 	source "$HOME/.autoenv/activate.sh"
