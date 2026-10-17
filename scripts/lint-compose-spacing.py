@@ -27,19 +27,19 @@ def lint_file(path: Path) -> list[str]:
     seen_child_section: set[str] = set()
     seen_root_mapping: bool = False
 
-    for line_index, line in enumerate(lines):
+    for line_index, line in enumerate(iterable=lines):
         if not line.strip() or line.lstrip().startswith("#"):
             continue
 
         if not line.startswith((" ", "\t")):
-            match: Optional[Match[str]] = KEY_PATTERN.match(line)
+            match: Optional[Match[str]] = KEY_PATTERN.match(string=line)
             if not match:
                 current_section = None
                 continue
             current_section = match.group(1)
             seen_child_section.discard(current_section)
             if current_section in ROOT_SECTIONS and seen_root_mapping:
-                blank_count = blank_separator_count(lines=lines, line_index=line_index)
+                blank_count: int = blank_separator_count(lines=lines, line_index=line_index)
                 if blank_count == 0:
                     errors.append(f"{path}:{line_index + 1}: add a blank line before the {current_section} section")
                 elif blank_count > 1:
@@ -50,7 +50,7 @@ def lint_file(path: Path) -> list[str]:
         if current_section not in CHILD_SECTIONS or not line.startswith("  ") or line.startswith("   "):
             continue
 
-        match = KEY_PATTERN.match(line[2:])
+        match = KEY_PATTERN.match(string=line[2:])
         if not match:
             continue
         if current_section in seen_child_section:
