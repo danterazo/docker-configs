@@ -61,14 +61,13 @@
   the same target/access approvals and safety constraints to each agent.
   Keep deployment mutations sequential and validate each guest before the
   next mutation. The deploy skill defines ownership and failure gates.
-- If direct terminal execution stops returning output, retry read-only Git
-  inspection once after the terminal is restored. A local VS Code shell task
-  is pre-approved as a direct execution fallback for deployment/Git work;
-  no separate approval is needed to create its task definition. Keep that
-  execution artifact out of deployment commits unless explicitly requested,
-  preserve existing task definitions, and verify actual output and exit status.
-  This fallback never bypasses a permission denial, changes tool approvals,
-  or authorizes new remote access. Do not infer success from echoed commands.
+- Use the integrated terminal directly for local Git, approved SSH, and
+  deployment commands. If it stops returning output, retry a simple read-only
+  command once in the restored terminal; do not create VS Code task definitions
+  merely to execute commands. If direct execution remains unavailable, stop
+  and report the blocker rather than switching execution methods. Never infer
+  success from echoed commands or use a fallback to bypass permission denials,
+  tool approvals, SSH verification, or remote-access scope.
 - Deploy published commits only. Ignore and preserve uncommitted local work,
   including bootstrap edits; it does not block deployment. Alert the user to
   locally staged changes without committing, unstaging, or deploying them.

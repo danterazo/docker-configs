@@ -307,6 +307,10 @@ caddyserver.com while the guest's Caddy is stopped.
 
 Use noninteractive SSH with existing aliases, bounded connection timeouts,
 and strict host-key checking. Reconfirm the owner identity on each connection.
+Run commands directly in the integrated terminal; do not create VS Code task
+definitions just to execute deployment or preflight commands. If terminal
+execution is unavailable, stop and report the blocker rather than switching
+execution methods or bypassing approval prompts.
 For an LXC, run `pct exec <id> --keep-env 0 -- ...` on that owner. Do not use
 interactive `pct enter`, and do not substitute a local or host command if
 guest access fails. For a VM, use approved configured SSH access or an available
