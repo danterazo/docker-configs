@@ -6,6 +6,9 @@ services:
   gluetun:
     image: qmcgaw/gluetun:latest #v3.41.3
     container_name: gluetun
+    environment:
+      PUID: "1000"
+      PGID: "1000"
     cap_add:
       - NET_ADMIN
     devices:

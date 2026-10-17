@@ -2,6 +2,9 @@ services:
   spoolman:
     image: ghcr.io/donkie/spoolman:latest
     container_name: spoolman
+    environment:
+      PUID: "1000"
+      PGID: "1000"
     restart: unless-stopped
     ports:
       - 7912:8000/tcp
