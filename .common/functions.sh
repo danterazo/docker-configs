@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# upgrade git and docker stacks
+# pull git and docker registry images, then rebuild and recreate stacks
 dpull() {
 	# local variables
 	local root_dir="/docker"
@@ -28,15 +28,32 @@ dpull() {
 	done
 }
 
-# upgrade packages, then pull
+# bootstrap, then pull git again and docker registry images via dpull
+dbpull() {
+	bootstrap
+	dpull
+}
+
+# upgrade packages, then pull git and docker registry images via dpull
 dupull() {
 	upgrade
 	dpull
 }
 
-# pull, upgrade packages, then restart
-durpull() {
+# upgrade packages, bootstrap, then pull git again and docker registry images via dpull
+dubpull() {
 	upgrade
-	dpull
+	dbpull
+}
+
+# upgrade packages, pull git and docker registry images via dpull, then reboot
+durpull() {
+	dupull
+	sudo reboot
+}
+
+# upgrade packages, bootstrap, pull git again and docker registry images via dpull, then reboot
+durbpull() {
+	dubpull
 	sudo reboot
 }
