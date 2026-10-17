@@ -37,8 +37,12 @@ if grep -Rqs 'ppa:zhangsongcui3371/fastfetch' /etc/apt/sources.list /etc/apt/sou
 	sudo add-apt-repository --remove ppa:zhangsongcui3371/fastfetch -y || true
 fi
 
-# install autoenv using automated install script
-curl -#fLo- 'https://raw.githubusercontent.com/hyperupcall/autoenv/main/scripts/install.sh' | sh
+# install or update autoenv without modifying shell startup files
+if [[ -d "$HOME/.autoenv" ]]; then
+	git -C "$HOME/.autoenv" pull --ff-only || exit 1
+else
+	git clone https://github.com/hyperupcall/autoenv.git "$HOME/.autoenv" || exit 1
+fi
 
 : 'INSTALL DOCKER'
 # add docker's official GPG key
