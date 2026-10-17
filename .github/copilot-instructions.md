@@ -31,9 +31,15 @@
   nodes, and hostnames under docker_guests. This map covers Docker workloads,
   not every cluster guest. Cerulean does not own every
   guest; query current ownership through the cluster before operating.
-- Ask before initiating SSH unless explicitly requested for that target
-  and task. Do not configure remote access or change authentication,
-  host-key verification, or trust relationships.
+- An explicit remote or deployment request authorizes existing SSH access
+  needed for that selected task's discovery and preflight; do not ask again
+  before using it. For unrelated SSH access, ask before connecting. Do not
+  configure remote access or change authentication, host-key verification,
+  or trust relationships.
+- Before using a VM alias, inspect its effective settings with `ssh -G
+  <alias>` and confirm `id -un` after connecting. OpenSSH uses the first
+  configured value for each option; keep host-specific `User` entries before
+  broad `Host *` defaults. Never bypass an unknown or changed host key.
 
 ## Deployment map and validation
 
