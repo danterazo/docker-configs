@@ -4,7 +4,7 @@ EXCLUDES := \( -path './.git' -o -path './.venv' -o -path './venv' -o -path './n
 .PHONY: fix format fix-text lint-compose-spacing lint-docker fix-caddy deps
 
 # format everything
-format: fix-text fix-python
+format: fix-python fix-caddy lint-compose-spacing lint-docker
 
 # alias
 fix: format
