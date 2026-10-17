@@ -37,13 +37,6 @@ if grep -Rqs 'ppa:zhangsongcui3371/fastfetch' /etc/apt/sources.list /etc/apt/sou
 	sudo add-apt-repository --remove ppa:zhangsongcui3371/fastfetch -y || true
 fi
 
-# install or update autoenv without modifying shell startup files
-if [[ -d "$HOME/.autoenv" ]]; then
-	git -C "$HOME/.autoenv" pull --ff-only || exit 1
-else
-	git clone https://github.com/hyperupcall/autoenv.git "$HOME/.autoenv" || exit 1
-fi
-
 : 'INSTALL DOCKER'
 # add docker's official GPG key
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -137,12 +130,20 @@ if [ -n "${SSH_DIR}" ]; then
 	export GIT_SSH_COMMAND="ssh -i ${SSH_DIR}/id_ed25519 -o IdentitiesOnly=yes"
 fi
 
+# install or update autoenv without modifying shell startup files
+AUTOENV_URL="git@github.com:hyperupcall/autoenv.git"
+if [[ -d "$HOME/.autoenv" ]]; then
+	git -C "$HOME/.autoenv" remote set-url origin "${AUTOENV_URL}" || exit 1
+	git -C "$HOME/.autoenv" pull --ff-only || exit 1
+else
+	git clone "${AUTOENV_URL}" "$HOME/.autoenv" || exit 1
+fi
+
+REPO_URL="git@github.com:danterazo/docker-configs.git"
 REPO_CREATED=0
 if [ ! -d "${ROOT_DIR}/.git" ]; then
 	# first-time setup; clone repository
-	if ! git clone \
-		git@github.com:danterazo/docker-configs.git \
-		"${ROOT_DIR}"; then
+	if ! git clone "${REPO_URL}" "${ROOT_DIR}"; then
 		echo "ERROR: Failed to clone repository"
 		exit 1
 	fi
@@ -155,6 +156,7 @@ fi
 # move to root-level repo directory
 cd "${ROOT_DIR}"
 if [ "${REPO_CREATED}" = "0" ]; then
+	git remote set-url origin "${REPO_URL}"
 	git pull
 fi
 
