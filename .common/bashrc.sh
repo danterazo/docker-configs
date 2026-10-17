@@ -25,6 +25,11 @@ if [[ -r "$HOME/.config/autoenv/autoenv.sh" ]]; then
 	source "$HOME/.config/autoenv/autoenv.sh"
 fi
 
+# always start in app-specific hostname path
+if [[ -r /docker/.common/auto-cd.sh ]]; then
+	source /docker/.common/auto-cd.sh
+fi
+
 : 'STANDARD UBUNTU DEFAULTS'
 
 # don't put duplicate lines in the history. See bash(1) for more options
