@@ -162,6 +162,14 @@ Do not expand the selected guest scope.
   Do not suppress bootstrap failures or silently skip phases. Never reboot
   implicitly, run bootstrap locally or on a Proxmox owner, or bypass failed
   SSH verification to reach a guest.
+  Before bootstrap, enumerate Compose bind mounts whose host sources are
+  inside `/docker` and inspect their existing numeric owner/group and modes.
+  Bootstrap ownership repair may change the `/docker` root and `.git`
+  metadata only. Never recursively chown the worktree, because ignored
+  application data can contain database datadirs. If Git cannot update a
+  tracked path as `dante`, stop and inspect that exact repository path; do not
+  broaden the repair to app data. Never recursively chown application data
+  merely to clear a health failure.
 3. The current alias uses `runuser`, requiring a guest administrative shell;
   the standing bootstrap approval includes that shell through the existing
   approved access method, not new remote access or trust configuration.
@@ -284,6 +292,19 @@ caddyserver.com while the guest's Caddy is stopped.
    container's name, state, health, and restart count, plus the active
    Compose projects. Stacks remain down if a later step fails, so this
    snapshot is the reference for both validation and failure reports.
+    Treat this as a hard pre-mutation health gate: before bootstrap, teardown,
+    or image changes, every in-scope container must be running and every
+    configured healthcheck must be healthy. If a container is unhealthy,
+    restarting, or exited, stop that guest's rollout immediately and report
+    the pre-existing failure. If a container is nominally running but its
+    restart history or functional probe suggests instability, compare two
+    read-only container snapshots at least 60 seconds apart; any restart-count
+    increase blocks that guest's rollout. Do not use a weaker probe such as
+    `pg_isready` to override an unhealthy database healthcheck. Resolve and
+    validate pre-existing failures separately before deployment; do not
+    restart, repair permissions, or otherwise mutate them implicitly. For
+    containers without healthchecks, require their documented functional
+    baseline probe before proceeding.
    On both LXCs and Docker VMs (including `nvidia-vm`/101), run Git,
    `docker`, Compose, and deployment helpers as `dante` without `sudo`.
    Historical sudo requirements are not current requirements: verify using
@@ -387,7 +408,26 @@ Capture a baseline before mutation and repeat after the settling window.
 | Spoolman | Request `/api/v1/health` on the discovered guest IP and published port, parse the expected healthy result, and check the UI. Also check `https://spools.samskeyti.net` through Caddy. |
 | Pocket ID | Run `/app/pocket-id healthcheck` inside its container and check the direct published HTTP endpoint. Also verify the expected sign-in page through `https://id.samskeyti.net`; expected authentication responses alone do not prove login functionality. Do not perform a sign-in. |
 | Immich, Plex, and Tautulli | Use the deployed version's documented unauthenticated ping/identity/health endpoint where available and verify an application-specific response, plus the expected UI. If authentication is required, report that limit rather than retrieving credentials or inferring success. |
-| Internal dependencies | Use existing read-only native probes, such as Redis `PING` or PostgreSQL readiness, from the dependency's own guest/container context. Keep internal ports internal. These checks do not replace the owning app's external probe. |
+| Internal dependencies | Use existing read-only native probes from the dependency's own guest/container context. For Immich PostgreSQL, check the Compose healthcheck and inspect bind-mount ownership against the database process UID/GID; `pg_isready` alone is insufficient. For Immich Redis with AOF enabled, require `PING`, `aof_last_write_status:ok`, and write access as the actual Redis process UID to its data bind mount. Keep internal ports internal. These checks do not replace the owning app's external probe. |
+
+For PostgreSQL, a successful `pg_isready` only proves that the server socket
+accepts connections; it does not supersede a failing Compose healthcheck or
+prove queries can read the database files. When the healthcheck reports a
+permission error, compare the bind-mounted datadir's host ownership/modes with
+the database process UID/GID and inspect the specific denied path read-only.
+Do not assume the correct UID, run `chown`/`chmod`, delete files, or recreate
+the database until the owner mismatch is confirmed and a recovery plan is
+approved. For Immich on VM 101, the Compose bind source is
+`/docker/immich/data/immich`; also check whether bootstrap changed its
+ownership. Immich's current database process uses UID/GID `999:999`; its bind
+source must be writable by that identity. Its Redis process uses UID/GID
+`999:1000`; the AOF bind source must be writable by that identity as well.
+Verify both identities and paths from the running images rather than assuming
+them after an image update. Compose `user:` sets the process identity inside
+the container; it does not translate host UID/GID values. For bind mounts,
+either set host ownership to the verified container identity or separately
+design and validate an idmapped mount. Do not enable daemon-wide
+`userns-remap` to solve one service's ownership mismatch.
 
 Record endpoint, guest, client vantage point, expected and observed response,
 and probe time. An unexpected response, failed query, unreachable healthcheck,

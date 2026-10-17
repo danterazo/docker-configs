@@ -147,6 +147,20 @@
   and the required guest administrative shell. Report which guests require
   it; follow the deploy skill. Those actions outside bootstrap.sh still need
   approval. This exception never bypasses SSH verification or authorizes reboot.
+- Before bootstrap or teardown, audit bind mounts sourced beneath `/docker`:
+  bootstrap may change the `/docker` root and `.git` metadata only. Never
+  recursively chown the worktree, which can change nested service data. If
+  Git cannot update a tracked path as `dante`, inspect that path and stop
+  rather than broadening ownership changes. For Immich, verify PostgreSQL
+  `999:999` and Redis `999:1000` runtime identities against their bind mounts.
+  Compose `user:` changes process identity; it does not map host IDs to
+  container IDs.
+- Treat pre-deployment container health as a hard gate. Do not mutate a guest
+  with unhealthy, restarting, or exited containers, or restart counts that
+  continue increasing during baseline observation. A weaker readiness result
+  such as `pg_isready` does not override a failed database healthcheck. Resolve
+  pre-existing failures separately; never repair permissions or restart as
+  an implicit part of deployment.
 - Report and preserve untracked guest repository files during upgrades unless
   cleanup is specifically approved. Stop on collisions or unsafe tracked
   changes; leave non-conflicting untracked files for follow-up handling.
@@ -167,6 +181,12 @@
   mappings. Do not schedule background discovery without approval.
 - Deployed checkout paths and revisions have not been verified. /docker
   comes from bootstrap.sh; confirm the actual checkout before using it.
+
+## Compose formatting
+
+- In Compose YAML, leave strings unquoted unless quotes are required by YAML
+  syntax or to preserve the intended string value/type. Quote values that YAML
+  would otherwise parse as a number, boolean, null, or another unintended type.
 
 ## Guest repository identity and ownership
 
