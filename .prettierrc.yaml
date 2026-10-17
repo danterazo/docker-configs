@@ -4,3 +4,8 @@ endOfLine: lf
 printWidth: 150
 tabWidth: 2
 useTabs: true
+
+overrides:
+  - files: "*.jsonc"
+    options:
+      trailingComma: none
