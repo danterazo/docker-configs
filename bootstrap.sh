@@ -24,13 +24,13 @@ CLEANED_GRUB=$(echo "$CURRENT_GRUB" | sed -E 's/\bquiet\b//g' | xargs) # remove 
 
 # apply grub changes only when the configuration changed
 if [ "${CURRENT_GRUB}" != "${CLEANED_GRUB}" ]; then
-	sudo sed -i -E "s|^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"|GRUB_CMDLINE_LINUX_DEFAULT=\"${CLEANED_GRUB}\"|" "$GRUB_FILE"
-	sudo update-grub
+	sudo sed -i -E "s|^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"|GRUB_CMDLINE_LINUX_DEFAULT=\"${CLEANED_GRUB}\"|" "$GRUB_FILE" &&
+		sudo update-grub || exit 1
 fi
 
 : 'INSTALL PACKAGES'
-sudo apt-get update
-sudo apt-get install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release fastfetch direnv lrzsz
+sudo apt-get update &&
+	sudo apt-get install -y tree ca-certificates curl git software-properties-common nfs-common iotop bash-completion lsb-release fastfetch direnv lrzsz || exit 1
 
 # remove the obsolete fastfetch PPA if present
 if grep -Rqs 'ppa:zhangsongcui3371/fastfetch' /etc/apt/sources.list /etc/apt/sources.list.d 2>/dev/null; then
@@ -60,9 +60,9 @@ Components: stable
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-sudo apt-get update
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io \
-	docker-buildx-plugin docker-compose-plugin
+sudo apt-get update &&
+	sudo apt-get install -y docker-ce docker-ce-cli containerd.io \
+		docker-buildx-plugin docker-compose-plugin || exit 1
 
 : 'CONFIGURE DOCKER'
 if [ ! -f /etc/docker/daemon.json ]; then
@@ -174,10 +174,10 @@ else
 fi
 
 # move to root-level repo directory
-cd "${ROOT_DIR}"
+cd "${ROOT_DIR}" || exit 1
 if [ "${REPO_CREATED}" = "0" ]; then
-	dante_git -C "${ROOT_DIR}" remote set-url origin "${REPO_URL}"
-	dante_git -C "${ROOT_DIR}" pull
+	dante_git -C "${ROOT_DIR}" remote set-url origin "${REPO_URL}" &&
+		dante_git -C "${ROOT_DIR}" pull || exit 1
 fi
 
 # host-specific sparse profiles
