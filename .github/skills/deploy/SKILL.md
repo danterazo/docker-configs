@@ -117,3 +117,24 @@ guests, but does not make `dupull` stack-scoped.
 - Report the pushed/current published SHA, selected guest IDs and owners,
   `dupull` result per guest, and skipped or failed targets. Keep the report
   concise. For deep checks, use `/deploy-deep` as a separate request.
+
+## Learn From The Run
+
+Before the final report, briefly review the session's failures, tricky steps,
+user corrections, repeated work, and avoidable delays. Do this automatically
+on success or when stopping for a blocker, using evidence already collected;
+do not add probes, log reads, or a session-history investigation for this step.
+
+- If there is a concrete reusable lesson, make a small targeted update to the
+   relevant deployment skill. Update `.github/copilot-instructions.md` only
+   when the lesson applies across workflows. Preserve concurrent edits and
+   existing approvals, safety gates, and lite-mode limits. This step authorizes
+   these narrow documentation edits, not operational changes or scope expansion.
+- Record unresolved incidents in the canonical pending ledger with verified
+   evidence, target/path, blocker, and next safe action. Keep temporary runtime
+   observations and unproven hypotheses out of enduring instructions; never
+   record credentials or turn a workaround into a permission exception.
+- Validate changed documentation with `git diff --check` and mention the
+   lesson/update briefly in the final report. Do not commit or push retrospective
+   edits without an explicit request; an earlier deployment push does not cover
+   newly written documentation. If there is no new lesson, make no edits.
