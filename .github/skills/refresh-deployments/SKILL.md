@@ -215,9 +215,14 @@ job or a deployment command. Keep operational notes here, not in the YAML.
 - Caddy maps to all three LXCs: 203 and 205 were on Cerulean and 204 on Kex.
   AdGuard Home also has duplicate hostnames: 200, 201, and 202. A hostname
   alone does not uniquely identify these guests.
-- Use `/docker` as the checkout root and `root` as the guest execution user;
-  these conventions do not need a repository block in the YAML. Verify the
-  target checkout before operating; deployed revisions remain unverified.
+- Use `/docker` as the checkout root and `dante` for guest Git operations
+  and repository edits. Root on the Proxmox owner may invoke `pct`, but use
+  `pct exec <id> --keep-env 0 -- runuser -u dante -- /bin/bash --noprofile --norc`
+  for a guest repository shell. Inspect relevant ownership before Git and
+  follow the standing scoped repair approval in `.github/copilot-instructions.md`;
+  never probe Git as root or add `safe.directory` exceptions. Verify the target
+  checkout before operating; deployed revisions remain unverified. These
+  conventions do not need a repository block in the YAML.
 - Migrations, removals, renames, address drift, and missing mappings must be
   called out. Ask before dropping a guest associated with repo workloads.
 

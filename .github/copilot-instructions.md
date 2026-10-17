@@ -92,6 +92,35 @@
 - Deployed checkout paths and revisions have not been verified. /docker
   comes from bootstrap.sh; confirm the actual checkout before using it.
 
+## Guest repository identity and ownership
+- Run Git commands and repository edits inside guests as dante, not root.
+  Approved remote repository tasks include using runuser -u dante inside
+  the guest; no separate confirmation is needed for that user selection.
+  Root SSH to a Proxmox owner is for pct administration, not guest Git.
+- Before the first Git command, inspect ownership of /docker and its .git
+  metadata. Inside guests, /docker and its contents should be dante:dante.
+  There is standing approval to repair mismatched ownership of relevant
+  repository paths to dante:dante when needed for Git; notify the user.
+  Keep repairs inside /docker, do not follow symlinks outside it, and do not
+  recursively change mounted application data as an implicit Git repair.
+- Root can access dante-owned files, but Git's dubious-ownership safeguard
+  is separate from filesystem permissions. Prevent the warning by selecting
+  dante before Git, rather than probing Git as root or hiding stderr.
+  Do not add safe.directory exceptions, use safe.directory=*, or otherwise
+  disable ownership checks. If Git fails as dante, stop and report it.
+- For LXC repository commands, use this on the confirmed owning node:
+
+  ```bash
+  pct exec <CTID> --keep-env 0 -- runuser -u dante -- /bin/bash --noprofile --norc -c 'set -e; cd /docker; test "$(id -un)" = dante; export GIT_OPTIONAL_LOCKS=0; git status --short --branch --untracked-files=all'
+  ```
+
+- For VMs, prefer an existing trusted dante SSH alias. An already-approved
+  root guest session may use the same runuser pattern inside the VM. Never
+  bypass failed SSH host-key verification by switching execution methods.
+- Ownership repair and user selection do not authorize discarding changes,
+  changing Git trust, running bootstrap, upgrading packages, deploying, or
+  rebooting. Review deployed helpers and obtain their required approvals.
+
 ## LXC access
 - Run pct on the confirmed owning Proxmox node through an approved remote
   execution method, not in this local checkout.

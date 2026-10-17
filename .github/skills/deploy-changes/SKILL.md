@@ -59,8 +59,11 @@ refreshing the deployment map does not authorize a deployment.
    commits or pushes. Do not imply that Git pull transfers local edits.
 4. Confirm the guest checkout location, repository identity, branch/upstream,
    current revision, clean tracked/untracked worktree, sparse paths, and the
-   upstream revision that Git pull would retrieve. `/docker` is expected,
-   but verify it before use. Preserve remote changes; do not reset, stash,
+   upstream revision that Git pull would retrieve. Inspect relevant ownership
+   first, applying only the standing scoped repair approval in
+   `.github/copilot-instructions.md` when needed, and run Git as `dante`.
+   Do not probe Git as root or add `safe.directory` exceptions. `/docker` is
+   expected, but verify it before use. Preserve remote changes; do not reset, stash,
    clean, force-pull, or bypass Git ownership checks. Do not print credentials
    or environment files. Stop on divergence or unrelated upstream changes
    unless their inclusion is explicitly approved. Record the predeploy SHA.
@@ -84,12 +87,19 @@ interactive `pct enter`, and do not substitute a local or host command if
 guest access fails. For a VM, use approved configured SSH access or an available
 QEMU guest agent, not `pct`.
 
+Run the repository shell inside the guest as `dante`, using
+`pct exec <id> --keep-env 0 -- runuser -u dante -- /bin/bash --noprofile --norc`
+for LXCs. For VMs, prefer an existing trusted `dante` SSH alias. Do not switch
+execution methods to bypass failed SSH host-key verification. Root is for
+approved administrative actions, not Git; do not run the helper body as root.
+
 `dupull` is a Bash function. Do not assume a noninteractive shell reads the
 interactive `.bashrc`, which returns early without a prompt. After reviewing
 the deployed files, the guest-side command body is:
 
 ```bash
 set -e
+test "$(id -un)" = dante
 cd /docker
 shopt -s expand_aliases
 source /docker/.common/aliases.sh
