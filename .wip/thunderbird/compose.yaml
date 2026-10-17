@@ -46,6 +46,7 @@ services:
 networks:
   thunderbird-net:
     name: thunderbird-net
+
   proxy-net:
     external: true
 

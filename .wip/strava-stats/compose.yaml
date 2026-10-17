@@ -20,6 +20,7 @@ services:
 networks:
   strava-net:
     name: strava-net
+
   proxy-net:
     external: true
 

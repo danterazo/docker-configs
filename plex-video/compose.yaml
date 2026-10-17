@@ -14,6 +14,7 @@ services:
       - /dev/shm/plex-transcode/:/transcode/:rw
     networks:
       - plex-video-net
+
   # TODO: add oauth2
   tautulli-video:
     container_name: tautulli
@@ -44,6 +45,7 @@ volumes:
       type: nfs
       o: addr=192.168.20.42,soft,rw,noatime,nfsvers=4
       device: ":/tank/media/videos/"
+
   backups_nfs:
     driver: local
     driver_opts:

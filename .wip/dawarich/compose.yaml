@@ -82,6 +82,7 @@ services:
       retries: 5
       start_period: 30s
       timeout: 10s
+
   dawarich-geo:
     image: rtuszik/photon-docker:latest
     container_name: dawarich-geo
@@ -155,6 +156,7 @@ services:
 networks:
   dawarich-net:
     name: dawarich-net
+
   proxy-net:
     external: true
   #  immich-net:

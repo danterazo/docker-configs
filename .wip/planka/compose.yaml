@@ -54,6 +54,7 @@ services:
 networks:
   planka-net:
     name: planka-net
+
   proxy-net:
     external: true
 
