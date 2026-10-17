@@ -11,6 +11,6 @@ RUN wget --user-agent="curl/8.0" -O /usr/bin/caddy "${CADDY_URL}" \
     && chmod +x /usr/bin/caddy
 
 # validate install
-RUN	/usr/bin/caddy version \
+RUN /usr/bin/caddy version \
     && /usr/bin/caddy list-modules | grep -qx 'dns.providers.cloudflare' \
     && /usr/bin/caddy list-modules | grep -qx 'security'
