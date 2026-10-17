@@ -39,6 +39,14 @@
   at .github/skills/refresh-deployments/SKILL.md. Operational notes and
   refresh procedures live there; keep the YAML metadata-only, keyed by
   bare guest IDs, without guest runtime or node online/offline status.
+- For an explicit deployment request, follow /deploy-changes through
+  .github/skills/deploy-changes/SKILL.md. Resolve all target guests and current
+  owners, confirm the intended changes are published, and run the approved
+  dupull workflow inside the guests, never locally or on the PVE host.
+- dupull upgrades OS packages and then pulls/rebuilds/recreates every
+  top-level Compose stack in that guest checkout. Disclose and obtain
+  approval for package upgrades/removal and this broader workload impact
+  before running it. A request to add a skill is not permission to deploy.
 - Detect Docker guests using the exact PVE docker tag, a read-only in-guest
   Docker binary check, or a repo stack/hostname match as a likely candidate.
   Preserve known Docker guests when stopped or unprobeable; report uncertain
