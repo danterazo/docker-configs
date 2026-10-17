@@ -47,6 +47,11 @@
   deployment, or remote-validation targets unless a matching guest is explicitly
   listed in the root-level deployments.yaml; normal approval requirements still
   apply.
+- Prefer the GitHub CLI (`gh`) for relevant GitHub operations, including
+  repository renames and repository administration. Check authentication with
+  `gh auth status` without reading or printing credentials; if authentication
+  is unavailable, ask the user to authenticate rather than extracting tokens.
+  Existing approval and safety requirements still apply.
 - When the user explicitly asks to push, note any existing unpushed commits but
   do not treat their presence as a blocker. Push the current branch and its
   commits unless the user limits the requested push scope.
