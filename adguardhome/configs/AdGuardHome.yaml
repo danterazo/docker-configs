@@ -31,7 +31,6 @@ dns:
     - https://cloudflare-dns.com/dns-query
     - https://dns10.quad9.net/dns-query
     - https://dns.adguard-dns.com/dns-query
-    - https://dns0.eu/dns-query
   upstream_dns_file: ""
   bootstrap_dns:
     - 1.1.1.1
