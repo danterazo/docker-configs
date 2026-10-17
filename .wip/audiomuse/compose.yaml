@@ -38,8 +38,10 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              device_ids: ["0"]
-              capabilities: [gpu]
+              device_ids:
+                - "0"
+              capabilities:
+                - gpu
 
   # AudioMuse-AI Queue Worker service
   audiomuse-worker:
@@ -61,8 +63,10 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              device_ids: ["0"]
-              capabilities: [gpu]
+              device_ids:
+                - "0"
+              capabilities:
+                - gpu
 
 networks:
   audiomuse-net:

@@ -30,7 +30,8 @@ services:
     container_name: adguardhome-sync
     restart: unless-stopped
     command: run
-    profiles: [sync]
+    profiles:
+      - sync
     ports:
       - 8070:8080/tcp
     env_file: common.env
