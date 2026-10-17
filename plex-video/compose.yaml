@@ -3,7 +3,7 @@ services:
     container_name: plex-video
     image: plexinc/pms-docker:latest
     restart: unless-stopped
-    runtime: "nvidia"
+    runtime: nvidia
     ports:
       - 32400:32400/tcp
     env_file: .env
