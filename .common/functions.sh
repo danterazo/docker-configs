@@ -1,22 +1,22 @@
 #!/bin/bash
 
-# pull git and docker registry images, then rebuild and recreate stacks
+# pull Git and Docker registry images, then rebuild and recreate stacks
 dpull() {
 	# local variables
 	local root_dir="/docker"
 	local app_dir
 
-	# check git init status
+	# check Git init status
 	if [ ! -d "$root_dir/.git" ]; then
 		echo "ERROR: .git directory missing from Docker configuration repository!"
 		return 1
 	fi
 
-	# pull latest changes from git
+	# pull latest changes from Git
 	cd "$root_dir" || return 1
 	git pull || return 1
 
-	# iterate over each app directory and run docker compose commands
+	# iterate over each app directory and run Docker Compose commands
 	for app_dir in "$root_dir"/*/; do
 		[ -d "$app_dir" ] || continue
 		[ -f "$app_dir/compose.yaml" ] || [ -f "$app_dir/compose.yml" ] || continue
@@ -28,27 +28,27 @@ dpull() {
 	done
 }
 
-# bootstrap, then pull git again and docker registry images via dpull
+# bootstrap, then pull Git again and Docker registry images via dpull
 dbpull() {
 	bootstrap && dpull
 }
 
-# upgrade packages, then pull git and docker registry images via dpull
+# upgrade packages, then pull Git and Docker registry images via dpull
 dupull() {
 	upgrade && dpull
 }
 
-# upgrade packages, bootstrap, then pull git again and docker registry images via dpull
+# upgrade packages, bootstrap, then pull Git again and Docker registry images via dpull
 dubpull() {
 	upgrade && dbpull
 }
 
-# upgrade packages, pull git and docker registry images via dpull, then reboot
+# upgrade packages, pull Git and Docker registry images via dpull, then reboot
 durpull() {
 	dupull && sudo reboot
 }
 
-# upgrade packages, bootstrap, pull git again and docker registry images via dpull, then reboot
+# upgrade packages, bootstrap, pull Git again and Docker registry images via dpull, then reboot
 durbpull() {
 	dubpull && sudo reboot
 }

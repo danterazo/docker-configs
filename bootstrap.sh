@@ -38,7 +38,7 @@ if grep -Rqs 'ppa:zhangsongcui3371/fastfetch' /etc/apt/sources.list /etc/apt/sou
 fi
 
 : 'INSTALL DOCKER'
-# add docker's official GPG key
+# add Docker's official GPG key
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg |
 	sudo tee /etc/apt/keyrings/docker.asc >/dev/null
@@ -98,7 +98,7 @@ fi
 sudo chown dante:dante /home/dante
 
 : 'GIT CONFIG'
-# run git as a user from a cwd they can read; /docker is owned by dante
+# run Git as a user from a cwd they can read; /docker is owned by dante
 user_git() {
 	local user="$1"
 	shift
@@ -116,7 +116,7 @@ done
 sudo mkdir -p "${ROOT_DIR}"
 sudo chown -R dante:dante "${ROOT_DIR}"
 
-# pre-seed github host keys system-wide; source: https://api.github.com/meta (verified 2026-10-16)
+# pre-seed GitHub host keys system-wide; source: https://api.github.com/meta (verified 2026-10-16)
 KNOWN_HOSTS="/etc/ssh/ssh_known_hosts"
 sudo touch "${KNOWN_HOSTS}"
 sudo sed -i '/^github\.com /d' "${KNOWN_HOSTS}"
@@ -127,7 +127,7 @@ github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+V
 EOF
 
 # TODO: set up SSH key sharing
-# dante runs the /docker git commands, so it needs the shared key too
+# dante runs the /docker Git commands, so it needs the shared key too
 if [ ! -f /home/dante/.ssh/id_ed25519 ] && [ -f /root/.ssh/id_ed25519 ] && [ -f /root/.ssh/id_ed25519.pub ]; then
 	sudo install -d -m 700 -o dante -g dante /home/dante/.ssh
 	sudo install -m 600 -o dante -g dante /root/.ssh/id_ed25519 /home/dante/.ssh/id_ed25519

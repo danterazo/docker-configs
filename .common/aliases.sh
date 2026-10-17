@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# docker-compose-v2 syntax
+# docker Compose v2 syntax
 alias dcp="docker compose pull"
 alias dcd="docker compose down"
 alias dcu="docker compose up -d"
