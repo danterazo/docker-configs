@@ -137,6 +137,11 @@
   user's active tab. If available tools cannot hide agent-started/shared tabs,
   disclose that limitation; do not change browser settings or claim hidden
   execution. Keep screenshots free of credentials and sensitive app data.
+- For static public documentation, prefer a repository/file API or direct HTTP
+  fetch such as `curl`. Use the built-in browser when rendered content or
+  interaction matters, or direct fetching is unavailable; do not open pages
+  just to read static text. This does not replace browser-based visual checks
+  required above.
 - Caddy and AdGuard Home deployments are staggered: one secondary of each
   type first, validated, then the rest, primaries last, as defined in the
   deploy skill. Primary/secondary roles come from PVE tags in
