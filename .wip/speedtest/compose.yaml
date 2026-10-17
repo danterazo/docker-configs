@@ -8,8 +8,8 @@ services:
       - 9374:80/tcp
     env_file: .env
     environment:
-      PUID: "1000"
-      PGID: "1000"
+      PUID: 1000
+      PGID: 1000
       APP_NAME: Samskeyti Speed Tester
       APP_URL: https://speed.samskeyti.com/
       #ASSET_URL: https://speed.samskeyti.com/

@@ -41,7 +41,7 @@ services:
     # expose:
     #   - ${PLANKA_PORT}
     ports:
-      - "${PLANKA_PORT}:${PLANKA_PORT}/tcp"
+      - ${PLANKA_PORT}:${PLANKA_PORT}/tcp
     env_file: .env
     volumes:
       - /self-hosted/planka/oauth2-proxy.cfg:/oauth2-proxy.cfg:ro

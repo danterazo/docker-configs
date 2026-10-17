@@ -4,8 +4,8 @@ services:
     image: uroni/urbackup-server:latest
     container_name: urbackup
     environment:
-      PUID: "1000"
-      PGID: "1000"
+      PUID: 1000
+      PGID: 1000
     restart: unless-stopped
     env_file: .env
     volumes:
