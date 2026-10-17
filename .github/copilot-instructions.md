@@ -46,16 +46,17 @@
 - For an explicit deployment request, follow /deploy through
   .github/skills/deploy/SKILL.md. Resolve all target guests and current
   owners, confirm the intended changes are published, and run the approved
-  dupull workflow inside the guests, never locally or on the PVE host.
-- dupull upgrades OS packages and then pulls/rebuilds/recreates every
-  top-level Compose stack in that guest checkout. Disclose and obtain
-  approval for package upgrades/removal and this broader workload impact
-  before running it. A request to add a skill is not permission to deploy.
+  dcd -v + dpull workflow inside the guests, never locally or on the PVE host.
+- That workflow stops, pulls/rebuilds, and recreates every top-level Compose
+  stack in that guest checkout, then validates startup. Disclose and obtain
+  approval for this guest-wide impact before running it. dupull adds OS
+  package upgrades/removal and needs separate explicit approval. A request
+  to add a skill is not permission to deploy.
 - Detect Docker guests using the exact PVE docker tag, a read-only in-guest
   Docker binary check, or a repo stack/hostname match as a likely candidate.
   Preserve known Docker guests when stopped or unprobeable; report uncertain
   classifications rather than silently dropping guests or starting them.
-- Guest fields are ordered hostname, node, address, pool, type. The address
+- Guest fields are ordered hostname, node, address, pool, type, tags. The address
   is one unquoted bare IP string, without a CIDR prefix; use "" when unknown.
   Strip subnet prefixes from discovered or user-supplied CIDRs. Preserve
   known addresses on empty discovery; ask if several candidates are ambiguous.
@@ -72,6 +73,10 @@
   A file timestamp is not a claim that remote discovery was performed.
 - For caddy changes, plan validation on ALL three Caddy LXCs: 203 and 205
   on Cerulean, and 204 on Kex at discovery time. Do not validate only one.
+- Caddy and AdGuard Home deployments are staggered: one secondary of each
+  type first, validated, then the rest, primaries last, as defined in the
+  deploy skill. Primary/secondary roles come from PVE tags in
+  deployments.yaml. Never take every instance of a type down at once.
 - Guest hostnames normally match their stack names. nvidia-vm is VM 101
   and hosts immich, plex-video, and tautulli. Tautulli also runs on LXCs
   108 (development plex-video) and 120 (plex-music). Hostnames such as caddy

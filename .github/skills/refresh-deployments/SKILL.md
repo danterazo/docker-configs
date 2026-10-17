@@ -67,7 +67,10 @@ job or a deployment command. Keep operational notes here, not in the YAML.
    directory. Also compare guest names to repo stack directories: a matching
    hostname is a likely Docker guest, not proof that Docker was inspected.
    Known exceptions include `nvidia-vm`. Retain guest ID, type, name, owning
-   node, and pool. Retain node names only, not online status.
+   node, pool, and tags. Retain node names only, not online status.
+   Split `tags` on `;` (PVE may also use `,` or spaces), trim, and drop
+   empties. Tags such as primary/secondary distinguish duplicate hostnames
+   (AdGuard Home, Caddy); deployment ordering relies on them.
 3. Detect Docker inside running guests when tags or names are insufficient,
    or when resolving conflicting evidence. On a confirmed owning Proxmox
    node, an approved read-only LXC probe is:
@@ -182,10 +185,13 @@ job or a deployment command. Keep operational notes here, not in the YAML.
   requested; if a metadata change would make a comment misleading, ask.
 - Key `docker_guests` by bare numeric guest IDs. Do not duplicate the ID in each
   entry or prefix it with `lxc_` or `qemu_`. Each entry has exactly these fields
-  in this order: `hostname`, `node`, `address`, `pool`, `type`. The `address`
+  in this order: `hostname`, `node`, `address`, `pool`, `type`, `tags`. The `address`
   value is a string containing one bare IP without a CIDR suffix. Write known
   IPs as unquoted YAML scalars (for example, `address: 192.168.30.101`); keep
   `address: ""` when unknown, because an omitted value would parse as null.
+  Write `tags` as a one-line flow list of every PVE tag in the order PVE
+  returns them, for example `tags: [docker, primary]`; use `tags: []` when
+  none. Tags are configuration metadata, not runtime status.
   Do not add a per-guest `stacks` field or a reverse deployment table.
 - Record cluster node names and configured addresses as observations, not
   immutable identity. Recheck ownership and state live before guest work.
@@ -214,7 +220,9 @@ job or a deployment command. Keep operational notes here, not in the YAML.
   without storing it or starting them for validation.
 - Caddy maps to all three LXCs: 203 and 205 were on Cerulean and 204 on Kex.
   AdGuard Home also has duplicate hostnames: 200, 201, and 202. A hostname
-  alone does not uniquely identify these guests.
+  alone does not uniquely identify these guests. Report each duplicate set's
+  role tags; flag sets with no primary, multiple primaries, or untagged
+  members so the user can fix tags in PVE. Do not invent role tags.
 - Use `/docker` as the checkout root and `dante` for guest Git operations
   and repository edits. Root on the Proxmox owner may invoke `pct`, but use
   `pct exec <id> --keep-env 0 -- runuser -u dante -- /bin/bash --noprofile --norc`
@@ -233,6 +241,7 @@ job or a deployment command. Keep operational notes here, not in the YAML.
    that scope. Use `apply_patch` and preserve unrelated changes.
 2. Parse the result with an installed YAML parser. Validate schema version,
   numeric guest keys, allowed guest types, exact per-guest field order,
+  `tags` as a list of nonempty strings,
   existing node references, and unique addresses. Check that undeployed
   stack directories exist and do not conflict with known placements. Check
   the AM/PM date/time format against America/Chicago, without storing a zone
@@ -247,8 +256,8 @@ job or a deployment command. Keep operational notes here, not in the YAML.
    placements remain present unless the user approved topology changes.
    Validate with local non-executing checks and `git diff --check`. Do not
    install a missing validator without approval.
-4. Summarize additions, removals, migrations, address changes, unresolved
-   mappings, and incomplete reads. State that no remote changes were made.
+4. Summarize additions, removals, migrations, address changes, tag changes,
+   unresolved mappings, and incomplete reads. State that no remote changes were made.
 
 Refresh after guest creation, deletion, migration, rename, or address changes,
 and before remote validation. Prefer on-demand checks; a weekly read-only
