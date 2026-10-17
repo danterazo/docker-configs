@@ -122,6 +122,9 @@
   rebooting. Review deployed helpers and obtain their required approvals.
 
 ## LXC access
+- When asked to access an LXC, SSH into its current owning node by host
+  alias (for example, ssh cerulean), then use pct exec from there. Do not
+  SSH directly into LXC addresses.
 - Run pct on the confirmed owning Proxmox node through an approved remote
   execution method, not in this local checkout.
 - Use: pct exec <CTID> --keep-env 0 -- <command> <arguments>
