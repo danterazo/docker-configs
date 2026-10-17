@@ -43,6 +43,9 @@
   deployment, or remote-validation targets unless a matching guest is explicitly
   listed in the root-level deployments.yaml; normal approval requirements still
   apply.
+- When the user explicitly asks to push, note any existing unpushed commits but
+  do not treat their presence as a blocker. Push the current branch and its
+  commits unless the user limits the requested push scope.
 - Use /refresh-deployments to update the map through the repo-local skill
   at .github/skills/refresh-deployments/SKILL.md. Operational notes and
   refresh procedures live there; keep the YAML metadata-only, keyed by
