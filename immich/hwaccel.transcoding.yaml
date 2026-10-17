@@ -52,4 +52,4 @@ services:
     volumes:
       - /usr/lib/wsl:/usr/lib/wsl
     environment:
-      - LIBVA_DRIVER_NAME=d3d12
+      LIBVA_DRIVER_NAME: d3d12
